@@ -1,11 +1,14 @@
 import React from "react";
-import { MantineProvider } from "@mantine/core";
+import { GlobalStyles, MantineProvider } from "@mantine/core";
 import RenderRoutes from "./routes/Index";
+import AuthProvider from "./contexts/Index";
 
 const App = () => {
   return (
     <MantineProvider withGlobalStyles withNormalizeCSS>
-      <RenderRoutes />
+      <AuthProvider>
+        <RenderRoutes />
+      </AuthProvider>
     </MantineProvider>
   );
 };

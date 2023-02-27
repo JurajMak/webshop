@@ -81,54 +81,48 @@ export function UserLogin() {
 
   return (
     <div className={classes.wrapper}>
-      <Paper className={classes.form} radius={0} p={30}>
-        <Title
-          order={2}
-          className={classes.title}
-          align="center"
-          mt="md"
-          mb={50}
-        >
-          Welcome back!
-        </Title>
+      {/* <Paper className={classes.form} radius={0} p={30}> */}
+      <Title order={2} className={classes.title} align="center" mt="md" mb={50}>
+        Welcome back!
+      </Title>
 
-        <Form onSubmit={form.onSubmit(handleSubmit)}>
-          <TextInput
-            label="Email"
-            placeholder="Enter your email"
-            icon={<IconAt size={14} />}
-            {...form.getInputProps("email")}
-            value={email}
-          />
+      <Form onSubmit={form.onSubmit(handleSubmit)}>
+        <TextInput
+          label="Email"
+          placeholder="Enter your email"
+          icon={<IconAt size={14} />}
+          {...form.getInputProps("email")}
+          value={email}
+        />
 
-          <TextInput
-            type={type}
-            label="Password"
-            placeholder="************"
-            rightSection={
-              <ActionIcon
-                onClick={() =>
-                  type === "text" ? settype("password") : settype("text")
-                }
-              >
-                {type === "password" ? <IconEye /> : <IconEyeOff />}
-              </ActionIcon>
-            }
-            {...form.getInputProps("password")}
-            value={password}
-          />
+        <TextInput
+          type={type}
+          label="Password"
+          placeholder="************"
+          rightSection={
+            <ActionIcon
+              onClick={() =>
+                type === "text" ? settype("password") : settype("text")
+              }
+            >
+              {type === "password" ? <IconEye /> : <IconEyeOff />}
+            </ActionIcon>
+          }
+          {...form.getInputProps("password")}
+          value={password}
+        />
 
-          <StyledButton type="submit">Login</StyledButton>
-          <StyledButton onClick={returnHome}>Return</StyledButton>
-        </Form>
+        <StyledButton type="submit">Login</StyledButton>
+        <StyledButton onClick={returnHome}>Return</StyledButton>
+      </Form>
 
-        <Text align="center" mt="md">
-          Don&apos;t have an account?{" "}
-          <Anchor href="#" weight={700} onClick={returnRegister}>
-            Register
-          </Anchor>
-        </Text>
-      </Paper>
+      <Text align="center" mt="md">
+        Don&apos;t have an account?{" "}
+        <Anchor href="#" weight={700} onClick={returnRegister}>
+          Register
+        </Anchor>
+      </Text>
+      {/* </Paper> */}
     </div>
   );
 }

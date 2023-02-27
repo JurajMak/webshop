@@ -75,62 +75,56 @@ const RegisterForm = () => {
 
   return (
     <div className={classes.wrapper}>
-      <Paper className={classes.form} radius={0} p={30}>
-        <Title
-          order={2}
-          className={classes.title}
-          align="center"
-          mt="md"
-          mb={50}
-        >
-          Register
-        </Title>
+      {/* <Paper className={classes.form} radius={0} p={30}> */}
+      <Title order={2} className={classes.title} align="center" mt="md" mb={50}>
+        Register
+      </Title>
 
-        <Form onSubmit={form.onSubmit(handleSubmit)}>
-          <TextInput
-            label="First Name"
-            placeholder="Enter your first name"
-            icon={<IconAt size={14} />}
-            {...form.getInputProps("first_name")}
-            value={first_name}
-          />
-          <TextInput
-            label="Last Name"
-            placeholder="Enter your last name"
-            icon={<IconAt size={14} />}
-            {...form.getInputProps("last_name")}
-            value={last_name}
-          />
+      <Form onSubmit={form.onSubmit(handleSubmit)}>
+        <TextInput
+          label="First Name"
+          placeholder="Enter your first name"
+          icon={<IconAt size={14} />}
+          {...form.getInputProps("first_name")}
+          value={first_name}
+        />
+        <TextInput
+          label="Last Name"
+          placeholder="Enter your last name"
+          icon={<IconAt size={14} />}
+          {...form.getInputProps("last_name")}
+          value={last_name}
+        />
 
-          <TextInput
-            label="Email"
-            placeholder="Enter your email"
-            icon={<IconAt size={14} />}
-            {...form.getInputProps("email")}
-            value={email}
-          />
+        <TextInput
+          label="Email"
+          placeholder="Enter your email"
+          icon={<IconAt size={14} />}
+          {...form.getInputProps("email")}
+          value={email}
+        />
 
-          <TextInput
-            type={type}
-            label="Password"
-            placeholder="************"
-            rightSection={
-              <ActionIcon
-                onClick={() =>
-                  type === "text" ? settype("password") : settype("text")
-                }
-              >
-                {type === "password" ? <IconEye /> : <IconEyeOff />}
-              </ActionIcon>
-            }
-            {...form.getInputProps("password")}
-            value={password}
-          />
+        <TextInput
+          type={type}
+          label="Password"
+          placeholder="************"
+          rightSection={
+            <ActionIcon
+              onClick={() =>
+                type === "text" ? settype("password") : settype("text")
+              }
+            >
+              {type === "password" ? <IconEye /> : <IconEyeOff />}
+            </ActionIcon>
+          }
+          {...form.getInputProps("password")}
+          value={password}
+        />
 
-          <StyledButton type="submit">Submit</StyledButton>
-          <StyledButton onClick={returnHome}>Return</StyledButton>
-        </Form>
-      </Paper>
+        <StyledButton type="submit">Submit</StyledButton>
+        <StyledButton onClick={returnHome}>Return</StyledButton>
+      </Form>
+      {/* </Paper> */}
     </div>
   );
 };

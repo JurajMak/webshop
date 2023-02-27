@@ -1,13 +1,9 @@
 import React from "react";
-import HeaderTabs from "../../components/header/Index";
+
+import AppShellDemo from "./appshell";
 
 const Home = () => {
-  return (
-    <div>
-      <HeaderTabs />
-      <h1>Home</h1>
-    </div>
-  );
+  return <AppShellDemo></AppShellDemo>;
 };
 
 export default Home;
