@@ -12,6 +12,7 @@ import { useNavigate } from "react-router-dom";
 import { IconAt, IconEye, IconEyeOff } from "@tabler/icons";
 import { useForm } from "@mantine/form";
 import React, { useState } from "react";
+import { AuthContext } from "../../contexts/Index";
 
 import { Form, StyledButton, Div, TitleHeader } from "../login/Styles";
 const useStyles = createStyles((theme) => ({
@@ -50,6 +51,7 @@ const useStyles = createStyles((theme) => ({
 }));
 
 const RegisterForm = () => {
+  const { signUp } = React.useContext(AuthContext);
   const { classes } = useStyles();
   const form = useForm({
     first_name: "",
@@ -59,12 +61,20 @@ const RegisterForm = () => {
   });
   const navigate = useNavigate();
   const [type, settype] = useState("password");
-  const { email, password, first_name, last_name } = form;
+  const { email, password, first_name, last_name } = form.values;
 
   const handleSubmit = async (e) => {
-    const { email, password, first_name, last_name } = form.values;
+    // e.preventDefault();
 
-    console.log(form.values);
+    const { email, password } = form.values;
+    const data = await signUp({
+      email,
+      password,
+    });
+    if (data) {
+      navigate("/loggedUser");
+    }
+    console.log(form);
   };
 
   const returnHome = async () => {
@@ -114,8 +124,7 @@ const RegisterForm = () => {
             <ActionIcon
               onClick={() =>
                 type === "text" ? settype("password") : settype("text")
-              }
-            >
+              }>
               {type === "password" ? <IconEye /> : <IconEyeOff />}
             </ActionIcon>
           }

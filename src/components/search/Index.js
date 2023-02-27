@@ -1,9 +1,4 @@
-import {
-  TextInput,
-  TextInputProps,
-  ActionIcon,
-  useMantineTheme,
-} from "@mantine/core";
+import { TextInput, ActionIcon, useMantineTheme } from "@mantine/core";
 import { IconSearch, IconArrowRight, IconArrowLeft } from "@tabler/icons";
 
 export function InputWithButton(props) {
@@ -20,8 +15,7 @@ export function InputWithButton(props) {
           size={32}
           radius="xl"
           color={theme.primaryColor}
-          variant="filled"
-        >
+          variant="filled">
           {theme.dir === "ltr" ? (
             <IconArrowRight size={18} stroke={1.5} />
           ) : (

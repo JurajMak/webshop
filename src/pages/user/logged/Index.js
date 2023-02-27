@@ -8,13 +8,13 @@ import {
   TextInput,
   Input,
 } from "@mantine/core";
-import ProductsCard from "../productCard/Index";
-import { Wrapper, ProductsWrapper } from "../../pages/home/Styles";
-import HeaderTabs from "../header/Index";
-import { AuthContext } from "../../contexts/Index";
+import ProductsCard from "../../../components/productCard/Index";
+import { Wrapper, ProductsWrapper } from "./Styles";
+import HeaderUser from "../userheader/Index";
+import { AuthContext } from "../../../contexts/Index";
 import React from "react";
-import InputWithButton from "../search/Index";
-export default function AppShellLayout() {
+import InputWithButton from "../../../components/search/Index";
+export default function AppShellUser() {
   const theme = useMantineTheme();
   const [opened, setOpened] = useState(false);
   const { data } = React.useContext(AuthContext);
@@ -46,7 +46,7 @@ export default function AppShellLayout() {
           Application footer
         </Footer>
       }
-      header={<HeaderTabs />}>
+      header={<HeaderUser />}>
       <Wrapper>
         {data?.map((item, index) => {
           return (

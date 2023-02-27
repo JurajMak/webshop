@@ -8,8 +8,10 @@ import {
 } from "@mantine/core";
 import { MantineLogo } from "@mantine/ds";
 import { useNavigate } from "react-router-dom";
-import React, { useState } from "react";
-import { ImageLogo, CartBtn } from "./Styles";
+import React, { useContext, useState } from "react";
+// import { ImageLogo, CartBtn } from "./Styles";
+import { AuthContext } from "../../../contexts/Index";
+import { supabase } from "../../../config/Supabase";
 
 const useStyles = createStyles((theme) => ({
   link: {
@@ -31,25 +33,27 @@ const useStyles = createStyles((theme) => ({
   },
 }));
 
-export function HeaderTabs() {
+export function HeaderUser() {
+  const { user, setUser } = useContext(AuthContext);
   const { classes, theme } = useStyles();
   const [opened, setOpened] = useState(false);
   const navigate = useNavigate();
 
   const returnHome = async () => {
-    navigate("/");
+    navigate("/loggedUser");
   };
 
-  const returnProducts = async () => {
-    navigate("/products");
-  };
-  const navigateLogin = async () => {
-    navigate("/login");
-  };
-  const navigateRegister = async () => {
-    navigate("/register");
+  const signOut = async () => {
+    const { error } = await supabase.auth.signOut();
+    if (error) {
+      alert(error);
+    } else {
+      setUser(null);
+      alert(`${user.email} logged out`);
+    }
   };
 
+  console.log(user);
   return (
     <Box>
       <Header height={60} px="md">
@@ -64,7 +68,7 @@ export function HeaderTabs() {
               Home
             </a>
 
-            <a href="#" className={classes.link} onClick={returnProducts}>
+            <a href="#" className={classes.link}>
               Products
             </a>
           </Group>
@@ -77,11 +81,9 @@ export function HeaderTabs() {
             {/* Drawer content */}
           </Drawer>
           <Group className={classes.hiddenMobile}>
+            Welcome {user.email} !
             <Button onClick={() => setOpened(true)}>Cart</Button>
-            <Button variant="default" onClick={navigateLogin}>
-              Log in
-            </Button>
-            <Button onClick={navigateRegister}>Sign up</Button>
+            <Button onClick={signOut}>Logout</Button>
           </Group>
         </Group>
       </Header>
@@ -89,4 +91,4 @@ export function HeaderTabs() {
   );
 }
 
-export default HeaderTabs;
+export default HeaderUser;

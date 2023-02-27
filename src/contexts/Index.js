@@ -1,17 +1,93 @@
 import React, { createContext, useState, useEffect } from "react";
 import axios from "axios";
+import { supabase } from "../config/Supabase";
 
 export const AuthContext = createContext(null);
 
 const AuthProvider = ({ children }) => {
   const [data, setData] = useState([]);
 
-  // console.log(data);
+  const [user, setUser] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
+
+  const signIn = async ({ email, password }) => {
+    const { data, error } = await supabase.auth.signInWithPassword({
+      email,
+      password,
+    });
+
+    if (error) {
+      alert(error.message);
+      return;
+    }
+
+    return data;
+  };
+
+  const signUp = async ({ email, password }) => {
+    const { data, error } = await supabase.auth.signUp({
+      email,
+      password,
+    });
+    if (error) {
+      alert(error.message);
+      return;
+    }
+
+    return data;
+  };
+
+  const signInWithGugl = async () => {
+    const { data, error } = await supabase.auth.signInWithOAuth({
+      provider: "google",
+    });
+
+    if (error) {
+      alert(error.message);
+    }
+
+    return data;
+  };
 
   const value = {
+    signIn,
+    signUp,
+    signInWithGugl,
+    user,
+    setUser,
     data,
   };
-  // console.log(value);
+
+  // const initSession = async () => {
+  //   const { session } = await supabase.auth.getSession();
+  //   console.log("session", session);
+  // };
+
+  // React.useEffect(() => {
+  //   initSession();
+  // }, []);
+
+  React.useEffect(() => {
+    supabase.auth.getSession().then(({ data }) => {
+      console.log(data);
+      if (data && data.session) {
+        setUser(data.session.user);
+        setIsLoading(false);
+      } else {
+        setIsLoading(false);
+      }
+    });
+    supabase.auth.onAuthStateChange((event, session) => {
+      console.log(event, session);
+      if (event === "SIGNED_IN") {
+        setUser(session.user);
+        setIsLoading(false);
+      }
+      if (event === "SIGNED_OUT") {
+        setUser(null);
+      }
+    });
+  }, []);
   useEffect(() => {
     axios
       .get(`https://react-shopping-cart-67954.firebaseio.com/products.json`)

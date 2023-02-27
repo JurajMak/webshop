@@ -1,37 +1,106 @@
-import React, { useState } from "react";
+import {
+  Paper,
+  createStyles,
+  TextInput,
+  PasswordInput,
+  Checkbox,
+  Button,
+  Title,
+  Text,
+  Anchor,
+  ActionIcon,
+} from "@mantine/core";
 import { useNavigate } from "react-router-dom";
-import { ActionIcon, TextInput } from "@mantine/core";
 import { IconAt, IconEye, IconEyeOff } from "@tabler/icons";
 import { useForm } from "@mantine/form";
-import { Button, Group } from "@mantine/core";
-
+import React, { useState } from "react";
 import { Form, StyledButton, Div, TitleHeader } from "./Styles";
+import { AuthContext } from "../../contexts/Index";
 
-const Login = (props) => {
+const useStyles = createStyles((theme) => ({
+  wrapper: {
+    minHeight: 900,
+    backgroundSize: "cover",
+    backgroundImage:
+      "url(https://images.unsplash.com/photo-1484242857719-4b9144542727?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1280&q=80)",
+  },
+
+  form: {
+    borderRight: `1px solid ${
+      theme.colorScheme === "dark" ? theme.colors.dark[7] : theme.colors.gray[3]
+    }`,
+    minHeight: 900,
+    maxWidth: 450,
+    paddingTop: 80,
+
+    [`@media (max-width: ${theme.breakpoints.sm}px)`]: {
+      maxWidth: "100%",
+    },
+  },
+
+  title: {
+    color: theme.colorScheme === "dark" ? theme.white : theme.black,
+    fontFamily: `Greycliff CF, ${theme.fontFamily}`,
+  },
+
+  logo: {
+    color: theme.colorScheme === "dark" ? theme.white : theme.black,
+    width: 120,
+    display: "block",
+    marginLeft: "auto",
+    marginRight: "auto",
+  },
+}));
+
+export function UserLogin() {
+  const { classes } = useStyles();
   const form = useForm({
     email: "",
     password: "",
   });
+  const [opened, setOpened] = useState(false);
 
   const navigate = useNavigate();
-  // const { signIn, setUser, user } = React.useContext(AuthContext);
+  const { signIn, setUser, user } = React.useContext(AuthContext);
 
   const [type, settype] = useState("password");
   const { email, password } = form;
 
+  // const handleSubmit = async (e) => {
+  //   const { email, password } = form.values;
+  //   form.setValues({ email: email, password: password });
+  //   console.log(form.values);
+  // };
+
   const handleSubmit = async (e) => {
     const { email, password } = form.values;
 
-    console.log(form.values);
+    const data = await signIn({
+      email,
+      password,
+    });
+    if (data) {
+      setUser(data.user);
+      navigate("/loggedUser");
+    }
+    console.log(data.user);
   };
 
   const returnHome = async () => {
     navigate("/");
   };
 
+  const returnRegister = async () => {
+    navigate("/register");
+  };
+
   return (
-    <Div>
-      <TitleHeader>Login</TitleHeader>
+    <div className={classes.wrapper}>
+      {/* <Paper className={classes.form} radius={0} p={30}> */}
+      <Title order={2} className={classes.title} align="center" mt="md" mb={50}>
+        Welcome back!
+      </Title>
+
       <Form onSubmit={form.onSubmit(handleSubmit)}>
         <TextInput
           label="Email"
@@ -49,8 +118,7 @@ const Login = (props) => {
             <ActionIcon
               onClick={() =>
                 type === "text" ? settype("password") : settype("text")
-              }
-            >
+              }>
               {type === "password" ? <IconEye /> : <IconEyeOff />}
             </ActionIcon>
           }
@@ -61,8 +129,16 @@ const Login = (props) => {
         <StyledButton type="submit">Login</StyledButton>
         <StyledButton onClick={returnHome}>Return</StyledButton>
       </Form>
-    </Div>
-  );
-};
 
-export default Login;
+      <Text align="center" mt="md">
+        Don&apos;t have an account?{" "}
+        <Anchor href="#" weight={700} onClick={returnRegister}>
+          Register
+        </Anchor>
+      </Text>
+      {/* </Paper> */}
+    </div>
+  );
+}
+
+export default UserLogin;
