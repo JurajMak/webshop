@@ -9,6 +9,7 @@ import {
 import { MantineLogo } from "@mantine/ds";
 import { useNavigate } from "react-router-dom";
 import React, { useState } from "react";
+import { CartBtn } from "./Styles";
 
 const useStyles = createStyles((theme) => ({
   link: {
@@ -53,7 +54,8 @@ export function HeaderTabs() {
     <Box>
       <Header height={60} px="md">
         <Group position="apart" sx={{ height: "100%" }}>
-          <MantineLogo size={30} />
+          {/* <MantineLogo size={30} /> */}
+          Application Logo
           <Group
             sx={{ height: "100%" }}
             spacing={0}
@@ -67,7 +69,6 @@ export function HeaderTabs() {
               Products
             </a>
           </Group>
-
           <Drawer
             opened={opened}
             onClose={() => setOpened(false)}
@@ -77,8 +78,8 @@ export function HeaderTabs() {
           >
             {/* Drawer content */}
           </Drawer>
-
           <Group className={classes.hiddenMobile}>
+            {/* <CartBtn onClick={() => setOpened(true)}>Cart</CartBtn> */}
             <Button onClick={() => setOpened(true)}>Cart</Button>
             <Button variant="default" onClick={navigateLogin}>
               Log in

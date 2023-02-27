@@ -15,7 +15,7 @@ import {
   IconUsers,
 } from "@tabler/icons";
 import React from "react";
-
+import { AuthContext } from "../../contexts/Index";
 const useStyles = createStyles((theme) => ({
   card: {
     backgroundColor:
@@ -57,23 +57,17 @@ const useStyles = createStyles((theme) => ({
   },
 }));
 
-const mockdata = [
-  { label: "4 passengers", icon: IconUsers },
-  { label: "100 km/h in 4 seconds", icon: IconGauge },
-  { label: "Automatic gearbox", icon: IconManualGearbox },
-  { label: "Electric", icon: IconGasStation },
-];
+// const mockdata = [
+//   { label: "4 passengers", icon: IconUsers },
+//   { label: "100 km/h in 4 seconds", icon: IconGauge },
+//   { label: "Automatic gearbox", icon: IconManualGearbox },
+//   { label: "Electric", icon: IconGasStation },
+// ];
 
 export function ProductsCard(props) {
   const { classes } = useStyles();
-  const features = mockdata.map((feature) => (
-    <Center key={feature.label}>
-      <feature.icon size={18} className={classes.icon} stroke={1.5} />
-      <Text size="xs">{feature.label}</Text>
-    </Center>
-  ));
+  const { title, price, style, availableSizes } = props.data;
 
-  console.log("prosčp", props.text);
   return (
     <Card withBorder radius="md" className={classes.card}>
       <Card.Section className={classes.imageSection}>
@@ -82,9 +76,9 @@ export function ProductsCard(props) {
 
       <Group position="apart" mt="md">
         <div>
-          <Text weight={500}>Tesla Model S</Text>
+          <Text weight={500}>{}</Text>
           <Text size="xs" color="dimmed">
-            Free recharge at any station
+            {style}
           </Text>
         </div>
         <Badge variant="outline">25% off</Badge>
@@ -92,11 +86,11 @@ export function ProductsCard(props) {
 
       <Card.Section className={classes.section} mt="md">
         <Text size="sm" color="dimmed" className={classes.label}>
-          Basic configuration
+          Available sizes
         </Text>
 
         <Group spacing={8} mb={-8}>
-          {features}
+          {availableSizes.join("/")}
         </Group>
       </Card.Section>
 
@@ -104,7 +98,7 @@ export function ProductsCard(props) {
         <Group spacing={30}>
           <div>
             <Text size="xl" weight={700} sx={{ lineHeight: 1 }}>
-              {props.text}
+              ${price}
             </Text>
             <Text
               size="sm"

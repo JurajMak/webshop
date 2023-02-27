@@ -6,11 +6,12 @@ export const AuthContext = createContext(null);
 const AuthProvider = ({ children }) => {
   const [data, setData] = useState([]);
 
-  console.log(data);
+  // console.log(data);
 
   const value = {
     data,
   };
+  // console.log(value);
   useEffect(() => {
     axios
       .get(`https://react-shopping-cart-67954.firebaseio.com/products.json`)

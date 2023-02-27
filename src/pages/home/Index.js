@@ -1,6 +1,6 @@
 import React from "react";
 
-import AppShellDemo from "./appshell";
+import AppShellDemo from "../../components/layout/Index";
 
 const Home = () => {
   return <AppShellDemo></AppShellDemo>;

@@ -6,8 +6,6 @@ import {
   Checkbox,
   Button,
   Title,
-  Text,
-  Anchor,
   ActionIcon,
 } from "@mantine/core";
 import { useNavigate } from "react-router-dom";
@@ -84,6 +82,7 @@ const RegisterForm = () => {
         <TextInput
           label="First Name"
           placeholder="Enter your first name"
+          withAsterisk
           icon={<IconAt size={14} />}
           {...form.getInputProps("first_name")}
           value={first_name}
@@ -91,6 +90,7 @@ const RegisterForm = () => {
         <TextInput
           label="Last Name"
           placeholder="Enter your last name"
+          withAsterisk
           icon={<IconAt size={14} />}
           {...form.getInputProps("last_name")}
           value={last_name}
@@ -99,6 +99,7 @@ const RegisterForm = () => {
         <TextInput
           label="Email"
           placeholder="Enter your email"
+          withAsterisk
           icon={<IconAt size={14} />}
           {...form.getInputProps("email")}
           value={email}
@@ -108,6 +109,7 @@ const RegisterForm = () => {
           type={type}
           label="Password"
           placeholder="************"
+          withAsterisk
           rightSection={
             <ActionIcon
               onClick={() =>

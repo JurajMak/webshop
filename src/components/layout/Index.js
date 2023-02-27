@@ -1,40 +1,24 @@
 import { useState } from "react";
-import { AppShell, Navbar, Footer, Text, useMantineTheme } from "@mantine/core";
-import ProductsCard from "./test";
-import { Wrapper, ProductsWrapper, GridWrapper } from "./Styles";
-import HeaderTabs from "../../components/header/Index";
-
+import {
+  AppShell,
+  Navbar,
+  Footer,
+  Text,
+  useMantineTheme,
+  TextInput,
+  Input,
+} from "@mantine/core";
+import ProductsCard from "../productCard/Index";
+import { Wrapper, ProductsWrapper } from "../../pages/home/Styles";
+import HeaderTabs from "../header/Index";
+import { AuthContext } from "../../contexts/Index";
+import React from "react";
+import InputWithButton from "../search/Index";
 export default function AppShellDemo() {
   const theme = useMantineTheme();
   const [opened, setOpened] = useState(false);
+  const { data } = React.useContext(AuthContext);
 
-  const fakeData = [
-    "$168.00",
-    "$168.00",
-    "$168.00",
-    "$168.00",
-    "$168.00",
-    "$168.00",
-    "$168.00",
-    "$168.00",
-    "$168.00",
-    "$168.00",
-    "$168.00",
-    "$168.00",
-    "$168.00",
-    "$168.00",
-    "$168.00",
-    "$168.00",
-    "$168.00",
-    "$168.00",
-    "$168.00",
-    "$168.00",
-    "$168.00",
-    "$168.00",
-    "$168.00",
-    "$168.00",
-    "$168.00",
-  ];
   return (
     <AppShell
       styles={{
@@ -55,6 +39,7 @@ export default function AppShellDemo() {
           width={{ sm: 200, lg: 300 }}
         >
           <Text>Search</Text>
+          <InputWithButton></InputWithButton>
         </Navbar>
       }
       footer={
@@ -65,10 +50,10 @@ export default function AppShellDemo() {
       header={<HeaderTabs />}
     >
       <Wrapper>
-        {fakeData.map((item, index) => {
+        {data?.map((item, index) => {
           return (
             <ProductsWrapper key={index}>
-              <ProductsCard text={item} />
+              <ProductsCard data={item} />
             </ProductsWrapper>
           );
         })}
