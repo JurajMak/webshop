@@ -6,7 +6,9 @@ import {
   Container,
   Group,
 } from "@mantine/core";
+import { useContext } from "react";
 import { useNavigate } from "react-router-dom";
+import { AuthContext } from "../../contexts/Index";
 
 const useStyles = createStyles((theme) => ({
   root: {
@@ -50,11 +52,16 @@ const useStyles = createStyles((theme) => ({
 }));
 
 export function ErrorPage() {
+  const { user } = useContext(AuthContext);
   const navigate = useNavigate();
   const { classes } = useStyles();
 
   const home = async () => {
-    navigate("/");
+    if (!user) {
+      navigate("/");
+    } else {
+      navigate("/loggedUser");
+    }
   };
 
   return (

@@ -8,8 +8,10 @@ import {
 } from "@mantine/core";
 import { MantineLogo } from "@mantine/ds";
 import { useNavigate } from "react-router-dom";
-import React, { useState } from "react";
-import { ImageLogo, CartBtn } from "./Styles";
+import React, { useContext, useState } from "react";
+// import { ImageLogo, CartBtn } from "./Styles";
+import { AuthContext } from "../../contexts/Index";
+import { supabase } from "../../config/Supabase";
 
 const useStyles = createStyles((theme) => ({
   link: {
@@ -35,19 +37,26 @@ export function HeaderTabs() {
   const { classes, theme } = useStyles();
   const [opened, setOpened] = useState(false);
   const navigate = useNavigate();
+  const { user, setUser } = useContext(AuthContext);
 
   const returnHome = async () => {
     navigate("/");
   };
 
-  const returnProducts = async () => {
-    navigate("/products");
-  };
   const navigateLogin = async () => {
     navigate("/login");
   };
   const navigateRegister = async () => {
     navigate("/register");
+  };
+  const signOut = async () => {
+    const { error } = await supabase.auth.signOut();
+    if (error) {
+      alert(error);
+    } else {
+      setUser(null);
+      alert(`${user.email} logged out`);
+    }
   };
 
   return (
@@ -64,7 +73,7 @@ export function HeaderTabs() {
               Home
             </a>
 
-            <a href="#" className={classes.link} onClick={returnProducts}>
+            <a href="#" className={classes.link}>
               Products
             </a>
           </Group>
@@ -75,14 +84,23 @@ export function HeaderTabs() {
             padding="xl"
             size="xl">
             {/* Drawer content */}
+            {user ? <Button>Checkout</Button> : ""}
           </Drawer>
-          <Group className={classes.hiddenMobile}>
-            <Button onClick={() => setOpened(true)}>Cart</Button>
-            <Button variant="default" onClick={navigateLogin}>
-              Log in
-            </Button>
-            <Button onClick={navigateRegister}>Sign up</Button>
-          </Group>
+          {user ? (
+            <Group className={classes.hiddenMobile}>
+              Welcome {user.email} !
+              <Button onClick={() => setOpened(true)}>Cart</Button>
+              <Button onClick={signOut}>Logout</Button>
+            </Group>
+          ) : (
+            <Group className={classes.hiddenMobile}>
+              <Button onClick={() => setOpened(true)}>Cart</Button>
+              <Button variant="default" onClick={navigateLogin}>
+                Log in
+              </Button>
+              <Button onClick={navigateRegister}>Sign up</Button>
+            </Group>
+          )}
         </Group>
       </Header>
     </Box>
@@ -90,3 +108,11 @@ export function HeaderTabs() {
 }
 
 export default HeaderTabs;
+
+//  <Group className={classes.hiddenMobile}>
+//       <Button onClick={() => setOpened(true)}>Cart</Button>
+//       <Button variant="default" onClick={navigateLogin}>
+//         Log in
+//       </Button>
+//       <Button onClick={navigateRegister}>Sign up</Button>
+//     </Group>

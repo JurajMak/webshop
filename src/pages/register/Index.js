@@ -14,7 +14,7 @@ import { useForm } from "@mantine/form";
 import React, { useState } from "react";
 import { AuthContext } from "../../contexts/Index";
 
-import { Form, StyledButton, Div, TitleHeader } from "../login/Styles";
+import { Form, StyledButton } from "../login/Styles";
 const useStyles = createStyles((theme) => ({
   wrapper: {
     minHeight: 900,
@@ -64,8 +64,6 @@ const RegisterForm = () => {
   const { email, password, first_name, last_name } = form.values;
 
   const handleSubmit = async (e) => {
-    // e.preventDefault();
-
     const { email, password } = form.values;
     const data = await signUp({
       email,

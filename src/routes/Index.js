@@ -5,7 +5,7 @@ import Home from "../pages/home/Index";
 import UserLogin from "../pages/login/Index";
 import ProtectedRoute from "../pages/protected/Index";
 import RegisterForm from "../pages/register/Index";
-import AppShellUser from "../pages/user/logged/Index";
+// import AppShellUser from "../pages/user/logged/Index";
 import { ErrorPage } from "../pages/error/Index";
 
 const RenderRoutes = () => {
@@ -20,7 +20,7 @@ const RenderRoutes = () => {
           path="/loggedUser"
           element={
             <ProtectedRoute>
-              <AppShellUser />
+              <Home />
             </ProtectedRoute>
           }></Route>
 
