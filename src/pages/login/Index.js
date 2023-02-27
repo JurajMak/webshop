@@ -12,7 +12,6 @@ const Login = (props) => {
     email: "",
     password: "",
   });
-  const [opened, setOpened] = useState(false);
 
   const navigate = useNavigate();
   // const { signIn, setUser, user } = React.useContext(AuthContext);
