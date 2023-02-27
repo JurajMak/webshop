@@ -6,6 +6,7 @@ import UserLogin from "../pages/login/Index";
 import ProtectedRoute from "../pages/protected/Index";
 import RegisterForm from "../pages/register/Index";
 import AppShellUser from "../pages/user/logged/Index";
+import { ErrorPage } from "../pages/error/Index";
 
 const RenderRoutes = () => {
   return (
@@ -22,6 +23,8 @@ const RenderRoutes = () => {
               <AppShellUser />
             </ProtectedRoute>
           }></Route>
+
+        <Route path="*" element={<ErrorPage />} />
       </Routes>
     </BrowserRouter>
   );
