@@ -36,11 +36,11 @@ const useStyles = createStyles((theme) => ({
 }));
 
 export function HeaderTabs(props) {
-  const cartItems = JSON.parse(localStorage.getItem("cart") || "[]");
   const { classes, theme } = useStyles();
   const [opened, setOpened] = useState(false);
   const navigate = useNavigate();
   const { user, setUser } = useContext(AuthContext);
+  const cartItems = JSON.parse(localStorage.getItem(`${props.id}`) || "[]");
   const [storageData, setStoragedData] = useState([cartItems]);
 
   const { title, price, quantity, style, id } = storageData;
@@ -106,7 +106,7 @@ export function HeaderTabs(props) {
           >
             {/* Drawer content */}
             <DrawerWrapper>
-              <ShoppingItem />
+              <ShoppingItem data={storageData} />
               {/* <Button onClick={deleteAll}>Delete</Button> */}
               {user ? <Button>Checkout</Button> : ""}
             </DrawerWrapper>

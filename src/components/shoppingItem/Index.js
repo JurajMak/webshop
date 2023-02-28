@@ -59,10 +59,10 @@ const useStyles = createStyles((theme) => ({
   },
 }));
 
-const ShoppingItem = (props) => {
+const ShoppingItem = ({ data }) => {
   const { classes } = useStyles();
 
-  console.log(props);
+  console.log("shpITm", data);
 
   return (
     <Wrapper>
