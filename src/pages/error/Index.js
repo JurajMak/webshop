@@ -60,7 +60,7 @@ export function ErrorPage() {
     if (!user) {
       navigate("/");
     } else {
-      navigate("/loggedUser");
+      navigate("/login/user");
     }
   };
 
@@ -72,7 +72,8 @@ export function ErrorPage() {
         color="dimmed"
         size="lg"
         align="center"
-        className={classes.description}>
+        className={classes.description}
+      >
         Unfortunately, this is only a 404 page. You may have mistyped the
         address, or the page has been moved to another URL.
       </Text>

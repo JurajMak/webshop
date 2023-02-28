@@ -17,12 +17,13 @@ const RenderRoutes = () => {
         <Route path="/login" element={<UserLogin />} />
         <Route path="/register" element={<RegisterForm />} />
         <Route
-          path="/loggedUser"
+          path="/login/user"
           element={
             <ProtectedRoute>
               <Home />
             </ProtectedRoute>
-          }></Route>
+          }
+        ></Route>
 
         <Route path="*" element={<ErrorPage />} />
       </Routes>
