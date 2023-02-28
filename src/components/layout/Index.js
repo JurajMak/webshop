@@ -18,6 +18,7 @@ export default function AppShellLayout() {
   const theme = useMantineTheme();
   const [opened, setOpened] = useState(false);
   const { data } = React.useContext(AuthContext);
+  const [query, setQuery] = useState("");
 
   return (
     <AppShell
@@ -36,9 +37,29 @@ export default function AppShellLayout() {
           p="md"
           hiddenBreakpoint="sm"
           hidden={!opened}
-          width={{ sm: 200, lg: 300 }}>
+          width={{ sm: 200, lg: 300 }}
+        >
           <Text>Search</Text>
-          <InputWithButton></InputWithButton>
+          <InputWithButton
+            onChange={(event) => setQuery(event.target.value)}
+          ></InputWithButton>
+          {data
+            .filter((post) => {
+              if (query === "") {
+                return "";
+              } else if (
+                post.title.toLowerCase().includes(query.toLowerCase())
+              ) {
+                return post;
+              }
+            })
+            .map((post, index) => (
+              <div key={index}>
+                <p>
+                  {post.title}, ${post.price}.
+                </p>
+              </div>
+            ))}
         </Navbar>
       }
       footer={
@@ -46,7 +67,8 @@ export default function AppShellLayout() {
           Application footer
         </Footer>
       }
-      header={<HeaderTabs />}>
+      header={<HeaderTabs />}
+    >
       <Wrapper>
         {data?.map((item, index) => {
           return (
@@ -59,3 +81,11 @@ export default function AppShellLayout() {
     </AppShell>
   );
 }
+
+// {data
+//   ?.filter((item) => {
+//     if (selectedSize) {
+//       return item.availableSizes.includes(selectedSize);
+//     }
+//     return item;
+//   })

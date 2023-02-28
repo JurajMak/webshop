@@ -58,15 +58,6 @@ const AuthProvider = ({ children }) => {
     data,
   };
 
-  // const initSession = async () => {
-  //   const { session } = await supabase.auth.getSession();
-  //   console.log("session", session);
-  // };
-
-  // React.useEffect(() => {
-  //   initSession();
-  // }, []);
-
   React.useEffect(() => {
     supabase.auth.getSession().then(({ data }) => {
       console.log(data);
@@ -99,7 +90,11 @@ const AuthProvider = ({ children }) => {
       });
   }, []);
 
-  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
+  return (
+    <AuthContext.Provider value={value}>
+      {!isLoading && children}
+    </AuthContext.Provider>
+  );
 };
 
 export default AuthProvider;

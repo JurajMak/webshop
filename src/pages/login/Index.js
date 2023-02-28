@@ -16,6 +16,7 @@ import { useForm } from "@mantine/form";
 import React, { useState } from "react";
 import { Form, StyledButton, Div, TitleHeader } from "./Styles";
 import { AuthContext } from "../../contexts/Index";
+import Image from "../../assets/home.jpg";
 
 const useStyles = createStyles((theme) => ({
   wrapper: {
@@ -23,6 +24,8 @@ const useStyles = createStyles((theme) => ({
     backgroundSize: "cover",
     backgroundImage:
       "url(https://images.unsplash.com/photo-1484242857719-4b9144542727?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1280&q=80)",
+
+    // `url(${Image})`,
   },
 
   form: {
@@ -81,7 +84,7 @@ export function UserLogin() {
     });
     if (data) {
       setUser(data.user);
-      navigate("/loggedUser");
+      navigate("/login/user");
     }
     console.log(data.user);
   };
@@ -118,7 +121,8 @@ export function UserLogin() {
             <ActionIcon
               onClick={() =>
                 type === "text" ? settype("password") : settype("text")
-              }>
+              }
+            >
               {type === "password" ? <IconEye /> : <IconEyeOff />}
             </ActionIcon>
           }

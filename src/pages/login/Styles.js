@@ -8,6 +8,7 @@ export const Form = styled.form`
   border: 1px solid black;
   border-radius: 8px;
   padding: 20px;
+  // background: white;
 `;
 
 export const Div = styled.div`

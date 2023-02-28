@@ -5,17 +5,12 @@ import {
   Group,
   Badge,
   createStyles,
-  Center,
   Button,
 } from "@mantine/core";
-import {
-  IconGasStation,
-  IconGauge,
-  IconManualGearbox,
-  IconUsers,
-} from "@tabler/icons";
-import React from "react";
+import { IconShirt } from "@tabler/icons";
+import React, { useState, useEffect, useContext } from "react";
 import { AuthContext } from "../../contexts/Index";
+
 const useStyles = createStyles((theme) => ({
   card: {
     backgroundColor:
@@ -57,16 +52,41 @@ const useStyles = createStyles((theme) => ({
   },
 }));
 
-// const mockdata = [
-//   { label: "4 passengers", icon: IconUsers },
-//   { label: "100 km/h in 4 seconds", icon: IconGauge },
-//   { label: "Automatic gearbox", icon: IconManualGearbox },
-//   { label: "Electric", icon: IconGasStation },
-// ];
-
-export function ProductsCard(props) {
+export function ProductsCard({ data }) {
   const { classes } = useStyles();
-  const { title, price, style, availableSizes } = props.data;
+  const { title, price, style, availableSizes, id } = data;
+  const [shoppingData, setShoppingData] = useState([]);
+  const [selectedItem, setSelectedItem] = useState("");
+
+  const handleAddCart = (e, item) => {
+    const isExists = shoppingData?.some((cart) => {
+      return cart.id === item.id;
+    });
+
+    if (isExists) {
+      console.log(shoppingData);
+      setShoppingData(
+        shoppingData?.map((cart) => {
+          if (cart.id === item.id) {
+            return { ...cart, quantity: cart.quantity + 1 };
+          }
+          return cart;
+        })
+      );
+    } else {
+      return setShoppingData([...shoppingData, { ...item, quantity: 1 }]);
+    }
+  };
+
+  const storageId = (id) => {
+    const isValid = shoppingData?.some((cart) => {
+      return cart.id == id;
+    });
+  };
+
+  useEffect(() => {
+    localStorage.setItem(`${id}`, JSON.stringify(shoppingData));
+  }, [shoppingData]);
 
   return (
     <Card withBorder radius="md" className={classes.card}>
@@ -78,7 +98,7 @@ export function ProductsCard(props) {
         <div>
           <Text weight={500}>{}</Text>
           <Text size="xs" color="dimmed">
-            {style}
+            {title}
           </Text>
         </div>
         <Badge variant="outline">25% off</Badge>
@@ -90,7 +110,7 @@ export function ProductsCard(props) {
         </Text>
 
         <Group spacing={8} mb={-8}>
-          {availableSizes.join("/")}
+          <IconShirt /> {availableSizes.join("/")}
         </Group>
       </Card.Section>
 
@@ -109,8 +129,12 @@ export function ProductsCard(props) {
             ></Text>
           </div>
 
-          <Button radius="xl" style={{ flex: 1 }}>
-            Buy
+          <Button
+            radius="xl"
+            style={{ flex: 1 }}
+            onClick={(e) => handleAddCart(e, data)}
+          >
+            Add to cart
           </Button>
         </Group>
       </Card.Section>

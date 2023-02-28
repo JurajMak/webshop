@@ -6,12 +6,14 @@ import {
   Box,
   Drawer,
 } from "@mantine/core";
-import { MantineLogo } from "@mantine/ds";
+
 import { useNavigate } from "react-router-dom";
-import React, { useContext, useState } from "react";
-// import { ImageLogo, CartBtn } from "./Styles";
+import React, { useContext, useState, useEffect } from "react";
 import { AuthContext } from "../../contexts/Index";
 import { supabase } from "../../config/Supabase";
+import { IconShoppingCart } from "@tabler/icons";
+import ShoppingItem from "../shoppingItem/Index";
+import { DrawerWrapper } from "./Styles";
 
 const useStyles = createStyles((theme) => ({
   link: {
@@ -33,11 +35,15 @@ const useStyles = createStyles((theme) => ({
   },
 }));
 
-export function HeaderTabs() {
+export function HeaderTabs(props) {
+  const cartItems = JSON.parse(localStorage.getItem("cart") || "[]");
   const { classes, theme } = useStyles();
   const [opened, setOpened] = useState(false);
   const navigate = useNavigate();
   const { user, setUser } = useContext(AuthContext);
+  const [storageData, setStoragedData] = useState([cartItems]);
+
+  const { title, price, quantity, style, id } = storageData;
 
   const returnHome = async () => {
     navigate("/");
@@ -59,42 +65,66 @@ export function HeaderTabs() {
     }
   };
 
+  // useEffect(() => {
+  //   const items = JSON.parse(localStorage.getItem("cart"));
+  //   if (items) {
+  //     setStoragedData(items);
+  //   }
+  // }, []);
+
+  const handleDeleteItem = (e, id) => {
+    setStoragedData(
+      storageData?.filter((item) => {
+        if (item.id !== id) {
+          return item;
+        }
+      })
+    );
+  };
+
+  const deleteAll = () => {
+    localStorage.clear();
+  };
+
+  console.log("head", storageData);
   return (
     <Box>
       <Header height={60} px="md">
         <Group position="apart" sx={{ height: "100%" }}>
-          {/* <MantineLogo size={30} /> */}
-          Application Logo
+          Application Name
           <Group
             sx={{ height: "100%" }}
             spacing={0}
-            className={classes.hiddenMobile}>
-            <a href="#" className={classes.link} onClick={returnHome}>
-              Home
-            </a>
-
-            <a href="#" className={classes.link}>
-              Products
-            </a>
-          </Group>
+            className={classes.hiddenMobile}
+          ></Group>
           <Drawer
             opened={opened}
             onClose={() => setOpened(false)}
-            title="Cart"
+            title="Shopping Cart"
             padding="xl"
-            size="xl">
+            size="xl"
+          >
             {/* Drawer content */}
-            {user ? <Button>Checkout</Button> : ""}
+            <DrawerWrapper>
+              <ShoppingItem />
+              {/* <Button onClick={deleteAll}>Delete</Button> */}
+              {user ? <Button>Checkout</Button> : ""}
+            </DrawerWrapper>
           </Drawer>
           {user ? (
             <Group className={classes.hiddenMobile}>
               Welcome {user.email} !
-              <Button onClick={() => setOpened(true)}>Cart</Button>
+              <Button onClick={() => setOpened(true)}>
+                {" "}
+                <IconShoppingCart size={25} />
+              </Button>
               <Button onClick={signOut}>Logout</Button>
             </Group>
           ) : (
             <Group className={classes.hiddenMobile}>
-              <Button onClick={() => setOpened(true)}>Cart</Button>
+              <Button onClick={() => setOpened(true)}>
+                <IconShoppingCart size={25} />
+              </Button>
               <Button variant="default" onClick={navigateLogin}>
                 Log in
               </Button>
@@ -108,11 +138,3 @@ export function HeaderTabs() {
 }
 
 export default HeaderTabs;
-
-//  <Group className={classes.hiddenMobile}>
-//       <Button onClick={() => setOpened(true)}>Cart</Button>
-//       <Button variant="default" onClick={navigateLogin}>
-//         Log in
-//       </Button>
-//       <Button onClick={navigateRegister}>Sign up</Button>
-//     </Group>

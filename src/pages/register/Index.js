@@ -70,7 +70,7 @@ const RegisterForm = () => {
       password,
     });
     if (data) {
-      navigate("/loggedUser");
+      navigate("/login");
     }
     console.log(form);
   };
@@ -90,7 +90,6 @@ const RegisterForm = () => {
         <TextInput
           label="First Name"
           placeholder="Enter your first name"
-          withAsterisk
           icon={<IconAt size={14} />}
           {...form.getInputProps("first_name")}
           value={first_name}
@@ -98,7 +97,6 @@ const RegisterForm = () => {
         <TextInput
           label="Last Name"
           placeholder="Enter your last name"
-          withAsterisk
           icon={<IconAt size={14} />}
           {...form.getInputProps("last_name")}
           value={last_name}
@@ -122,7 +120,8 @@ const RegisterForm = () => {
             <ActionIcon
               onClick={() =>
                 type === "text" ? settype("password") : settype("text")
-              }>
+              }
+            >
               {type === "password" ? <IconEye /> : <IconEyeOff />}
             </ActionIcon>
           }
