@@ -55,9 +55,7 @@ const useStyles = createStyles((theme) => ({
 export function ProductsCard({ data }) {
   const { classes } = useStyles();
   const { title, price, style, availableSizes, id } = data;
-  // const cartItems = JSON.parse(localStorage.getItem(`cart`) || "[]");
   const [shoppingData, setShoppingData] = useState([]);
-  const [selectedItem, setSelectedItem] = useState("");
 
   const handleAddCart = (e, item) => {
     const isExists = shoppingData?.some((cart) => {
@@ -68,27 +66,34 @@ export function ProductsCard({ data }) {
       setShoppingData(
         shoppingData?.map((cart) => {
           if (cart.id === item.id) {
-            return { ...cart, quantity: cart.quantity + 1 };
+            const updatedItem = { ...cart, quantity: cart.quantity + 1 };
+            localStorage.setItem(
+              `shoppingData_${item.id}`,
+              JSON.stringify(updatedItem)
+            );
+            return updatedItem;
           }
           return cart;
         })
       );
     } else {
-      return setShoppingData([...shoppingData, { ...item, quantity: 1 }]);
+      const newItem = { ...item, quantity: 1 };
+      localStorage.setItem(`shoppingData_${item.id}`, JSON.stringify(newItem));
+      setShoppingData([...shoppingData, newItem]);
     }
   };
 
   useEffect(() => {
-    localStorage.setItem(`shoppingData`, JSON.stringify(shoppingData));
-  }, [shoppingData]);
-
-  // useEffect(() => {
-  //   const mergedData = [
-  //     ...cartItems,
-  //     ...shoppingData.filter((item) => !cartItems.includes(item.id)),
-  //   ];
-  //   localStorage.setItem(`cart`, JSON.stringify(mergedData));
-  // }, [shoppingData, cartItems]);
+    const savedData = [];
+    for (let i = 0; i < localStorage.length; i++) {
+      const key = localStorage.key(i);
+      if (key.includes("shoppingData_")) {
+        const item = JSON.parse(localStorage.getItem(key));
+        savedData.push(item);
+      }
+    }
+    setShoppingData(savedData);
+  }, []);
 
   return (
     <Card withBorder radius="md" className={classes.card}>

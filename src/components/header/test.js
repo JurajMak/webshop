@@ -35,15 +35,13 @@ const useStyles = createStyles((theme) => ({
   },
 }));
 
-export function HeaderTabs(props) {
+export function HeaderTabs() {
   const { classes, theme } = useStyles();
   const [opened, setOpened] = useState(false);
   const navigate = useNavigate();
   const { user, setUser, data } = useContext(AuthContext);
-  const cartItems = JSON.parse(localStorage.getItem(`shoppingData`) || "[]");
-  const [storageData, setStoragedData] = useState(cartItems);
-
-  const { title, price, quantity, style, id } = storageData;
+  const cartItems = JSON.parse(localStorage.getItem(`shoppingData_4`) || "[]");
+  const [storageData, setStorageData] = useState(cartItems);
 
   const returnHome = async () => {
     navigate("/");
@@ -65,21 +63,17 @@ export function HeaderTabs(props) {
     }
   };
 
-  // useEffect(() => {
-  //   const items = JSON.parse(localStorage.getItem("cart"));
-  //   if (items) {
-  //     setStoragedData(items);
-  //   }
-  // }, []);
   useEffect(() => {
-    const storedShoppingData = JSON.parse(localStorage.getItem("shoppingData"));
+    const storedShoppingData = JSON.parse(
+      localStorage.getItem(`shoppingData_4`)
+    );
     if (storedShoppingData) {
-      setStoragedData(storedShoppingData);
+      setStorageData(storedShoppingData);
     }
   }, []);
 
   const handleDeleteItem = (e, id) => {
-    setStoragedData(
+    setStorageData(
       storageData?.filter((item) => {
         if (item.id !== id) {
           return item;
@@ -92,7 +86,7 @@ export function HeaderTabs(props) {
     localStorage.clear();
   };
 
-  console.log("head", props);
+  console.log("head", storageData);
   return (
     <Box>
       <Header height={60} px="md">
@@ -110,9 +104,9 @@ export function HeaderTabs(props) {
             size="xl">
             {/* Drawer content */}
             <DrawerWrapper>
-              {storageData?.map((item) => {
+              {/* {storageData?.map((item) => {
                 return <ShoppingItem key={item.id} data={item} />;
-              })}
+              })} */}
 
               {/* <Button onClick={deleteAll}>Delete</Button> */}
               {user ? <Button>Checkout</Button> : ""}

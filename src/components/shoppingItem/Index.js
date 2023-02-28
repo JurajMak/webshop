@@ -14,9 +14,11 @@ import {
   IconManualGearbox,
   IconUsers,
   IconShirt,
+  IconSquarePlus,
+  IconSquareMinus,
 } from "@tabler/icons";
 import React, { useState, useEffect } from "react";
-import { Wrapper } from "./Styled";
+import { Wrapper, DivReducer, ButtonWrapper, Transparent } from "./Styled";
 
 const useStyles = createStyles((theme) => ({
   card: {
@@ -61,56 +63,64 @@ const useStyles = createStyles((theme) => ({
 
 const ShoppingItem = ({ data }) => {
   const { classes } = useStyles();
-
+  const { title, price, style, quantity, id, availableSizes } = data;
   console.log("shpITm", data);
 
   return (
     <Wrapper>
-      <Card withBorder radius="md" className={classes.card}>
-        <Card.Section className={classes.imageSection}>
-          <Image src="https://i.imgur.com/ZL52Q2D.png" alt="Tesla Model S" />
-        </Card.Section>
+      <DivReducer>
+        <Card withBorder radius="md" className={classes.card}>
+          <Card.Section className={classes.imageSection}>
+            <Image src="https://i.imgur.com/ZL52Q2D.png" alt="Tesla Model S" />
+          </Card.Section>
 
-        <Group position="apart" mt="md">
-          <div>
-            <Text weight={500}>{}</Text>
-            <Text size="xs" color="dimmed">
-              {/* {title} */}
-              Product
-            </Text>
-          </div>
-          <Badge variant="outline">25% off</Badge>
-        </Group>
-
-        <Card.Section className={classes.section} mt="md">
-          <Text fz="xs" color="dimmed" className={classes.label}>
-            Quantity:
-            {/* {quantity} */}
-          </Text>
-
-          <Group spacing={8} mb={-8}>
-            <IconShirt size={15} />
-          </Group>
-        </Card.Section>
-
-        <Card.Section className={classes.section}>
-          <Group spacing={30}>
+          <Group position="apart" mt="md">
             <div>
-              <Text size="xl" weight={700} sx={{ lineHeight: 1 }}>
-                $ 100
-                {/* {price * quantity} */}
+              <Text weight={500}>{}</Text>
+              <Text size="xs" color="dimmed">
+                {title}
+                Product
               </Text>
-              <Text
-                size="sm"
-                color="dimmed"
-                weight={500}
-                sx={{ lineHeight: 1 }}
-                mt={3}
-              ></Text>
             </div>
+            <Badge variant="outline">25% off</Badge>
           </Group>
-        </Card.Section>
-      </Card>
+
+          <Card.Section className={classes.section} mt="md">
+            <Text fz="xs" color="dimmed" className={classes.label}>
+              Quantity: {quantity}
+            </Text>
+
+            <Group spacing={8} mb={-8}>
+              <IconShirt size={15} />
+              {availableSizes.join("/")}
+            </Group>
+          </Card.Section>
+
+          <Card.Section className={classes.section}>
+            <Group spacing={30}>
+              <div>
+                <Text size="xl" weight={700} sx={{ lineHeight: 1 }}>
+                  $ {price * quantity}
+                </Text>
+                <Text
+                  size="sm"
+                  color="dimmed"
+                  weight={500}
+                  sx={{ lineHeight: 1 }}
+                  mt={3}></Text>
+              </div>
+            </Group>
+          </Card.Section>
+        </Card>
+      </DivReducer>
+      <ButtonWrapper>
+        <Button>
+          <IconSquarePlus size={50} />
+        </Button>
+        <Button>
+          <IconSquareMinus size={50} />
+        </Button>
+      </ButtonWrapper>
     </Wrapper>
   );
 };

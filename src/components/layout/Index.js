@@ -8,17 +8,19 @@ import {
   TextInput,
   Input,
 } from "@mantine/core";
-import ProductsCard from "../productCard/Index";
+// import ProductsCard from "../productCard/Index";
+import ProductsCard from "../productCard/test";
 import { Wrapper, ProductsWrapper } from "../../pages/home/Styles";
-import HeaderTabs from "../header/Index";
+// import HeaderTabs from "../header/Index";
 import { AuthContext } from "../../contexts/Index";
 import React from "react";
 import InputWithButton from "../search/Index";
+import HeaderTabs from "../header/test";
 export default function AppShellLayout() {
   const theme = useMantineTheme();
   const [opened, setOpened] = useState(false);
   const { data } = React.useContext(AuthContext);
-  const [query, setQuery] = useState("");
+  const [search, setSearch] = useState("");
 
   return (
     <AppShell
@@ -37,26 +39,26 @@ export default function AppShellLayout() {
           p="md"
           hiddenBreakpoint="sm"
           hidden={!opened}
-          width={{ sm: 200, lg: 300 }}
-        >
+          width={{ sm: 200, lg: 300 }}>
           <Text>Search</Text>
           <InputWithButton
-            onChange={(event) => setQuery(event.target.value)}
-          ></InputWithButton>
+            onChange={(e) => setSearch(e.target.value)}
+            value={search}></InputWithButton>
+
           {data
-            .filter((post) => {
-              if (query === "") {
+            .filter((item) => {
+              if (search === "") {
                 return "";
               } else if (
-                post.title.toLowerCase().includes(query.toLowerCase())
+                item.title.toLowerCase().includes(search.toLowerCase())
               ) {
-                return post;
+                return item;
               }
             })
-            .map((post, index) => (
+            .map((item, index) => (
               <div key={index}>
                 <p>
-                  {post.title}, ${post.price}.
+                  {item.title}, ${item.price}.
                 </p>
               </div>
             ))}
@@ -67,8 +69,7 @@ export default function AppShellLayout() {
           Application footer
         </Footer>
       }
-      header={<HeaderTabs />}
-    >
+      header={<HeaderTabs />}>
       <Wrapper>
         {data?.map((item, index) => {
           return (
@@ -81,11 +82,3 @@ export default function AppShellLayout() {
     </AppShell>
   );
 }
-
-// {data
-//   ?.filter((item) => {
-//     if (selectedSize) {
-//       return item.availableSizes.includes(selectedSize);
-//     }
-//     return item;
-//   })
