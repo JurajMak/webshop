@@ -29,3 +29,15 @@ export const Shopping = styled.div`
     display: none;
   }
 `;
+
+export const SelectedItems = styled.div`
+  border-radius: 50%;
+  position: absolute;
+  background-color: gold;
+  font-size: 15px;
+  min-width: 20px;
+  min-height: 20px;
+  text-align: center;
+  top: 30px;
+  right: 260px;
+`;

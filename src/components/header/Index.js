@@ -13,7 +13,13 @@ import { AuthContext } from "../../contexts/Index";
 import { supabase } from "../../config/Supabase";
 import { IconShoppingCart } from "@tabler/icons";
 import ShoppingItem from "../shoppingItem/Index";
-import { DrawerWrapper, DrawerSlider, CheckoutBtn, Shopping } from "./Styles";
+import {
+  DrawerWrapper,
+  DrawerSlider,
+  CheckoutBtn,
+  Shopping,
+  SelectedItems,
+} from "./Styles";
 
 const useStyles = createStyles((theme) => ({
   link: {
@@ -119,6 +125,11 @@ export function HeaderTabs({ data, onRemove, onDelete, onQuantity }) {
                 Log in
               </Button>
               <Button onClick={navigateRegister}>Sign up</Button>
+              {data.length < 1 ? (
+                ""
+              ) : (
+                <SelectedItems>{data.length}</SelectedItems>
+              )}
             </Group>
           )}
         </Group>
