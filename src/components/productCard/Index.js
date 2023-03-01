@@ -52,43 +52,9 @@ const useStyles = createStyles((theme) => ({
   },
 }));
 
-export function ProductsCard({ data }) {
+export function ProductsCard(props) {
   const { classes } = useStyles();
-  const { title, price, style, availableSizes, id } = data;
-  // const cartItems = JSON.parse(localStorage.getItem(`cart`) || "[]");
-  const [shoppingData, setShoppingData] = useState([]);
-  const [selectedItem, setSelectedItem] = useState("");
-
-  const handleAddCart = (e, item) => {
-    const isExists = shoppingData?.some((cart) => {
-      return cart.id === item.id;
-    });
-
-    if (isExists) {
-      setShoppingData(
-        shoppingData?.map((cart) => {
-          if (cart.id === item.id) {
-            return { ...cart, quantity: cart.quantity + 1 };
-          }
-          return cart;
-        })
-      );
-    } else {
-      return setShoppingData([...shoppingData, { ...item, quantity: 1 }]);
-    }
-  };
-
-  useEffect(() => {
-    localStorage.setItem(`shoppingData`, JSON.stringify(shoppingData));
-  }, [shoppingData]);
-
-  // useEffect(() => {
-  //   const mergedData = [
-  //     ...cartItems,
-  //     ...shoppingData.filter((item) => !cartItems.includes(item.id)),
-  //   ];
-  //   localStorage.setItem(`cart`, JSON.stringify(mergedData));
-  // }, [shoppingData, cartItems]);
+  const { title, price, style, availableSizes, id } = props.data;
 
   return (
     <Card withBorder radius="md" className={classes.card}>
@@ -112,7 +78,8 @@ export function ProductsCard({ data }) {
         </Text>
 
         <Group spacing={8} mb={-8}>
-          <IconShirt /> {availableSizes.join("/")}
+          <IconShirt />
+          {/* {availableSizes.join("/")} */}
         </Group>
       </Card.Section>
 
@@ -127,13 +94,11 @@ export function ProductsCard({ data }) {
               color="dimmed"
               weight={500}
               sx={{ lineHeight: 1 }}
-              mt={3}></Text>
+              mt={3}
+            ></Text>
           </div>
 
-          <Button
-            radius="xl"
-            style={{ flex: 1 }}
-            onClick={(e) => handleAddCart(e, data)}>
+          <Button radius="xl" style={{ flex: 1 }} onClick={props.onClick}>
             Add to cart
           </Button>
         </Group>

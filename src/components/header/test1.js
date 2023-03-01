@@ -13,7 +13,7 @@ import { AuthContext } from "../../contexts/Index";
 import { supabase } from "../../config/Supabase";
 import { IconShoppingCart } from "@tabler/icons";
 import ShoppingItem from "../shoppingItem/Index";
-import { DrawerWrapper, DrawerSlider, CheckoutBtn } from "./Styles";
+import { DrawerWrapper } from "./Styles";
 
 const useStyles = createStyles((theme) => ({
   link: {
@@ -35,13 +35,17 @@ const useStyles = createStyles((theme) => ({
   },
 }));
 
-export function HeaderTabs(props) {
+export function HeaderTabs() {
   const { classes } = useStyles();
   const [opened, setOpened] = useState(false);
   const navigate = useNavigate();
   const { user, setUser, data, filterData } = useContext(AuthContext);
   // const cartItems = JSON.parse(localStorage.getItem(`shoppingData`) || "[]");
   // const [storageData, setStoragedData] = useState(cartItems);
+
+  // const returnHome = async () => {
+  //   navigate("/");
+  // };
 
   const navigateLogin = async () => {
     navigate("/login");
@@ -66,13 +70,15 @@ export function HeaderTabs(props) {
   //   }
   // }, []);
 
-  const sumPrice = (item) => {
-    return item
-      .reduce((acc, cart) => {
-        return cart.quantity * cart.price + acc;
-      }, 0)
-      .toFixed(2);
-  };
+  // const handleDeleteItem = (e, id) => {
+  //   setStoragedData(
+  //     storageData?.filter((item) => {
+  //       if (item.id !== id) {
+  //         return item;
+  //       }
+  //     })
+  //   );
+  // };
 
   return (
     <Box>
@@ -84,44 +90,19 @@ export function HeaderTabs(props) {
             spacing={0}
             className={classes.hiddenMobile}
           ></Group>
-          <DrawerSlider
-            opened={opened}
-            onClose={() => setOpened(false)}
-            title="Shopping Cart"
-            padding="xl"
-            size="xl"
-          >
-            {/* Drawer content */}
-            <DrawerWrapper>
-              {props.data?.map((item) => {
-                return (
-                  <ShoppingItem
-                    key={item.id}
-                    data={item}
-                    onRemove={props.onRemove}
-                    onQuantity={props.onQuantity}
-                    onDelete={props.onDelete}
-                  />
-                );
-              })}
-
-              {/* <Button onClick={deleteAll}>Delete</Button> */}
-              <div>{user ? <CheckoutBtn>$ Checkout</CheckoutBtn> : ""}</div>
-            </DrawerWrapper>
-          </DrawerSlider>
           {user ? (
             <Group className={classes.hiddenMobile}>
               Welcome {user.email} !
-              <Button onClick={() => setOpened(true)}>
+              {/* <Button onClick={() => setOpened(true)}>
                 <IconShoppingCart size={25} />
-              </Button>
+              </Button> */}
               <Button onClick={signOut}>Logout</Button>
             </Group>
           ) : (
             <Group className={classes.hiddenMobile}>
-              <Button onClick={() => setOpened(true)}>
+              {/* <Button onClick={() => setOpened(true)}>
                 <IconShoppingCart size={25} />
-              </Button>
+              </Button> */}
               <Button variant="default" onClick={navigateLogin}>
                 Log in
               </Button>

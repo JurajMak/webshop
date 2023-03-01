@@ -7,18 +7,23 @@ import {
   createStyles,
   Center,
   Button,
+  UnstyledButton,
 } from "@mantine/core";
 import {
-  IconGasStation,
-  IconGauge,
-  IconManualGearbox,
-  IconUsers,
   IconShirt,
   IconSquarePlus,
   IconSquareMinus,
+  IconX,
 } from "@tabler/icons";
 import React, { useState, useEffect } from "react";
-import { Wrapper, DivReducer, ButtonWrapper, Transparent } from "./Styled";
+import {
+  Wrapper,
+  DivReducer,
+  ButtonWrapper,
+  Transparent,
+  ImageWrapper,
+  CardWrapper,
+} from "./Styled";
 
 const useStyles = createStyles((theme) => ({
   card: {
@@ -61,13 +66,14 @@ const useStyles = createStyles((theme) => ({
   },
 }));
 
-const ShoppingItem = ({ data }) => {
+const ShoppingItem = (props) => {
   const { classes } = useStyles();
-  const { title, price, style, quantity, id, availableSizes } = data;
-  console.log("shpITm", data);
+  // const { title, price, style, quantity, id, availableSizes } = data;
+  // console.log("shpITm", data);
+  const { title, price, style, quantity, id, availableSizes } = props.data;
 
   return (
-    <Wrapper>
+    <CardWrapper>
       <DivReducer>
         <Card withBorder radius="md" className={classes.card}>
           <Card.Section className={classes.imageSection}>
@@ -100,28 +106,32 @@ const ShoppingItem = ({ data }) => {
             <Group spacing={30}>
               <div>
                 <Text size="xl" weight={700} sx={{ lineHeight: 1 }}>
-                  $ {price * quantity}
+                  $ {price * quantity.toFixed(2)}
                 </Text>
                 <Text
                   size="sm"
                   color="dimmed"
                   weight={500}
                   sx={{ lineHeight: 1 }}
-                  mt={3}></Text>
+                  mt={3}
+                ></Text>
               </div>
             </Group>
           </Card.Section>
         </Card>
       </DivReducer>
       <ButtonWrapper>
-        <Button>
-          <IconSquarePlus size={50} />
-        </Button>
-        <Button>
-          <IconSquareMinus size={50} />
-        </Button>
+        <UnstyledButton onClick={(e) => props.onDelete(e, props.data.id)}>
+          <IconX size={30} />
+        </UnstyledButton>
+        <UnstyledButton onClick={(e) => props.onQuantity(e, props.data)}>
+          <IconSquarePlus size={30} />
+        </UnstyledButton>
+        <UnstyledButton onClick={(e) => props.onRemove(e, props.data)}>
+          <IconSquareMinus size={30} />
+        </UnstyledButton>
       </ButtonWrapper>
-    </Wrapper>
+    </CardWrapper>
   );
 };
 

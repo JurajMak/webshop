@@ -6,13 +6,17 @@ import {
   useMantineTheme,
   TextInput,
   Input,
+  Button,
+  Drawer,
 } from "@mantine/core";
 import ProductsCard from "../productCard/Index";
-import HeaderTabs from "../header/Index";
+import HeaderTabs from "../header/test1";
+import ShoppingItem from "../shoppingItem/Index";
+import { DrawerWrapper } from "../header/Styles";
 // import ProductsCard from "../productCard/test";
-// import HeaderTabs from "../header/test1";
+// import HeaderTabs from "../header/test";
 import { Wrapper, ProductsWrapper } from "../../pages/home/Styles";
-
+import { IconShoppingCart } from "@tabler/icons";
 import { AuthContext } from "../../contexts/Index";
 import React, { useState, useEffect, useContext } from "react";
 import InputWithButton from "../search/Index";
@@ -20,59 +24,32 @@ import InputWithButton from "../search/Index";
 export default function AppShellLayout() {
   const theme = useMantineTheme();
   const [opened, setOpened] = useState(false);
-  const { data } = React.useContext(AuthContext);
+  const { data, user } = React.useContext(AuthContext);
   const [search, setSearch] = useState("");
-  // const { title, price, style, availableSizes, id } = data;
+  const { title, price, style, availableSizes, id } = data;
   const [shoppingData, setShoppingData] = useState([]);
+  const [selectedItem, setSelectedItem] = useState("");
+  const { filterData, setFilterData } = useContext(AuthContext);
 
-  const handleAddCart = (e, item) => {
-    console.log("item", item);
-    const isExists = shoppingData?.some((cart) => {
-      return cart.id === item.id;
-    });
+  // const handleAddCart = (e, item) => {
+  //   const isExists = shoppingData?.some((cart) => {
+  //     return cart.id === item.id;
+  //   });
 
-    if (isExists) {
-      setShoppingData(
-        shoppingData?.map((cart) => {
-          if (cart.id === item.id) {
-            return { ...cart, quantity: cart.quantity + 1 };
-          }
-          return cart;
-        })
-      );
-    } else {
-      return setShoppingData([...shoppingData, { ...item, quantity: 1 }]);
-    }
-  };
+  //   if (isExists) {
+  //     setShoppingData(
+  //       shoppingData?.map((cart) => {
+  //         if (cart.id === item.id) {
+  //           return { ...cart, quantity: cart.quantity + 1 };
+  //         }
+  //         return cart;
+  //       })
+  //     );
+  //   } else {
+  //     return setShoppingData([...shoppingData, { ...item, quantity: 1 }]);
+  //   }
+  // };
 
-  const handleRemoveQuantity = (e, item) => {
-    const isExists = shoppingData?.some((cart) => {
-      return cart.id === item.id;
-    });
-
-    if (isExists) {
-      return setShoppingData(
-        shoppingData?.map((cart) => {
-          if (cart.id === item.id && cart.quantity > 1) {
-            return { ...cart, quantity: cart.quantity - 1 };
-          }
-          return cart;
-        })
-      );
-    }
-  };
-
-  const handleDeleteItem = (e, id) => {
-    setShoppingData(
-      shoppingData?.filter((item) => {
-        if (item.id !== id) {
-          return item;
-        }
-      })
-    );
-  };
-
-  console.log(shoppingData);
   return (
     <AppShell
       styles={{
@@ -97,6 +74,7 @@ export default function AppShellLayout() {
             onChange={(e) => setSearch(e.target.value)}
             value={search}
           ></InputWithButton>
+
           {data
             .filter((item) => {
               if (search === "") {
@@ -121,16 +99,29 @@ export default function AppShellLayout() {
           Application footer
         </Footer>
       }
-      header={
-        <HeaderTabs
-          data={shoppingData}
-          onDelete={handleDeleteItem}
-          onQuantity={handleAddCart}
-          onRemove={handleRemoveQuantity}
-        />
-      }
+      header={<HeaderTabs data={data} />}
     >
       <Wrapper>
+        <Drawer
+          opened={opened}
+          onClose={() => setOpened(false)}
+          title="Shopping Cart"
+          padding="xl"
+          size="xl"
+        >
+          {/* Drawer content */}
+          <DrawerWrapper>
+            {shoppingData?.map((item) => {
+              return <ShoppingItem key={item.id} data={item} />;
+            })}
+
+            {/* <Button onClick={deleteAll}>Delete</Button> */}
+            {user ? <Button>Checkout</Button> : ""}
+          </DrawerWrapper>
+        </Drawer>
+        <Button onClick={() => setOpened(true)}>
+          <IconShoppingCart size={25} />
+        </Button>
         {data
           ?.filter((item) => {
             if (search === "") {
@@ -141,10 +132,11 @@ export default function AppShellLayout() {
               return item;
             }
           })
-          .map((item) => {
+          .map((item, index) => {
             return (
-              <ProductsWrapper key={item.id}>
+              <ProductsWrapper key={index}>
                 <ProductsCard
+                  key={item}
                   data={item}
                   onClick={(e) => handleAddCart(e, item)}
                 />
