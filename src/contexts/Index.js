@@ -10,7 +10,6 @@ const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [filterData, setFilterData] = useState([]);
-  const [shoppingData, setShoppingData] = useState([]);
 
   const signIn = async ({ email, password }) => {
     const { data, error } = await supabase.auth.signInWithPassword({
@@ -58,8 +57,8 @@ const AuthProvider = ({ children }) => {
     user,
     setUser,
     data,
-    filterData,
-    setFilterData,
+    // filterData,
+    // setFilterData,
   };
 
   React.useEffect(() => {

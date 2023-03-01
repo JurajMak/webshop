@@ -13,7 +13,6 @@ export const DrawerSlider = styled(Drawer)`
     display: none;
   }
   // display: grid;
-  // grid-template-rows: 0% 90% 10%;
 `;
 
 export const DrawerWrapper = styled.div``;

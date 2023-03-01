@@ -16,7 +16,7 @@ import { useForm } from "@mantine/form";
 import React, { useState } from "react";
 import { Form, StyledButton, Div, TitleHeader } from "./Styles";
 import { AuthContext } from "../../contexts/Index";
-import Image from "../../assets/home.jpg";
+import Image from "../../assets/login.jpg";
 
 const useStyles = createStyles((theme) => ({
   wrapper: {
