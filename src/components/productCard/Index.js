@@ -52,9 +52,9 @@ const useStyles = createStyles((theme) => ({
   },
 }));
 
-export function ProductsCard(props) {
+export function ProductsCard({ data, onClick }) {
   const { classes } = useStyles();
-  const { title, price, style, availableSizes, id } = props.data;
+  const { title, price, style, availableSizes, id } = data;
 
   return (
     <Card withBorder radius="md" className={classes.card}>
@@ -79,7 +79,7 @@ export function ProductsCard(props) {
 
         <Group spacing={8} mb={-8}>
           <IconShirt />
-          {/* {availableSizes.join("/")} */}
+          {availableSizes.join("/")}
         </Group>
       </Card.Section>
 
@@ -94,11 +94,10 @@ export function ProductsCard(props) {
               color="dimmed"
               weight={500}
               sx={{ lineHeight: 1 }}
-              mt={3}
-            ></Text>
+              mt={3}></Text>
           </div>
 
-          <Button radius="xl" style={{ flex: 1 }} onClick={props.onClick}>
+          <Button radius="xl" style={{ flex: 1 }} onClick={onClick}>
             Add to cart
           </Button>
         </Group>

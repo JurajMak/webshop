@@ -66,11 +66,9 @@ const useStyles = createStyles((theme) => ({
   },
 }));
 
-const ShoppingItem = (props) => {
+const ShoppingItem = ({ data, onQuantity, onDelete, onRemove }) => {
   const { classes } = useStyles();
-  // const { title, price, style, quantity, id, availableSizes } = data;
-  // console.log("shpITm", data);
-  const { title, price, style, quantity, id, availableSizes } = props.data;
+  const { title, price, style, quantity, id, availableSizes } = data;
 
   return (
     <CardWrapper>
@@ -113,21 +111,20 @@ const ShoppingItem = (props) => {
                   color="dimmed"
                   weight={500}
                   sx={{ lineHeight: 1 }}
-                  mt={3}
-                ></Text>
+                  mt={3}></Text>
               </div>
             </Group>
           </Card.Section>
         </Card>
       </DivReducer>
       <ButtonWrapper>
-        <UnstyledButton onClick={(e) => props.onDelete(e, props.data.id)}>
+        <UnstyledButton onClick={(e) => onDelete(e, data.id)}>
           <IconX size={30} />
         </UnstyledButton>
-        <UnstyledButton onClick={(e) => props.onQuantity(e, props.data)}>
+        <UnstyledButton onClick={(e) => onQuantity(e, data)}>
           <IconSquarePlus size={30} />
         </UnstyledButton>
-        <UnstyledButton onClick={(e) => props.onRemove(e, props.data)}>
+        <UnstyledButton onClick={(e) => onRemove(e, data)}>
           <IconSquareMinus size={30} />
         </UnstyledButton>
       </ButtonWrapper>

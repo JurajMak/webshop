@@ -22,11 +22,29 @@ export default function AppShellLayout() {
   const [opened, setOpened] = useState(false);
   const { data } = React.useContext(AuthContext);
   const [search, setSearch] = useState("");
-  // const { title, price, style, availableSizes, id } = data;
   const [shoppingData, setShoppingData] = useState([]);
 
+  // const handleAddCart = (e, item) => {
+  //   console.log("item", item);
+  //   const isExists = shoppingData?.some((cart) => {
+  //     return cart.id === item.id;
+  //   });
+
+  //   if (isExists) {
+  //     setShoppingData(
+  //       shoppingData?.map((cart) => {
+  //         if (cart.id === item.id) {
+  //           return { ...cart, quantity: cart.quantity + 1 };
+  //         }
+  //         return cart;
+  //       })
+  //     );
+  //   } else {
+  //     return setShoppingData([...shoppingData, { ...item, quantity: 1 }]);
+  //   }
+  // };
+
   const handleAddCart = (e, item) => {
-    console.log("item", item);
     const isExists = shoppingData?.some((cart) => {
       return cart.id === item.id;
     });
@@ -35,13 +53,20 @@ export default function AppShellLayout() {
       setShoppingData(
         shoppingData?.map((cart) => {
           if (cart.id === item.id) {
-            return { ...cart, quantity: cart.quantity + 1 };
+            const updatedItem = { ...cart, quantity: cart.quantity + 1 };
+            localStorage.setItem(
+              `shoppingData_${item.id}`,
+              JSON.stringify(updatedItem)
+            );
+            return updatedItem;
           }
           return cart;
         })
       );
     } else {
-      return setShoppingData([...shoppingData, { ...item, quantity: 1 }]);
+      const newItem = { ...item, quantity: 1 };
+      localStorage.setItem(`shoppingData_${item.id}`, JSON.stringify(newItem));
+      setShoppingData([...shoppingData, newItem]);
     }
   };
 
@@ -63,14 +88,21 @@ export default function AppShellLayout() {
   };
 
   const handleDeleteItem = (e, id) => {
-    setShoppingData(
-      shoppingData?.filter((item) => {
-        if (item.id !== id) {
-          return item;
-        }
-      })
-    );
+    setShoppingData(shoppingData?.filter((item) => item.id !== id));
+    localStorage.removeItem(`shoppingData_${id}`);
   };
+
+  useEffect(() => {
+    const savedData = [];
+    for (let i = 0; i < localStorage.length; i++) {
+      const key = localStorage.key(i);
+      if (key.includes("shoppingData_")) {
+        const item = JSON.parse(localStorage.getItem(key));
+        savedData.push(item);
+      }
+    }
+    setShoppingData(savedData);
+  }, []);
 
   console.log(shoppingData);
   return (
@@ -90,13 +122,11 @@ export default function AppShellLayout() {
           p="md"
           hiddenBreakpoint="sm"
           hidden={!opened}
-          width={{ sm: 200, lg: 300 }}
-        >
+          width={{ sm: 200, lg: 300 }}>
           <Text>Search</Text>
           <InputWithButton
             onChange={(e) => setSearch(e.target.value)}
-            value={search}
-          ></InputWithButton>
+            value={search}></InputWithButton>
           {data
             .filter((item) => {
               if (search === "") {
@@ -128,8 +158,7 @@ export default function AppShellLayout() {
           onQuantity={handleAddCart}
           onRemove={handleRemoveQuantity}
         />
-      }
-    >
+      }>
       <Wrapper>
         {data
           ?.filter((item) => {
