@@ -9,8 +9,6 @@ import {
 } from "@mantine/core";
 import ProductsCard from "../productCard/Index";
 import HeaderTabs from "../header/Index";
-// import ProductsCard from "../productCard/test";
-// import HeaderTabs from "../header/test1";
 import { Wrapper, ProductsWrapper } from "../../pages/home/Styles";
 
 import { AuthContext } from "../../contexts/Index";
@@ -23,26 +21,6 @@ export default function AppShellLayout() {
   const { data } = React.useContext(AuthContext);
   const [search, setSearch] = useState("");
   const [shoppingData, setShoppingData] = useState([]);
-
-  // const handleAddCart = (e, item) => {
-  //   console.log("item", item);
-  //   const isExists = shoppingData?.some((cart) => {
-  //     return cart.id === item.id;
-  //   });
-
-  //   if (isExists) {
-  //     setShoppingData(
-  //       shoppingData?.map((cart) => {
-  //         if (cart.id === item.id) {
-  //           return { ...cart, quantity: cart.quantity + 1 };
-  //         }
-  //         return cart;
-  //       })
-  //     );
-  //   } else {
-  //     return setShoppingData([...shoppingData, { ...item, quantity: 1 }]);
-  //   }
-  // };
 
   const handleAddCart = (e, item) => {
     const isExists = shoppingData?.some((cart) => {

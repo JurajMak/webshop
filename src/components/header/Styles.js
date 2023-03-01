@@ -12,6 +12,8 @@ export const DrawerSlider = styled(Drawer)`
   ::-webkit-scrollbar {
     display: none;
   }
+  // display: grid;
+  // grid-template-rows: 0% 90% 10%;
 `;
 
 export const DrawerWrapper = styled.div``;
@@ -19,4 +21,12 @@ export const DrawerWrapper = styled.div``;
 export const CheckoutBtn = styled(Button)`
   width: 250px;
   margin-left: 90px;
+`;
+
+export const Shopping = styled.div`
+  overflow-y: scroll;
+  overflow-x: hidden;
+  ::-webkit-scrollbar {
+    display: none;
+  }
 `;

@@ -40,12 +40,6 @@ export function HeaderTabs() {
   const [opened, setOpened] = useState(false);
   const navigate = useNavigate();
   const { user, setUser, data, filterData } = useContext(AuthContext);
-  // const cartItems = JSON.parse(localStorage.getItem(`shoppingData`) || "[]");
-  // const [storageData, setStoragedData] = useState(cartItems);
-
-  // const returnHome = async () => {
-  //   navigate("/");
-  // };
 
   const navigateLogin = async () => {
     navigate("/login");
@@ -63,23 +57,6 @@ export function HeaderTabs() {
     }
   };
 
-  // useEffect(() => {
-  //   const storedShoppingData = JSON.parse(localStorage.getItem("shoppingData"));
-  //   if (storedShoppingData) {
-  //     setStoragedData(storedShoppingData);
-  //   }
-  // }, []);
-
-  // const handleDeleteItem = (e, id) => {
-  //   setStoragedData(
-  //     storageData?.filter((item) => {
-  //       if (item.id !== id) {
-  //         return item;
-  //       }
-  //     })
-  //   );
-  // };
-
   return (
     <Box>
       <Header height={60} px="md">
@@ -88,8 +65,7 @@ export function HeaderTabs() {
           <Group
             sx={{ height: "100%" }}
             spacing={0}
-            className={classes.hiddenMobile}
-          ></Group>
+            className={classes.hiddenMobile}></Group>
           {user ? (
             <Group className={classes.hiddenMobile}>
               Welcome {user.email} !
@@ -116,3 +92,18 @@ export function HeaderTabs() {
 }
 
 export default HeaderTabs;
+
+// const handleAddCart = (e, item) => {
+//   const key = `user_${user.email}_cart_${item.id}`;
+//   const data = localStorage.getItem(key);
+//   const cartItem = data ? JSON.parse(data) : { ...item, quantity: 0 };
+
+//   const updatedItem = { ...cartItem, quantity: cartItem.quantity + 1 };
+//   localStorage.setItem(key, JSON.stringify(updatedItem));
+//   setShoppingData([...shoppingData, updatedItem]);
+// };
+
+// const handleDeleteItem = (e, id) => {
+//   const key = `user_${user.email}_cart_${id}`;
+//   setShoppingData(shoppingData.filter((item) => item.id !== id));
+// };

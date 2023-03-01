@@ -69,12 +69,6 @@ export function UserLogin() {
   const [type, settype] = useState("password");
   const { email, password } = form;
 
-  // const handleSubmit = async (e) => {
-  //   const { email, password } = form.values;
-  //   form.setValues({ email: email, password: password });
-  //   console.log(form.values);
-  // };
-
   const handleSubmit = async (e) => {
     const { email, password } = form.values;
 
@@ -121,8 +115,7 @@ export function UserLogin() {
             <ActionIcon
               onClick={() =>
                 type === "text" ? settype("password") : settype("text")
-              }
-            >
+              }>
               {type === "password" ? <IconEye /> : <IconEyeOff />}
             </ActionIcon>
           }

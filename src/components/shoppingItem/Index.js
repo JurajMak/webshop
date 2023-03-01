@@ -69,7 +69,7 @@ const useStyles = createStyles((theme) => ({
 const ShoppingItem = ({ data, onQuantity, onDelete, onRemove }) => {
   const { classes } = useStyles();
   const { title, price, style, quantity, id, availableSizes } = data;
-
+  const sum = price * quantity;
   return (
     <CardWrapper>
       <DivReducer>
@@ -104,7 +104,7 @@ const ShoppingItem = ({ data, onQuantity, onDelete, onRemove }) => {
             <Group spacing={30}>
               <div>
                 <Text size="xl" weight={700} sx={{ lineHeight: 1 }}>
-                  $ {price * quantity.toFixed(2)}
+                  $ {sum.toFixed(2)}
                 </Text>
                 <Text
                   size="sm"

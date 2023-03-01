@@ -13,7 +13,7 @@ import { AuthContext } from "../../contexts/Index";
 import { supabase } from "../../config/Supabase";
 import { IconShoppingCart } from "@tabler/icons";
 import ShoppingItem from "../shoppingItem/Index";
-import { DrawerWrapper, DrawerSlider, CheckoutBtn } from "./Styles";
+import { DrawerWrapper, DrawerSlider, CheckoutBtn, Shopping } from "./Styles";
 
 const useStyles = createStyles((theme) => ({
   link: {
@@ -35,13 +35,11 @@ const useStyles = createStyles((theme) => ({
   },
 }));
 
-export function HeaderTabs(props) {
+export function HeaderTabs({ data, onRemove, onDelete, onQuantity }) {
   const { classes } = useStyles();
   const [opened, setOpened] = useState(false);
   const navigate = useNavigate();
-  const { user, setUser, data, filterData } = useContext(AuthContext);
-  // const cartItems = JSON.parse(localStorage.getItem(`shoppingData`) || "[]");
-  // const [storageData, setStoragedData] = useState(cartItems);
+  const { user, setUser, filterData } = useContext(AuthContext);
 
   const navigateLogin = async () => {
     navigate("/login");
@@ -59,13 +57,6 @@ export function HeaderTabs(props) {
     }
   };
 
-  // useEffect(() => {
-  //   const storedShoppingData = JSON.parse(localStorage.getItem("shoppingData"));
-  //   if (storedShoppingData) {
-  //     setStoragedData(storedShoppingData);
-  //   }
-  // }, []);
-
   const sumPrice = (item) => {
     return item
       .reduce((acc, cart) => {
@@ -73,7 +64,7 @@ export function HeaderTabs(props) {
       }, 0)
       .toFixed(2);
   };
-
+  console.log(data);
   return (
     <Box>
       <Header height={60} px="md">
@@ -82,31 +73,33 @@ export function HeaderTabs(props) {
           <Group
             sx={{ height: "100%" }}
             spacing={0}
-            className={classes.hiddenMobile}
-          ></Group>
+            className={classes.hiddenMobile}></Group>
           <DrawerSlider
             opened={opened}
             onClose={() => setOpened(false)}
             title="Shopping Cart"
             padding="xl"
-            size="xl"
-          >
+            size="xl">
             {/* Drawer content */}
-            <DrawerWrapper>
-              {props.data?.map((item) => {
-                return (
-                  <ShoppingItem
-                    key={item.id}
-                    data={item}
-                    onRemove={props.onRemove}
-                    onQuantity={props.onQuantity}
-                    onDelete={props.onDelete}
-                  />
-                );
-              })}
+            {data?.map((item) => {
+              return (
+                <ShoppingItem
+                  key={item.id}
+                  data={item}
+                  onRemove={onRemove}
+                  onQuantity={onQuantity}
+                  onDelete={onDelete}
+                />
+              );
+            })}
 
+            <DrawerWrapper>
+              <div>
+                <h5>Total:{sumPrice(data)}</h5>
+                <button>Pay</button>
+              </div>
               {/* <Button onClick={deleteAll}>Delete</Button> */}
-              <div>{user ? <CheckoutBtn>$ Checkout</CheckoutBtn> : ""}</div>
+              {user ? <CheckoutBtn>$ Checkout</CheckoutBtn> : ""}
             </DrawerWrapper>
           </DrawerSlider>
           {user ? (
