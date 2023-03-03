@@ -8,6 +8,7 @@ import {
   Center,
   Button,
   UnstyledButton,
+  ActionIcon,
 } from "@mantine/core";
 import {
   IconShirt,
@@ -23,7 +24,7 @@ import {
   Transparent,
   ImageWrapper,
   CardWrapper,
-} from "./Styled";
+} from "./Styles";
 
 const useStyles = createStyles((theme) => ({
   card: {
@@ -89,7 +90,7 @@ const ShoppingItem = ({ data, onQuantity, onDelete, onRemove }) => {
             <Badge variant="outline">25% off</Badge>
           </Group>
 
-          <Card.Section className={classes.section} mt="md">
+          <Card.Section className={classes.section} mt="xs">
             <Text fz="xs" color="dimmed" className={classes.label}>
               Quantity: {quantity}
             </Text>
@@ -111,25 +112,44 @@ const ShoppingItem = ({ data, onQuantity, onDelete, onRemove }) => {
                   color="dimmed"
                   weight={500}
                   sx={{ lineHeight: 1 }}
-                  mt={3}></Text>
+                  mt={3}
+                ></Text>
               </div>
             </Group>
           </Card.Section>
         </Card>
       </DivReducer>
       <ButtonWrapper>
-        <UnstyledButton onClick={(e) => onDelete(e, data.id)}>
+        <ActionIcon mt={20} ml={40} onClick={(e) => onDelete(e, data.id)}>
           <IconX size={30} />
-        </UnstyledButton>
-        <UnstyledButton onClick={(e) => onQuantity(e, data)}>
-          <IconSquarePlus size={30} />
-        </UnstyledButton>
-        <UnstyledButton onClick={(e) => onRemove(e, data)}>
-          <IconSquareMinus size={30} />
-        </UnstyledButton>
+        </ActionIcon>
+        <div style={{ display: "flex" }}>
+          <ActionIcon mb={80} onClick={(e) => onRemove(e, data)}>
+            <IconSquareMinus size={30} />
+          </ActionIcon>
+          <ActionIcon mb={80} onClick={(e) => onQuantity(e, data)}>
+            <IconSquarePlus size={30} />
+          </ActionIcon>
+        </div>
       </ButtonWrapper>
     </CardWrapper>
   );
 };
 
 export default ShoppingItem;
+
+{
+  /* <ButtonWrapper>
+<UnstyledButton mt={20} ml={40} onClick={(e) => onDelete(e, data.id)}>
+  <IconX size={30} />
+</UnstyledButton>
+<div>
+  <UnstyledButton mb={80} onClick={(e) => onRemove(e, data)}>
+    <IconSquareMinus size={30} />
+  </UnstyledButton>
+  <UnstyledButton mb={80} onClick={(e) => onQuantity(e, data)}>
+    <IconSquarePlus size={30} />
+  </UnstyledButton>
+</div>
+</ButtonWrapper> */
+}

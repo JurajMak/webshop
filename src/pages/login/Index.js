@@ -69,7 +69,7 @@ export function UserLogin() {
   const [type, settype] = useState("password");
   const { email, password } = form;
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async () => {
     const { email, password } = form.values;
 
     const data = await signIn({
@@ -78,9 +78,13 @@ export function UserLogin() {
     });
     if (data) {
       setUser(data.user);
-      navigate("/login/user");
+      navigate("/");
+      if (data.user.user_metadata.role === "admin") {
+        navigate("/admin");
+        return;
+      }
+      return;
     }
-    console.log(data.user);
   };
 
   const returnHome = async () => {
@@ -102,25 +106,26 @@ export function UserLogin() {
         <TextInput
           label="Email"
           placeholder="Enter your email"
+          value={email}
           icon={<IconAt size={14} />}
           {...form.getInputProps("email")}
-          value={email}
         />
 
         <TextInput
           type={type}
           label="Password"
           placeholder="************"
+          value={password}
           rightSection={
             <ActionIcon
               onClick={() =>
                 type === "text" ? settype("password") : settype("text")
-              }>
+              }
+            >
               {type === "password" ? <IconEye /> : <IconEyeOff />}
             </ActionIcon>
           }
           {...form.getInputProps("password")}
-          value={password}
         />
 
         <StyledButton type="submit">Login</StyledButton>

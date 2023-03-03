@@ -4,8 +4,7 @@ import {
   Footer,
   Text,
   useMantineTheme,
-  TextInput,
-  Input,
+  Checkbox,
 } from "@mantine/core";
 import ProductsCard from "../productCard/Index";
 import HeaderTabs from "../header/Index";
@@ -13,7 +12,7 @@ import { Wrapper, ProductsWrapper } from "../../pages/home/Styles";
 
 import { AuthContext } from "../../contexts/Index";
 import React, { useState, useEffect, useContext } from "react";
-import InputWithButton from "../search/Index";
+import SearchBar from "../search/Index";
 
 export default function AppShellLayout() {
   const theme = useMantineTheme();
@@ -21,6 +20,9 @@ export default function AppShellLayout() {
   const { data } = React.useContext(AuthContext);
   const [search, setSearch] = useState("");
   const [shoppingData, setShoppingData] = useState([]);
+  const [checkedSize, setCheckedSize] = useState(false);
+  const [checkedName, setCheckedName] = useState(false);
+  const [checkedPrice, setCheckedPrice] = useState(false);
 
   const handleAddCart = (e, item) => {
     const isExists = shoppingData?.some((cart) => {
@@ -70,6 +72,10 @@ export default function AppShellLayout() {
     localStorage.removeItem(`shoppingData_${id}`);
   };
 
+  const checked = () => {
+    setCheckedSize(!checkedSize);
+  };
+
   useEffect(() => {
     const savedData = [];
     for (let i = 0; i < localStorage.length; i++) {
@@ -82,7 +88,6 @@ export default function AppShellLayout() {
     setShoppingData(savedData);
   }, []);
 
-  console.log(shoppingData);
   return (
     <AppShell
       styles={{
@@ -100,28 +105,42 @@ export default function AppShellLayout() {
           p="md"
           hiddenBreakpoint="sm"
           hidden={!opened}
-          width={{ sm: 200, lg: 300 }}>
+          width={{ sm: 200, lg: 300 }}
+        >
           <Text>Search</Text>
-          <InputWithButton
+          <SearchBar
+            placeholder="Search products"
             onChange={(e) => setSearch(e.target.value)}
-            value={search}></InputWithButton>
-          {data
-            .filter((item) => {
-              if (search === "") {
-                return "";
-              } else if (
-                item.title.toLowerCase().includes(search.toLowerCase())
-              ) {
-                return item;
-              }
-            })
-            .map((item, index) => (
-              <div key={index}>
-                <p>
-                  {item.title}, ${item.price}.
-                </p>
-              </div>
-            ))}
+            // onClick={handleSearch}
+            value={search}
+          ></SearchBar>
+          <Checkbox.Group
+            orientation="vertical"
+            offset="md"
+            size="md"
+            spacing={70}
+            mt={70}
+            ml={30}
+          >
+            <Checkbox
+              value="category"
+              label="Size"
+              checked={checkedSize}
+              onClick={() => setCheckedSize(!checkedSize)}
+            />
+            <Checkbox
+              value="category2"
+              label="Price"
+              checked={checkedPrice}
+              onClick={() => setCheckedPrice(!checkedPrice)}
+            />
+            <Checkbox
+              value="category3"
+              label="Name"
+              checked={checkedName}
+              onClick={() => setCheckedName(!checkedName)}
+            />
+          </Checkbox.Group>
         </Navbar>
       }
       footer={
@@ -136,15 +155,21 @@ export default function AppShellLayout() {
           onQuantity={handleAddCart}
           onRemove={handleRemoveQuantity}
         />
-      }>
+      }
+    >
       <Wrapper>
         {data
           ?.filter((item) => {
             if (search === "") {
               return item;
-            } else if (
-              item.title.toLowerCase().includes(search.toLowerCase())
-            ) {
+            }
+            if (item.title.toLowerCase().includes(search.toLowerCase())) {
+              return item;
+            }
+            if (search == item.price && checkedPrice) {
+              return item;
+            }
+            if (search.toUpperCase() == item.availableSizes && checkedSize) {
               return item;
             }
           })
@@ -162,3 +187,18 @@ export default function AppShellLayout() {
     </AppShell>
   );
 }
+
+// ?.filter((item) => {
+//   if (search === "") {
+//     return item;
+//   }
+//   if (item.title.toLowerCase().includes(search.toLowerCase())) {
+//     return item;
+//   }
+//   if (search == item.price && checkedPrice) {
+//     return item;
+//   }
+//   if (search.toUpperCase() == item.availableSizes && checkedSize) {
+//     return item;
+//   }
+// })

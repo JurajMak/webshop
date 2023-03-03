@@ -5,6 +5,9 @@ import {
   Button,
   Box,
   Drawer,
+  Flex,
+  Text,
+  Indicator,
 } from "@mantine/core";
 
 import { useNavigate } from "react-router-dom";
@@ -15,10 +18,13 @@ import { IconShoppingCart } from "@tabler/icons";
 import ShoppingItem from "../shoppingItem/Index";
 import {
   DrawerWrapper,
-  DrawerSlider,
   CheckoutBtn,
   Shopping,
   SelectedItems,
+  DrawerHeader,
+  SelectedItemsUser,
+  CheckoutWrapper,
+  TextWrapper,
 } from "./Styles";
 
 const useStyles = createStyles((theme) => ({
@@ -45,22 +51,13 @@ export function HeaderTabs({ data, onRemove, onDelete, onQuantity }) {
   const { classes } = useStyles();
   const [opened, setOpened] = useState(false);
   const navigate = useNavigate();
-  const { user, setUser, filterData } = useContext(AuthContext);
+  const { user, signOut } = useContext(AuthContext);
 
   const navigateLogin = async () => {
     navigate("/login");
   };
   const navigateRegister = async () => {
     navigate("/register");
-  };
-  const signOut = async () => {
-    const { error } = await supabase.auth.signOut();
-    if (error) {
-      alert(error);
-    } else {
-      setUser(null);
-      alert(`${user.email} logged out`);
-    }
   };
 
   const sumPrice = (item) => {
@@ -79,57 +76,106 @@ export function HeaderTabs({ data, onRemove, onDelete, onQuantity }) {
           <Group
             sx={{ height: "100%" }}
             spacing={0}
-            className={classes.hiddenMobile}></Group>
-          <DrawerSlider
+            className={classes.hiddenMobile}
+          ></Group>
+          <Drawer
             opened={opened}
             onClose={() => setOpened(false)}
-            title="Shopping Cart"
-            padding="xl"
-            size="xl">
-            {/* Drawer content */}
-            {data?.map((item) => {
-              return (
-                <ShoppingItem
-                  key={item.id}
-                  data={item}
-                  onRemove={onRemove}
-                  onQuantity={onQuantity}
-                  onDelete={onDelete}
-                />
-              );
-            })}
-
+            padding="xs"
+            size="xl"
+          >
             <DrawerWrapper>
-              <div>
-                <h5>Total:{sumPrice(data)}</h5>
-                <button>Pay</button>
-              </div>
-              {/* <Button onClick={deleteAll}>Delete</Button> */}
-              {user ? <CheckoutBtn>$ Checkout</CheckoutBtn> : ""}
+              {/* Drawer content */}
+
+              <DrawerHeader>
+                <Text fz="lg">Shopping Cart</Text>
+              </DrawerHeader>
+              <Shopping>
+                {data?.map((item) => {
+                  return (
+                    <ShoppingItem
+                      key={item.id}
+                      data={item}
+                      onRemove={onRemove}
+                      onQuantity={onQuantity}
+                      onDelete={onDelete}
+                    />
+                  );
+                })}
+              </Shopping>
+
+              <CheckoutWrapper>
+                <TextWrapper>
+                  <Text mb={30} ml={100} mt={50} fz="lg">
+                    Total :
+                  </Text>
+                  <Text mr={150} mt={50} fz="lg">
+                    $ {sumPrice(data)}
+                  </Text>
+                </TextWrapper>
+
+                {user ? (
+                  <CheckoutBtn>$ Checkout</CheckoutBtn>
+                ) : (
+                  <CheckoutBtn onClick={navigateLogin}>
+                    Log in to shop
+                  </CheckoutBtn>
+                )}
+              </CheckoutWrapper>
             </DrawerWrapper>
-          </DrawerSlider>
+          </Drawer>
           {user ? (
             <Group className={classes.hiddenMobile}>
               Welcome {user.email} !
-              <Button onClick={() => setOpened(true)}>
-                <IconShoppingCart size={25} />
-              </Button>
+              {data.length < 1 ? (
+                ""
+              ) : (
+                <Indicator
+                  color="gold"
+                  position="bottom-start"
+                  inline
+                  label={data.length}
+                  size={30}
+                  styles={{
+                    common: {
+                      color: "black",
+                    },
+                  }}
+                >
+                  <Button onClick={() => setOpened(true)}>
+                    <IconShoppingCart size={25} />
+                  </Button>
+                </Indicator>
+              )}
               <Button onClick={signOut}>Logout</Button>
             </Group>
           ) : (
             <Group className={classes.hiddenMobile}>
-              <Button onClick={() => setOpened(true)}>
-                <IconShoppingCart size={25} />
-              </Button>
+              {data.length < 1 ? (
+                ""
+              ) : (
+                <Indicator
+                  color="gold"
+                  position="bottom-start"
+                  inline
+                  label={data.length}
+                  size={30}
+                  styles={{
+                    common: {
+                      color: "black",
+                    },
+                  }}
+                >
+                  <Button onClick={() => setOpened(true)}>
+                    <IconShoppingCart size={25} />
+                  </Button>
+                </Indicator>
+              )}
+
               <Button variant="default" onClick={navigateLogin}>
                 Log in
               </Button>
               <Button onClick={navigateRegister}>Sign up</Button>
-              {data.length < 1 ? (
-                ""
-              ) : (
-                <SelectedItems>{data.length}</SelectedItems>
-              )}
             </Group>
           )}
         </Group>
@@ -139,3 +185,15 @@ export function HeaderTabs({ data, onRemove, onDelete, onQuantity }) {
 }
 
 export default HeaderTabs;
+
+// <Indicator
+// color="gold"
+// position="bottom-start"
+// inline
+// label={data.length}
+// size={20}
+// >
+// <Button onClick={() => setOpened(true)}>
+//   <IconShoppingCart size={25} />
+// </Button>
+// </Indicator>

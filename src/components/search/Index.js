@@ -1,7 +1,9 @@
 import { TextInput, ActionIcon, useMantineTheme } from "@mantine/core";
 import { IconSearch, IconArrowRight, IconArrowLeft } from "@tabler/icons";
+import { useContext } from "react";
+import { AuthContext } from "../../contexts/Index";
 
-export function InputWithButton(props) {
+export function SearchBar(props) {
   const theme = useMantineTheme();
 
   return (
@@ -16,7 +18,8 @@ export function InputWithButton(props) {
           size={32}
           radius="xl"
           color={theme.primaryColor}
-          variant="filled">
+          variant="filled"
+        >
           {theme.dir === "ltr" ? (
             <IconArrowRight size={18} stroke={1.5} />
           ) : (
@@ -24,11 +27,11 @@ export function InputWithButton(props) {
           )}
         </ActionIcon>
       }
-      placeholder="Search products"
+      placeholder={props.placeholder}
       rightSectionWidth={42}
       {...props}
     />
   );
 }
 
-export default InputWithButton;
+export default SearchBar;

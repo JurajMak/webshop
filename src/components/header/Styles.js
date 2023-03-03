@@ -6,16 +6,11 @@ export const CartBtn = styled.button`
   border: none;
 `;
 
-export const DrawerSlider = styled(Drawer)`
-  overflow-y: scroll;
-  overflow-x: hidden;
-  ::-webkit-scrollbar {
-    display: none;
-  }
-  // display: grid;
+export const DrawerWrapper = styled.div`
+  height: 1000px;
+  display: grid;
+  grid-template-rows: 2% 70% 10%;
 `;
-
-export const DrawerWrapper = styled.div``;
 
 export const CheckoutBtn = styled(Button)`
   width: 250px;
@@ -25,19 +20,24 @@ export const CheckoutBtn = styled(Button)`
 export const Shopping = styled.div`
   overflow-y: scroll;
   overflow-x: hidden;
-  ::-webkit-scrollbar {
-    display: none;
-  }
 `;
 
-export const SelectedItems = styled.div`
-  border-radius: 50%;
-  position: absolute;
-  background-color: gold;
-  font-size: 15px;
-  min-width: 20px;
-  min-height: 20px;
-  text-align: center;
-  top: 30px;
-  right: 260px;
+export const DrawerHeader = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
 `;
+
+export const CheckoutWrapper = styled.div`
+  margin-bottom: 150px;
+`;
+
+export const TextWrapper = styled.div`
+  display: flex;
+  justify-content: space-between;
+`;
+
+// styles={{
+//   common: {
+//     color: "black",
+//   },

@@ -7,6 +7,9 @@ import ProtectedRoute from "../pages/protected/Index";
 import RegisterForm from "../pages/register/Index";
 import { ErrorPage } from "../pages/error/Index";
 import { AuthContext } from "../contexts/Index";
+import Dashboard from "../pages/admin/dashboard/Index";
+import Create from "../pages/admin/create/Index";
+import Edit from "../pages/admin/edit/Index";
 
 const RenderRoutes = () => {
   const { user } = useContext(AuthContext);
@@ -18,12 +21,29 @@ const RenderRoutes = () => {
         <Route path="/login" element={<UserLogin />} />
         <Route path="/register" element={<RegisterForm />} />
         <Route
-          path="/login/user"
+          path="/admin"
           element={
             <ProtectedRoute>
-              <Home />
+              <Dashboard />
             </ProtectedRoute>
-          }></Route>
+          }
+        ></Route>
+        <Route
+          path="/admin/products/create"
+          element={
+            <ProtectedRoute>
+              <Create />
+            </ProtectedRoute>
+          }
+        ></Route>
+        <Route
+          path="/admin/products/:id"
+          element={
+            <ProtectedRoute>
+              <Edit />
+            </ProtectedRoute>
+          }
+        ></Route>
 
         <Route path="*" element={<ErrorPage />} />
       </Routes>

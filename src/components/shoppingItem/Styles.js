@@ -3,6 +3,7 @@ import { Button } from "@mantine/core";
 
 export const DivReducer = styled.div`
   max-width: 200px;
+
   border: none;
 `;
 export const Wrapper = styled.div``;
@@ -10,13 +11,13 @@ export const Wrapper = styled.div``;
 export const CardWrapper = styled.div`
   display: flex;
   justify-content: space-between;
-  margin: 40px;
+  margin: 10px;
 `;
 
 export const ButtonWrapper = styled.div`
   display: flex;
   flex-direction: column;
-  justify-content: space-around;
+  justify-content: space-between;
   margin-right: 60px;
 `;
 
@@ -25,5 +26,7 @@ export const Transparent = styled(Button)`
   border: none;
 `;
 export const ImageWrapper = styled.img`
-  // width: 100px;
+  object-fit: cover;
+  width: 70px;
+  height: 120px;
 `;

@@ -9,7 +9,6 @@ const AuthProvider = ({ children }) => {
 
   const [user, setUser] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
-  const [filterData, setFilterData] = useState([]);
 
   const signIn = async ({ email, password }) => {
     const { data, error } = await supabase.auth.signInWithPassword({
@@ -25,10 +24,11 @@ const AuthProvider = ({ children }) => {
     return data;
   };
 
-  const signUp = async ({ email, password }) => {
+  const signUp = async ({ email, password, options }) => {
     const { data, error } = await supabase.auth.signUp({
       email,
       password,
+      options,
     });
     if (error) {
       alert(error.message);
@@ -38,27 +38,23 @@ const AuthProvider = ({ children }) => {
     return data;
   };
 
-  const signInWithGugl = async () => {
-    const { data, error } = await supabase.auth.signInWithOAuth({
-      provider: "google",
-    });
-
+  const signOut = async () => {
+    const { error } = await supabase.auth.signOut();
     if (error) {
-      alert(error.message);
+      alert(error);
+    } else {
+      setUser(null);
+      alert(`${user.email} logged out`);
     }
-
-    return data;
   };
 
   const value = {
     signIn,
     signUp,
-    signInWithGugl,
+    signOut,
     user,
     setUser,
     data,
-    // filterData,
-    // setFilterData,
   };
 
   React.useEffect(() => {

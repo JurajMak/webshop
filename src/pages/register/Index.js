@@ -1,10 +1,7 @@
 import {
-  Paper,
   createStyles,
   TextInput,
-  PasswordInput,
   Checkbox,
-  Button,
   Title,
   ActionIcon,
 } from "@mantine/core";
@@ -13,6 +10,7 @@ import { IconAt, IconEye, IconEyeOff } from "@tabler/icons";
 import { useForm } from "@mantine/form";
 import React, { useState } from "react";
 import { AuthContext } from "../../contexts/Index";
+import { supabase } from "../../config/Supabase";
 
 import { Form, StyledButton } from "../login/Styles";
 const useStyles = createStyles((theme) => ({
@@ -53,26 +51,34 @@ const useStyles = createStyles((theme) => ({
 const RegisterForm = () => {
   const { signUp } = React.useContext(AuthContext);
   const { classes } = useStyles();
+
   const form = useForm({
-    first_name: "",
-    last_name: "",
+    full_name: "",
     email: "",
     password: "",
+    is_admin: false,
   });
   const navigate = useNavigate();
   const [type, settype] = useState("password");
-  const { email, password, first_name, last_name } = form.values;
 
-  const handleSubmit = async (e) => {
-    const { email, password } = form.values;
+  const handleSubmit = async () => {
+    const { email, password, full_name, is_admin } = form.values;
     const data = await signUp({
       email,
       password,
+      options: {
+        data: {
+          full_name,
+          role: is_admin ? "admin" : "user",
+        },
+      },
     });
-    if (data) {
-      navigate("/login");
+
+    if (data && is_admin) {
+      navigate("/admin");
+      return;
     }
-    console.log(form);
+    navigate("/login");
   };
 
   const returnHome = async () => {
@@ -88,18 +94,10 @@ const RegisterForm = () => {
 
       <Form onSubmit={form.onSubmit(handleSubmit)}>
         <TextInput
-          label="First Name"
-          placeholder="Enter your first name"
+          label="Full Name"
+          placeholder="Enter your Full name"
           icon={<IconAt size={14} />}
-          {...form.getInputProps("first_name")}
-          value={first_name}
-        />
-        <TextInput
-          label="Last Name"
-          placeholder="Enter your last name"
-          icon={<IconAt size={14} />}
-          {...form.getInputProps("last_name")}
-          value={last_name}
+          {...form.getInputProps("full_name")}
         />
 
         <TextInput
@@ -108,7 +106,6 @@ const RegisterForm = () => {
           withAsterisk
           icon={<IconAt size={14} />}
           {...form.getInputProps("email")}
-          value={email}
         />
 
         <TextInput
@@ -126,12 +123,14 @@ const RegisterForm = () => {
             </ActionIcon>
           }
           {...form.getInputProps("password")}
-          value={password}
         />
+
+        <Checkbox label="Is Admin" {...form.getInputProps("is_admin")} />
 
         <StyledButton type="submit">Submit</StyledButton>
         <StyledButton onClick={returnHome}>Return</StyledButton>
       </Form>
+
       {/* </Paper> */}
     </div>
   );
