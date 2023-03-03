@@ -1,16 +1,16 @@
 import React from "react";
 import { AuthContext } from "../../contexts/Index";
-import { Navigate } from "react-router-dom";
-const ProtectedRoute = ({ children }) => {
+import { Navigate, Outlet } from "react-router-dom";
+const ProtectedRoute = () => {
   const { user } = React.useContext(AuthContext);
 
-  console.log("Protected route", user);
+  console.log("Protected route", user?.user_metadata.role);
 
-  if (!user) {
+  if (user?.user_metadata.role !== "admin") {
     return <Navigate to="/login" />;
   }
 
-  return children;
+  return <Outlet />;
 };
 
 export default ProtectedRoute;

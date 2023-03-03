@@ -56,7 +56,6 @@ const Edit = () => {
   const form = useForm({});
   const navigate = useNavigate();
   const [type, settype] = useState("password");
-  // const { } = form.values;
 
   const returnDashboard = async () => {
     navigate("/admin");
@@ -65,7 +64,7 @@ const Edit = () => {
   return (
     <div className={classes.wrapper}>
       {/* <Paper className={classes.form} radius={0} p={30}> */}
-      <Title order={2} className={classes.title} align="center" mt="md" mb={50}>
+      <Title order={2} className={classes.title} align="center" pt={50} mb={50}>
         Edit product
       </Title>
 
