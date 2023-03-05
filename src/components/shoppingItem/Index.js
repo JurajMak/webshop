@@ -69,7 +69,7 @@ const useStyles = createStyles((theme) => ({
 
 const ShoppingItem = ({ data, onQuantity, onDelete, onRemove }) => {
   const { classes } = useStyles();
-  const { title, price, style, quantity, id, availableSizes } = data;
+  const { name, price, description, quantity, id } = data;
   const sum = price * quantity;
   return (
     <CardWrapper>
@@ -83,11 +83,10 @@ const ShoppingItem = ({ data, onQuantity, onDelete, onRemove }) => {
             <div>
               <Text weight={500}>{}</Text>
               <Text size="xs" color="dimmed">
-                {title}
-                Product
+                {name}
               </Text>
             </div>
-            <Badge variant="outline">25% off</Badge>
+            {/* <Badge variant="outline">25% off</Badge> */}
           </Group>
 
           <Card.Section className={classes.section} mt="xs">
@@ -97,7 +96,7 @@ const ShoppingItem = ({ data, onQuantity, onDelete, onRemove }) => {
 
             <Group spacing={8} mb={-8}>
               <IconShirt size={15} />
-              {availableSizes.join("/")}
+              {description}
             </Group>
           </Card.Section>
 
@@ -112,8 +111,7 @@ const ShoppingItem = ({ data, onQuantity, onDelete, onRemove }) => {
                   color="dimmed"
                   weight={500}
                   sx={{ lineHeight: 1 }}
-                  mt={3}
-                ></Text>
+                  mt={3}></Text>
               </div>
             </Group>
           </Card.Section>

@@ -9,7 +9,7 @@ export const CartBtn = styled.button`
 export const DrawerWrapper = styled.div`
   height: 1000px;
   display: grid;
-  grid-template-rows: 2% 70% 10%;
+  grid-template-rows: 3% 68% 20%;
 `;
 
 export const CheckoutBtn = styled(Button)`
@@ -20,6 +20,9 @@ export const CheckoutBtn = styled(Button)`
 export const Shopping = styled.div`
   overflow-y: scroll;
   overflow-x: hidden;
+  ::-webkit-scrollbar {
+    display: none;
+  }
 `;
 
 export const DrawerHeader = styled.div`
@@ -36,8 +39,3 @@ export const TextWrapper = styled.div`
   display: flex;
   justify-content: space-between;
 `;
-
-// styles={{
-//   common: {
-//     color: "black",
-//   },

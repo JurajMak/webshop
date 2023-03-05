@@ -54,7 +54,7 @@ const useStyles = createStyles((theme) => ({
 
 export function ProductsCard({ data, onClick }) {
   const { classes } = useStyles();
-  const { title, price, style, availableSizes, id } = data;
+  const { name, price, description, quantity, id } = data;
 
   return (
     <Card withBorder radius="md" className={classes.card}>
@@ -66,7 +66,7 @@ export function ProductsCard({ data, onClick }) {
         <div>
           <Text weight={500}>{}</Text>
           <Text size="xs" color="dimmed">
-            {title}
+            {name}
           </Text>
         </div>
         <Badge variant="outline">25% off</Badge>
@@ -74,12 +74,12 @@ export function ProductsCard({ data, onClick }) {
 
       <Card.Section className={classes.section} mt="md">
         <Text size="sm" color="dimmed" className={classes.label}>
-          Available sizes
+          Quantity: {quantity}
         </Text>
 
         <Group spacing={8} mb={-8}>
           <IconShirt />
-          {availableSizes.join("/")}
+          {description}
         </Group>
       </Card.Section>
 

@@ -117,8 +117,7 @@ const RegisterForm = () => {
             <ActionIcon
               onClick={() =>
                 type === "text" ? settype("password") : settype("text")
-              }
-            >
+              }>
               {type === "password" ? <IconEye /> : <IconEyeOff />}
             </ActionIcon>
           }

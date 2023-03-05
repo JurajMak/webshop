@@ -9,7 +9,9 @@ export const GridWrapper = styled.div`
 export const Wrapper = styled.div`
   display: flex;
   flex-wrap: wrap;
-  margin-left: 100px;
+  margin-left: auto;
+  margin-right: auto;
+  min-height: 80vh;
 `;
 
 export const ProductsWrapper = styled.div`

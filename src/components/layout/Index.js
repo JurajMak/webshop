@@ -5,11 +5,13 @@ import {
   Text,
   useMantineTheme,
   Checkbox,
+  Group,
+  Pagination,
 } from "@mantine/core";
 import ProductsCard from "../productCard/Index";
 import HeaderTabs from "../header/Index";
 import { Wrapper, ProductsWrapper } from "../../pages/home/Styles";
-
+import { supabase } from "../../config/Supabase";
 import { AuthContext } from "../../contexts/Index";
 import React, { useState, useEffect, useContext } from "react";
 import SearchBar from "../search/Index";
@@ -17,12 +19,13 @@ import SearchBar from "../search/Index";
 export default function AppShellLayout() {
   const theme = useMantineTheme();
   const [opened, setOpened] = useState(false);
-  const { data } = React.useContext(AuthContext);
-  const [search, setSearch] = useState("");
+  const { data, setData, categories } = React.useContext(AuthContext);
+  const [search, setSearch] = useState([]);
+  const [searchWord, setSearchWord] = useState("");
+  const [isSearching, setIsSearching] = useState(false);
   const [shoppingData, setShoppingData] = useState([]);
-  const [checkedSize, setCheckedSize] = useState(false);
-  const [checkedName, setCheckedName] = useState(false);
-  const [checkedPrice, setCheckedPrice] = useState(false);
+  const [selectedCategories, setSelectedCategories] = useState([]);
+  const [activePage, setPage] = useState(1);
 
   const handleAddCart = (e, item) => {
     const isExists = shoppingData?.some((cart) => {
@@ -72,8 +75,23 @@ export default function AppShellLayout() {
     localStorage.removeItem(`shoppingData_${id}`);
   };
 
-  const checked = () => {
-    setCheckedSize(!checkedSize);
+  const handleSearchText = (e) => {
+    setSearchWord(e.target.value);
+  };
+
+  const handleSearchButtonClick = async (e) => {
+    e.preventDefault();
+    const { data, error } = await supabase
+      .from("products")
+      .select("*")
+      .ilike("name", `%${searchWord}%`);
+
+    if (error) {
+      console.error(error);
+    } else {
+      setSearch(data);
+      setIsSearching(true);
+    }
   };
 
   useEffect(() => {
@@ -85,8 +103,11 @@ export default function AppShellLayout() {
         savedData.push(item);
       }
     }
+
     setShoppingData(savedData);
   }, []);
+
+  console.log("search", search);
 
   return (
     <AppShell
@@ -105,41 +126,32 @@ export default function AppShellLayout() {
           p="md"
           hiddenBreakpoint="sm"
           hidden={!opened}
-          width={{ sm: 200, lg: 300 }}
-        >
+          width={{ sm: 200, lg: 300 }}>
           <Text>Search</Text>
           <SearchBar
             placeholder="Search products"
-            onChange={(e) => setSearch(e.target.value)}
-            // onClick={handleSearch}
-            value={search}
-          ></SearchBar>
+            onChange={(e) => handleSearchText(e)}
+            onClick={handleSearchButtonClick}></SearchBar>
+
           <Checkbox.Group
             orientation="vertical"
             offset="md"
             size="md"
-            spacing={70}
+            spacing={30}
             mt={70}
-            ml={30}
-          >
-            <Checkbox
-              value="category"
-              label="Size"
-              checked={checkedSize}
-              onClick={() => setCheckedSize(!checkedSize)}
-            />
-            <Checkbox
-              value="category2"
-              label="Price"
-              checked={checkedPrice}
-              onClick={() => setCheckedPrice(!checkedPrice)}
-            />
-            <Checkbox
-              value="category3"
-              label="Name"
-              checked={checkedName}
-              onClick={() => setCheckedName(!checkedName)}
-            />
+            ml={30}>
+            {categories?.map((item) => {
+              return (
+                <Checkbox
+                  key={item.id}
+                  value={item.name}
+                  label={item.name}
+                  // checked={selectedCategories.includes(item.name)}
+                  // onChange={() => handleCategoryChange(item)}
+                  // onClick={() => console.log(`check`)}
+                />
+              );
+            })}
           </Checkbox.Group>
         </Navbar>
       }
@@ -155,50 +167,32 @@ export default function AppShellLayout() {
           onQuantity={handleAddCart}
           onRemove={handleRemoveQuantity}
         />
-      }
-    >
+      }>
       <Wrapper>
-        {data
-          ?.filter((item) => {
-            if (search === "") {
-              return item;
-            }
-            if (item.title.toLowerCase().includes(search.toLowerCase())) {
-              return item;
-            }
-            if (search == item.price && checkedPrice) {
-              return item;
-            }
-            if (search.toUpperCase() == item.availableSizes && checkedSize) {
-              return item;
-            }
-          })
-          .map((item) => {
-            return (
+        {isSearching
+          ? search?.map((item) => (
               <ProductsWrapper key={item.id}>
                 <ProductsCard
                   data={item}
                   onClick={(e) => handleAddCart(e, item)}
                 />
               </ProductsWrapper>
-            );
-          })}
+            ))
+          : data?.map((item) => (
+              <ProductsWrapper key={item.id}>
+                <ProductsCard
+                  data={item}
+                  onClick={(e) => handleAddCart(e, item)}
+                />
+              </ProductsWrapper>
+            ))}
+        <Pagination
+          mt="auto"
+          value={activePage}
+          onChange={setPage}
+          total={10}
+        />
       </Wrapper>
     </AppShell>
   );
 }
-
-// ?.filter((item) => {
-//   if (search === "") {
-//     return item;
-//   }
-//   if (item.title.toLowerCase().includes(search.toLowerCase())) {
-//     return item;
-//   }
-//   if (search == item.price && checkedPrice) {
-//     return item;
-//   }
-//   if (search.toUpperCase() == item.availableSizes && checkedSize) {
-//     return item;
-//   }
-// })

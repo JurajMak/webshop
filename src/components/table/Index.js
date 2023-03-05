@@ -13,21 +13,27 @@ import {
 import { IconPencil, IconTrash } from "@tabler/icons";
 import { useNavigate } from "react-router-dom";
 
-export function DashboardTable({ data, titles }) {
+export function DashboardTable({ data, titles, onDelete }) {
   const theme = useMantineTheme();
   const navigate = useNavigate();
 
-  const toEdit = async () => {
+  const toEdit = async (id) => {
     navigate(`/admin/products/${data.id}`);
   };
 
+  const handleClick = (e, item) => {
+    console.log("item", item);
+  };
+
+  console.log("edit", data);
+
   const deleteProducts = () => {};
   const rows = data.map((item) => (
-    <tr key={item.title}>
+    <tr key={item.id}>
       <td>
         <Group spacing="sm">
           <Text fz="sm" fw={500}>
-            {item.title}
+            {item.name}
           </Text>
         </Group>
       </td>
@@ -44,16 +50,15 @@ export function DashboardTable({ data, titles }) {
       </td>
       <td>
         <Text fz="sm" c="dimmed">
-          {/* {item.quantity} */}
-          10
+          {item.quantity}
         </Text>
       </td>
       <td>
         <Group spacing={0} position="right">
-          <ActionIcon onClick={toEdit}>
+          <ActionIcon onClick={() => toEdit(data)}>
             <IconPencil size="1rem" stroke={1.5} />
           </ActionIcon>
-          <ActionIcon color="red" onClick={deleteProducts}>
+          <ActionIcon color="red" onClick={(e) => handleClick(e, data)}>
             <IconTrash size="1rem" stroke={1.5} />
           </ActionIcon>
         </Group>

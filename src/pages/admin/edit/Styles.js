@@ -5,10 +5,10 @@ export const Form = styled.form`
   margin-left: auto;
   margin-right: auto;
   max-width: 500px;
-  border: 1px solid black;
   border-radius: 8px;
   padding: 20px;
   background: white;
+  border: 1px solid black;
 `;
 
 export const Div = styled.div`
@@ -21,7 +21,7 @@ export const ButtonWrapper = styled.div`
 `;
 
 export const StyledButton = styled(Button)`
-  margin: 10px;
+  margin: 10px 50px 10px 0px;
 `;
 
 export const TitleHeader = styled.h1`

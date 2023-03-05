@@ -6,9 +6,21 @@ export const AuthContext = createContext(null);
 
 const AuthProvider = ({ children }) => {
   const [data, setData] = useState([]);
+  const [products, setProducts] = useState([]);
+  const [categories, setCategories] = useState([]);
 
   const [user, setUser] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
+
+  const getData = async () => {
+    const { data, error } = await supabase.from("products").select();
+    setData(data);
+  };
+
+  const getCategory = async () => {
+    const { data, error } = await supabase.from("categories").select();
+    setCategories(data);
+  };
 
   const signIn = async ({ email, password }) => {
     const { data, error } = await supabase.auth.signInWithPassword({
@@ -55,6 +67,7 @@ const AuthProvider = ({ children }) => {
     user,
     setUser,
     data,
+    categories,
   };
 
   React.useEffect(() => {
@@ -77,17 +90,21 @@ const AuthProvider = ({ children }) => {
         setUser(null);
       }
     });
+    getData();
+    getCategory();
   }, []);
-  useEffect(() => {
-    axios
-      .get(`https://react-shopping-cart-67954.firebaseio.com/products.json`)
-      .then((res) => {
-        setData(res.data.products);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  }, []);
+  // useEffect(() => {
+  //   axios
+  //     .get(`https://react-shopping-cart-67954.firebaseio.com/products.json`)
+  //     .then((res) => {
+  //       setData(res.data.products);
+  //     })
+  //     .catch((err) => {
+  //       console.log(err);
+  //     });
+  // }, []);
+
+  console.log(categories);
 
   return (
     <AuthContext.Provider value={value}>

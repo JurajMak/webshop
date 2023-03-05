@@ -18,13 +18,13 @@ export default function Dashboard() {
   const [opened, setOpened] = useState(false);
   const { user, signOut, data } = useContext(AuthContext);
   const navigate = useNavigate();
-  const titles = ["Products", "Description", "Price", "Quantity"];
+  const titles = ["Name", "Description", "Price", "Quantity"];
 
   const navigateToCreate = async () => {
     navigate("/admin/products/create");
   };
 
-  console.log(titles);
+  console.log("dashboard", data);
 
   return (
     <AppShell
@@ -42,8 +42,7 @@ export default function Dashboard() {
           p="md"
           hiddenBreakpoint="sm"
           hidden={!opened}
-          width={{ sm: 200, lg: 300 }}
-        >
+          width={{ sm: 200, lg: 300 }}>
           <SearchBar placeholder="Search" />
 
           <p>Products</p>
@@ -67,14 +66,12 @@ export default function Dashboard() {
               justifyContent: "space-between",
               alignItems: "center",
               height: "100%",
-            }}
-          >
+            }}>
             <Text>Dashboard</Text>
             <Button onClick={navigateToCreate}>Create</Button>
           </div>
         </Header>
-      }
-    >
+      }>
       {/* <Text>Resize app to see responsive navbar in action</Text> */}
       <DashboardTable data={data} titles={titles} />
     </AppShell>

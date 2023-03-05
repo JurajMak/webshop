@@ -14,12 +14,11 @@ export function SearchBar(props) {
       maxLength={30}
       rightSection={
         <ActionIcon
-          // onClick={props.onClick}
+          onClick={props.onClick}
           size={32}
           radius="xl"
           color={theme.primaryColor}
-          variant="filled"
-        >
+          variant="filled">
           {theme.dir === "ltr" ? (
             <IconArrowRight size={18} stroke={1.5} />
           ) : (

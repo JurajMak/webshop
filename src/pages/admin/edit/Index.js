@@ -9,9 +9,6 @@ import {
 import { useNavigate } from "react-router-dom";
 import { useForm } from "@mantine/form";
 import React, { useState } from "react";
-// import { AuthContext } from "../../contexts/Index";
-import Image from "../../../assets/login.jpg";
-// import Image from "../../../assets/register.jpg";
 
 import { Form, StyledButton } from "./Styles";
 const useStyles = createStyles((theme) => ({
@@ -19,8 +16,7 @@ const useStyles = createStyles((theme) => ({
     minHeight: 900,
     backgroundSize: "cover",
     backgroundImage:
-      // "url(https://images.unsplash.com/photo-1484242857719-4b9144542727?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1280&q=80)",
-      `url(${Image})`,
+      "url(https://images.unsplash.com/photo-1484242857719-4b9144542727?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1280&q=80)",
   },
 
   form: {
@@ -51,11 +47,9 @@ const useStyles = createStyles((theme) => ({
 }));
 
 const Edit = () => {
-  // const { signUp } = React.useContext(AuthContext);
   const { classes } = useStyles();
   const form = useForm({});
   const navigate = useNavigate();
-  const [type, settype] = useState("password");
 
   const returnDashboard = async () => {
     navigate("/admin");
@@ -72,39 +66,21 @@ const Edit = () => {
         <TextInput
           label="Product name"
           placeholder="Product name"
-          {...form.getInputProps("first_name")}
-          // value={}
+          {...form.getInputProps("name")}
         />
-        {/* <TextInput
+        <TextInput
           label="Description"
-          placeholder="Enter your last name"
-          {...form.getInputProps("last_name")}
-          // value={}
-        /> */}
-        <Textarea
-          label="Description of product"
-          minRows={10}
-          maxRows={10}
-          // placeholder={state.description}
-          // value={}
+          placeholder="Description of product"
           {...form.getInputProps("description")}
         />
-        <NumberInput
-          label="Price"
-          parser={(value) => value.replace(/\$\s?|(,*)/g, "")}
-          formatter={(value) =>
-            !Number.isNaN(parseFloat(value))
-              ? `$ ${value}`.replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",")
-              : "$ "
-          }
-        />
-        <NumberInput label="Quantity" />
+
+        <TextInput label="Price" />
+        <TextInput label="Quantity" />
 
         <TextInput
           label="Category"
           placeholder="Category"
-          {...form.getInputProps("first_name")}
-          // value={}
+          {...form.getInputProps("category")}
         />
 
         <StyledButton type="submit">Submit</StyledButton>
