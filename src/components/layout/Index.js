@@ -7,6 +7,7 @@ import {
   Checkbox,
   Group,
   Pagination,
+  Title,
 } from "@mantine/core";
 import ProductsCard from "../productCard/Index";
 import HeaderTabs from "../header/Index";
@@ -79,8 +80,23 @@ export default function AppShellLayout() {
     setSearchWord(e.target.value);
   };
 
+  const handleSearchEnter = async (e) => {
+    if (e.key === "Enter") {
+      const { data, error } = await supabase
+        .from("products")
+        .select("*")
+        .ilike("name", `%${searchWord}%`);
+
+      if (error) {
+        console.error(error);
+      } else {
+        setSearch(data);
+        setIsSearching(true);
+      }
+    }
+  };
+
   const handleSearchButtonClick = async (e) => {
-    e.preventDefault();
     const { data, error } = await supabase
       .from("products")
       .select("*")
@@ -126,30 +142,28 @@ export default function AppShellLayout() {
           p="md"
           hiddenBreakpoint="sm"
           hidden={!opened}
-          width={{ sm: 200, lg: 300 }}>
+          width={{ sm: 200, lg: 300 }}
+        >
           <Text>Search</Text>
           <SearchBar
             placeholder="Search products"
             onChange={(e) => handleSearchText(e)}
-            onClick={handleSearchButtonClick}></SearchBar>
+            onClick={handleSearchButtonClick}
+            onKeyDown={(e) => handleSearchEnter(e)}
+          ></SearchBar>
 
           <Checkbox.Group
             orientation="vertical"
             offset="md"
             size="md"
             spacing={30}
-            mt={70}
-            ml={30}>
+            mt={20}
+            ml={30}
+          >
+            <Text>Categories</Text>
             {categories?.map((item) => {
               return (
-                <Checkbox
-                  key={item.id}
-                  value={item.name}
-                  label={item.name}
-                  // checked={selectedCategories.includes(item.name)}
-                  // onChange={() => handleCategoryChange(item)}
-                  // onClick={() => console.log(`check`)}
-                />
+                <Checkbox key={item.id} value={item.name} label={item.name} />
               );
             })}
           </Checkbox.Group>
@@ -167,7 +181,8 @@ export default function AppShellLayout() {
           onQuantity={handleAddCart}
           onRemove={handleRemoveQuantity}
         />
-      }>
+      }
+    >
       <Wrapper>
         {isSearching
           ? search?.map((item) => (

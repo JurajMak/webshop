@@ -1,5 +1,4 @@
 import {
-  Avatar,
   Badge,
   Table,
   Group,
@@ -12,22 +11,37 @@ import {
 
 import { IconPencil, IconTrash } from "@tabler/icons";
 import { useNavigate } from "react-router-dom";
+import { supabase } from "../../config/Supabase";
+import React, { useState } from "react";
 
-export function DashboardTable({ data, titles, onDelete }) {
+export function DashboardTable({ titles }) {
   const theme = useMantineTheme();
   const navigate = useNavigate();
+  // const {data, getData } = useContext(AuthContext);
+  const [data, setData] = useState([]);
 
-  const toEdit = async (id) => {
-    navigate(`/admin/products/${data.id}`);
+  const getData = async () => {
+    const { data, error } = await supabase.from("products").select();
+    setData(data);
+  };
+
+  const toEdit = async (item) => {
+    console.log("item Edit", item.id);
+    navigate(`/admin/products/${item.id}`, { state: item });
   };
 
   const handleClick = (e, item) => {
-    console.log("item", item);
+    console.log("item Delete", item.id);
   };
 
-  console.log("edit", data);
+  const handleDeleteProduct = async (id) => {
+    const { error } = await supabase.from("products").delete().eq(`id`, id);
+  };
 
-  const deleteProducts = () => {};
+  React.useEffect(() => {
+    getData();
+  }, [handleDeleteProduct]);
+
   const rows = data.map((item) => (
     <tr key={item.id}>
       <td>
@@ -55,10 +69,10 @@ export function DashboardTable({ data, titles, onDelete }) {
       </td>
       <td>
         <Group spacing={0} position="right">
-          <ActionIcon onClick={() => toEdit(data)}>
+          <ActionIcon onClick={() => toEdit(item)}>
             <IconPencil size="1rem" stroke={1.5} />
           </ActionIcon>
-          <ActionIcon color="red" onClick={(e) => handleClick(e, data)}>
+          <ActionIcon color="red" onClick={() => handleDeleteProduct(item.id)}>
             <IconTrash size="1rem" stroke={1.5} />
           </ActionIcon>
         </Group>

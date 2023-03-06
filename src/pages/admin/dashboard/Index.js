@@ -42,7 +42,8 @@ export default function Dashboard() {
           p="md"
           hiddenBreakpoint="sm"
           hidden={!opened}
-          width={{ sm: 200, lg: 300 }}>
+          width={{ sm: 200, lg: 300 }}
+        >
           <SearchBar placeholder="Search" />
 
           <p>Products</p>
@@ -66,14 +67,16 @@ export default function Dashboard() {
               justifyContent: "space-between",
               alignItems: "center",
               height: "100%",
-            }}>
+            }}
+          >
             <Text>Dashboard</Text>
+            <Text>Admin: {user.user_metadata.full_name}</Text>
             <Button onClick={navigateToCreate}>Create</Button>
           </div>
         </Header>
-      }>
-      {/* <Text>Resize app to see responsive navbar in action</Text> */}
-      <DashboardTable data={data} titles={titles} />
+      }
+    >
+      <DashboardTable titles={titles} />
     </AppShell>
   );
 }

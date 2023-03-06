@@ -27,3 +27,8 @@ export const StyledButton = styled(Button)`
 export const TitleHeader = styled.h1`
   text-align: center;
 `;
+
+export const SaleWrapper = styled.div`
+  display: flex;
+  justify-content: space-between;
+`;

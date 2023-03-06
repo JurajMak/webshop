@@ -1,17 +1,17 @@
-import { Paper, createStyles, TextInput, Title } from "@mantine/core";
+import { Paper, createStyles, TextInput, Title, Checkbox } from "@mantine/core";
 import { useNavigate } from "react-router-dom";
 import { useForm } from "@mantine/form";
-import Image from "../../../assets/login.jpg";
 import { supabase } from "../../../config/Supabase";
 
 import { Form, StyledButton } from "./Styles";
+import { useContext, useState } from "react";
+import { AuthContext } from "../../../contexts/Index";
 const useStyles = createStyles((theme) => ({
   wrapper: {
     minHeight: 900,
     backgroundSize: "cover",
     backgroundImage:
       "url(https://images.unsplash.com/photo-1484242857719-4b9144542727?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1280&q=80)",
-    // `url(${Image})`,
   },
 
   form: {
@@ -43,6 +43,7 @@ const useStyles = createStyles((theme) => ({
 
 const Create = () => {
   const { classes } = useStyles();
+  const { user } = useContext(AuthContext);
   const form = useForm({
     name: "",
     description: "",
@@ -50,6 +51,7 @@ const Create = () => {
     quantity: "",
     category: "",
   });
+  const [checked, setChecked] = useState(false);
   const navigate = useNavigate();
   const { name, description, price, quantity, category } = form.values;
 
@@ -69,18 +71,24 @@ const Create = () => {
     if (!categories) {
       const { data: addCategory } = await supabase
         .from("categories")
-        .insert({ name: category });
+        .insert({ name: category, user_id: user.id });
 
       categoryId = addCategory.id;
     } else {
       categoryId = categories.id;
     }
 
-    const { data, error } = await supabase
-      .from("products")
-      .insert({ name, description, price, quantity, category_id: categoryId });
+    const { data, error } = await supabase.from("products").insert({
+      name,
+      description,
+      price,
+      quantity,
+      category_id: categoryId,
+      is_sale: checked,
+    });
   };
 
+  console.log(checked);
   return (
     <div className={classes.wrapper}>
       {/* <Paper className={classes.form} radius={0} p={30}> */}
@@ -96,6 +104,13 @@ const Create = () => {
         />
 
         <TextInput label="Price" {...form.getInputProps("price")} />
+
+        <Checkbox
+          checked={checked}
+          onChange={(e) => setChecked(e.target.checked)}
+          label="Set item on Sale"
+        />
+
         <TextInput label="Quantity" {...form.getInputProps("quantity")} />
         <TextInput
           label="Category"

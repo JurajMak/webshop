@@ -1,5 +1,4 @@
 import React, { createContext, useState, useEffect } from "react";
-import axios from "axios";
 import { supabase } from "../config/Supabase";
 
 export const AuthContext = createContext(null);
@@ -68,6 +67,7 @@ const AuthProvider = ({ children }) => {
     setUser,
     data,
     categories,
+    getData,
   };
 
   React.useEffect(() => {
@@ -93,16 +93,6 @@ const AuthProvider = ({ children }) => {
     getData();
     getCategory();
   }, []);
-  // useEffect(() => {
-  //   axios
-  //     .get(`https://react-shopping-cart-67954.firebaseio.com/products.json`)
-  //     .then((res) => {
-  //       setData(res.data.products);
-  //     })
-  //     .catch((err) => {
-  //       console.log(err);
-  //     });
-  // }, []);
 
   console.log(categories);
 

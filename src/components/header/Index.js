@@ -76,12 +76,14 @@ export function HeaderTabs({ data, onRemove, onDelete, onQuantity }) {
           <Group
             sx={{ height: "100%" }}
             spacing={0}
-            className={classes.hiddenMobile}></Group>
+            className={classes.hiddenMobile}
+          ></Group>
           <Drawer
             opened={opened}
             onClose={() => setOpened(false)}
             padding="xs"
-            size="xl">
+            size="xl"
+          >
             <DrawerWrapper>
               {/* Drawer content */}
 
@@ -112,7 +114,7 @@ export function HeaderTabs({ data, onRemove, onDelete, onQuantity }) {
                   </Text>
                 </TextWrapper>
 
-                {user ? (
+                {user?.user_metadata.role === "user" ? (
                   <CheckoutBtn>$ Checkout</CheckoutBtn>
                 ) : (
                   <CheckoutBtn onClick={navigateLogin}>
@@ -122,9 +124,9 @@ export function HeaderTabs({ data, onRemove, onDelete, onQuantity }) {
               </CheckoutWrapper>
             </DrawerWrapper>
           </Drawer>
-          {user ? (
+          {user?.user_metadata.role === "user" ? (
             <Group className={classes.hiddenMobile}>
-              Welcome {user.email} !
+              Welcome {user.user_metadata.full_name} !
               {data.length < 1 ? (
                 ""
               ) : (
@@ -138,7 +140,8 @@ export function HeaderTabs({ data, onRemove, onDelete, onQuantity }) {
                     common: {
                       color: "black",
                     },
-                  }}>
+                  }}
+                >
                   <Button onClick={() => setOpened(true)}>
                     <IconShoppingCart size={25} />
                   </Button>
@@ -161,7 +164,8 @@ export function HeaderTabs({ data, onRemove, onDelete, onQuantity }) {
                     common: {
                       color: "black",
                     },
-                  }}>
+                  }}
+                >
                   <Button onClick={() => setOpened(true)}>
                     <IconShoppingCart size={25} />
                   </Button>

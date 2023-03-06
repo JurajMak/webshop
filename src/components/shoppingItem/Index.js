@@ -95,7 +95,7 @@ const ShoppingItem = ({ data, onQuantity, onDelete, onRemove }) => {
             </Text>
 
             <Group spacing={8} mb={-8}>
-              <IconShirt size={15} />
+              {/* <IconShirt size={15} /> */}
               {description}
             </Group>
           </Card.Section>
@@ -111,7 +111,8 @@ const ShoppingItem = ({ data, onQuantity, onDelete, onRemove }) => {
                   color="dimmed"
                   weight={500}
                   sx={{ lineHeight: 1 }}
-                  mt={3}></Text>
+                  mt={3}
+                ></Text>
               </div>
             </Group>
           </Card.Section>
@@ -135,19 +136,3 @@ const ShoppingItem = ({ data, onQuantity, onDelete, onRemove }) => {
 };
 
 export default ShoppingItem;
-
-{
-  /* <ButtonWrapper>
-<UnstyledButton mt={20} ml={40} onClick={(e) => onDelete(e, data.id)}>
-  <IconX size={30} />
-</UnstyledButton>
-<div>
-  <UnstyledButton mb={80} onClick={(e) => onRemove(e, data)}>
-    <IconSquareMinus size={30} />
-  </UnstyledButton>
-  <UnstyledButton mb={80} onClick={(e) => onQuantity(e, data)}>
-    <IconSquarePlus size={30} />
-  </UnstyledButton>
-</div>
-</ButtonWrapper> */
-}

@@ -54,7 +54,7 @@ const useStyles = createStyles((theme) => ({
 
 export function ProductsCard({ data, onClick }) {
   const { classes } = useStyles();
-  const { name, price, description, quantity, id } = data;
+  const { name, price, description, quantity, id, sale_price } = data;
 
   return (
     <Card withBorder radius="md" className={classes.card}>
@@ -78,7 +78,7 @@ export function ProductsCard({ data, onClick }) {
         </Text>
 
         <Group spacing={8} mb={-8}>
-          <IconShirt />
+          {/* <IconShirt /> */}
           {description}
         </Group>
       </Card.Section>
@@ -89,12 +89,16 @@ export function ProductsCard({ data, onClick }) {
             <Text size="xl" weight={700} sx={{ lineHeight: 1 }}>
               ${price}
             </Text>
+            {/* <Text size="xl" weight={700} sx={{ lineHeight: 1 }}>
+              ${sale_price}
+            </Text> */}
             <Text
               size="sm"
               color="dimmed"
               weight={500}
               sx={{ lineHeight: 1 }}
-              mt={3}></Text>
+              mt={3}
+            ></Text>
           </div>
 
           <Button radius="xl" style={{ flex: 1 }} onClick={onClick}>
