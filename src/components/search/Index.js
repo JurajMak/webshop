@@ -10,20 +10,6 @@ export function SearchBar(props) {
       radius="xl"
       size="md"
       maxLength={30}
-      // rightSection={
-      //   <ActionIcon
-      //     onClick={props.onClick}
-      //     size={32}
-      //     radius="xl"
-      //     color={theme.primaryColor}
-      //     variant="filled">
-      //     {theme.dir === "ltr" ? (
-      //       <IconArrowRight size={18} stroke={1.5} />
-      //     ) : (
-      //       <IconArrowLeft size={18} stroke={1.5} />
-      //     )}
-      //   </ActionIcon>
-      // }
       placeholder={props.placeholder}
       rightSectionWidth={42}
       {...props}
