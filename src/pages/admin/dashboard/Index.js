@@ -27,18 +27,6 @@ export default function Dashboard() {
 
   console.log("dashboard", categories);
 
-  // const categoryData = categories?.map((item) => ({
-  //   id: item.id,
-  //   name: item.name,
-  // }));
-
-  // const handleCategoryChange = (value) => {
-  //   const selectedCategory = categories.find(
-  //     (category) => category.id === value
-  //   );
-  //   console.log(selectedCategory);
-  // };
-
   const handleClick = (id) => {
     console.log(id);
   };

@@ -7,6 +7,7 @@ import {
   Anchor,
   ScrollArea,
   useMantineTheme,
+  Pagination,
 } from "@mantine/core";
 
 import { IconPencil, IconTrash } from "@tabler/icons";
@@ -19,12 +20,12 @@ export function DashboardTable({ titles }) {
   const theme = useMantineTheme();
   const navigate = useNavigate();
   const { data, getData, getCategory } = useContext(AuthContext);
-  // const [data, setData] = useState([]);
+  const [activePage, setPage] = useState(1);
+  const [itemsPerPage, setItemsPerPage] = useState(13);
 
-  // const getData = async () => {
-  //   const { data, error } = await supabase.from("products").select();
-  //   setData(data);
-  // };
+  const lastPost = activePage * itemsPerPage;
+  const firstPost = lastPost - itemsPerPage;
+  const currentPost = data?.slice(firstPost, lastPost);
 
   const toEdit = async (item) => {
     console.log("item Edit", item.id);
@@ -44,7 +45,7 @@ export function DashboardTable({ titles }) {
     getData();
   }, []);
 
-  const rows = data.map((item) => (
+  const rows = currentPost?.map((item) => (
     <tr key={item.id}>
       <td>
         <Group spacing="sm">
@@ -99,6 +100,14 @@ export function DashboardTable({ titles }) {
         </thead>
         <tbody>{rows}</tbody>
       </Table>
+
+      <Pagination
+        mt="auto"
+        withEdges
+        value={activePage}
+        onChange={setPage}
+        total={data.length / 10}
+      />
     </ScrollArea>
   );
 }

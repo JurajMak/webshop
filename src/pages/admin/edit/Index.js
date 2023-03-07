@@ -184,9 +184,6 @@ const Edit = () => {
       console.log("proslo", form.values);
     }
   };
-  // console.log(state);
-  // console.log(state.name, state.id);
-  console.log(prevCategory);
 
   React.useEffect(() => {
     getProductCategory();

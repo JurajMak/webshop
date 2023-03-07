@@ -77,14 +77,12 @@ export function HeaderTabs({ data, onRemove, onDelete, onQuantity }) {
           <Group
             sx={{ height: "100%" }}
             spacing={0}
-            className={classes.hiddenMobile}
-          ></Group>
+            className={classes.hiddenMobile}></Group>
           <Drawer
             opened={opened}
             onClose={() => setOpened(false)}
             padding="xs"
-            size="xl"
-          >
+            size="xl">
             <DrawerWrapper>
               {/* Drawer content */}
 
@@ -141,8 +139,7 @@ export function HeaderTabs({ data, onRemove, onDelete, onQuantity }) {
                     common: {
                       color: "black",
                     },
-                  }}
-                >
+                  }}>
                   <Button onClick={() => setOpened(true)}>
                     <IconShoppingCart size={25} />
                   </Button>
@@ -165,8 +162,7 @@ export function HeaderTabs({ data, onRemove, onDelete, onQuantity }) {
                     common: {
                       color: "black",
                     },
-                  }}
-                >
+                  }}>
                   <Button onClick={() => setOpened(true)}>
                     <IconShoppingCart size={25} />
                   </Button>
@@ -186,11 +182,3 @@ export function HeaderTabs({ data, onRemove, onDelete, onQuantity }) {
 }
 
 export default HeaderTabs;
-
-// const sumPrice = (item) => {
-//   return item
-//     .reduce((acc, cart) => {
-//       return cart.quantity * cart.price + acc;
-//     }, 0)
-//     .toFixed(2);
-// };

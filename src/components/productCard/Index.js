@@ -7,9 +7,8 @@ import {
   createStyles,
   Button,
 } from "@mantine/core";
-import { IconShirt } from "@tabler/icons";
+
 import React, { useState, useEffect, useContext } from "react";
-import { AuthContext } from "../../contexts/Index";
 
 const useStyles = createStyles((theme) => ({
   card: {
@@ -70,7 +69,7 @@ export function ProductsCard({ data, onClick }) {
           </Text>
         </div>
         {is_sale && (
-          <Badge variant="outline">
+          <Badge variant="outline" size="lg">
             {Math.round(((price - sale_price) / price) * 100)}% off
           </Badge>
         )}
@@ -90,9 +89,6 @@ export function ProductsCard({ data, onClick }) {
       <Card.Section className={classes.section}>
         <Group spacing={30}>
           <div>
-            {/* <Text size="xl" weight={700} sx={{ lineHeight: 1 }}>
-              ${price}
-            </Text> */}
             {is_sale ? (
               <div>
                 <Text
@@ -113,21 +109,9 @@ export function ProductsCard({ data, onClick }) {
                 </Text>
               </div>
             )}
-
-            {/* <Text size="xl" weight={700} sx={{ lineHeight: 1 }}>
-                ${sale_price}
-              </Text> */}
-
-            {/* <Text
-              size="sm"
-              color="dimmed"
-              weight={500}
-              sx={{ lineHeight: 1 }}
-              mt={3}
-            ></Text> */}
           </div>
 
-          <Button radius="xl" style={{ flex: 1 }} onClick={onClick}>
+          <Button size="xs" radius="xl" style={{ flex: 1 }} onClick={onClick}>
             Add to cart
           </Button>
         </Group>

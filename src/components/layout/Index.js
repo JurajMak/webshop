@@ -27,6 +27,11 @@ export default function AppShellLayout() {
   const [shoppingData, setShoppingData] = useState([]);
   const [selectedCategories, setSelectedCategories] = useState([]);
   const [activePage, setPage] = useState(1);
+  const [itemsPerPage, setItemsPerPage] = useState(10);
+
+  const lastPost = activePage * itemsPerPage;
+  const firstPost = lastPost - itemsPerPage;
+  const currentPost = data?.slice(firstPost, lastPost);
 
   const handleAddCart = (e, item) => {
     const isExists = shoppingData?.some((cart) => {
@@ -123,7 +128,7 @@ export default function AppShellLayout() {
     setShoppingData(savedData);
   }, []);
 
-  console.log("search", shoppingData);
+  console.log("search", data);
 
   return (
     <AppShell
@@ -142,15 +147,13 @@ export default function AppShellLayout() {
           p="md"
           hiddenBreakpoint="sm"
           hidden={!opened}
-          width={{ sm: 200, lg: 300 }}
-        >
+          width={{ sm: 200, lg: 300 }}>
           <Text>Search</Text>
           <SearchBar
             placeholder="Search products"
             onChange={(e) => handleSearchText(e)}
             onClick={handleSearchButtonClick}
-            onKeyDown={(e) => handleSearchEnter(e)}
-          ></SearchBar>
+            onKeyDown={(e) => handleSearchEnter(e)}></SearchBar>
 
           <Checkbox.Group
             orientation="vertical"
@@ -158,8 +161,7 @@ export default function AppShellLayout() {
             size="md"
             spacing={30}
             mt={20}
-            ml={30}
-          >
+            ml={30}>
             <Text>Categories</Text>
             {categories?.map((item) => {
               return (
@@ -181,8 +183,7 @@ export default function AppShellLayout() {
           onQuantity={handleAddCart}
           onRemove={handleRemoveQuantity}
         />
-      }
-    >
+      }>
       <Wrapper>
         {isSearching
           ? search?.map((item) => (
@@ -193,7 +194,7 @@ export default function AppShellLayout() {
                 />
               </ProductsWrapper>
             ))
-          : data?.map((item) => (
+          : currentPost?.map((item) => (
               <ProductsWrapper key={item.id}>
                 <ProductsCard
                   data={item}
@@ -203,9 +204,10 @@ export default function AppShellLayout() {
             ))}
         <Pagination
           mt="auto"
+          withEdges
           value={activePage}
           onChange={setPage}
-          total={10}
+          total={data.length / 10}
         />
       </Wrapper>
     </AppShell>

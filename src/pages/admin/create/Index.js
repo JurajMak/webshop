@@ -4,7 +4,7 @@ import { useForm } from "@mantine/form";
 import { supabase } from "../../../config/Supabase";
 
 import { Form, StyledButton } from "./Styles";
-import { useContext, useState } from "react";
+import React, { useContext, useState } from "react";
 import { AuthContext } from "../../../contexts/Index";
 const useStyles = createStyles((theme) => ({
   wrapper: {
@@ -50,14 +50,23 @@ const Create = () => {
     price: "",
     quantity: "",
     category: "",
+    salePercentage: "",
   });
   const [checked, setChecked] = useState(false);
   const navigate = useNavigate();
-  const { name, description, price, quantity, category } = form.values;
-
+  const { name, description, price, quantity, category, salePercentage } =
+    form.values;
+  let calc = Math.round((price / 100) * salePercentage);
+  let total = price - calc;
   const returnDashboard = async () => {
     navigate("/admin");
   };
+
+  // const handleSalePrice = async () => {
+  //   let calc = Math.round((price / 100) * salePercentage);
+  //   let total = price - calc;
+
+  // };
 
   const handleAddProduct = async () => {
     const { data: categories } = await supabase
@@ -85,6 +94,7 @@ const Create = () => {
       quantity,
       category_id: categoryId,
       is_sale: checked,
+      sale_price: total,
     });
   };
 
@@ -106,15 +116,23 @@ const Create = () => {
         <TextInput label="Price" {...form.getInputProps("price")} />
 
         <Checkbox
+          m="auto"
+          mt={10}
           checked={checked}
           onChange={(e) => setChecked(e.target.checked)}
           label="Set item on Sale"
         />
+        {checked && (
+          <TextInput
+            label={`Set sale %`}
+            {...form.getInputProps("salePercentage")}
+          />
+        )}
 
         <TextInput label="Quantity" {...form.getInputProps("quantity")} />
         <TextInput
           label="Category"
-          placeholder="Category"
+          // placeholder="Category"
           {...form.getInputProps("category")}
         />
 

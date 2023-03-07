@@ -5,3 +5,7 @@ export const BtnWrapper = styled.div`
   justify-content: space-evenly;
   //   margin-right: 50px;
 `;
+
+export const Wrap = styled.div`
+  min-height: 100px;
+`;
