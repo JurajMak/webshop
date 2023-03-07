@@ -9,6 +9,7 @@ import {
   Text,
   useMantineTheme,
   Button,
+  Select,
 } from "@mantine/core";
 import { AuthContext } from "../../../contexts/Index";
 import { useNavigate } from "react-router-dom";
@@ -16,15 +17,31 @@ import { useNavigate } from "react-router-dom";
 export default function Dashboard() {
   const theme = useMantineTheme();
   const [opened, setOpened] = useState(false);
-  const { user, signOut, data } = useContext(AuthContext);
+  const { user, signOut, data, categories } = useContext(AuthContext);
   const navigate = useNavigate();
-  const titles = ["Name", "Description", "Price", "Quantity"];
+  const titles = ["Name", "Description", "Price", "Quantity", "Sale price"];
 
   const navigateToCreate = async () => {
     navigate("/admin/products/create");
   };
 
-  console.log("dashboard", data);
+  console.log("dashboard", categories);
+
+  // const categoryData = categories?.map((item) => ({
+  //   id: item.id,
+  //   name: item.name,
+  // }));
+
+  // const handleCategoryChange = (value) => {
+  //   const selectedCategory = categories.find(
+  //     (category) => category.id === value
+  //   );
+  //   console.log(selectedCategory);
+  // };
+
+  const handleClick = (id) => {
+    console.log(id);
+  };
 
   return (
     <AppShell
@@ -42,13 +59,17 @@ export default function Dashboard() {
           p="md"
           hiddenBreakpoint="sm"
           hidden={!opened}
-          width={{ sm: 200, lg: 300 }}
-        >
+          width={{ sm: 200, lg: 300 }}>
           <SearchBar placeholder="Search" />
-
-          <p>Products</p>
-          <p>Category</p>
           <p>Orders</p>
+          <p>Category</p>
+          <Select
+            placeholder="Categories"
+            value={categories}
+            data={categories}
+            onChange={(e) => handleClick(categories.id)}
+          />
+
           <Button mt={500} onClick={signOut}>
             Logout
           </Button>
@@ -67,15 +88,13 @@ export default function Dashboard() {
               justifyContent: "space-between",
               alignItems: "center",
               height: "100%",
-            }}
-          >
+            }}>
             <Text>Dashboard</Text>
             <Text>Admin: {user.user_metadata.full_name}</Text>
             <Button onClick={navigateToCreate}>Create</Button>
           </div>
         </Header>
-      }
-    >
+      }>
       <DashboardTable titles={titles} />
     </AppShell>
   );

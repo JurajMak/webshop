@@ -71,7 +71,7 @@ export function ProductsCard({ data, onClick }) {
         </div>
         {is_sale && (
           <Badge variant="outline">
-            {((price - sale_price) / price) * 100}% off
+            {Math.round(((price - sale_price) / price) * 100)}% off
           </Badge>
         )}
       </Group>
@@ -99,8 +99,7 @@ export function ProductsCard({ data, onClick }) {
                   td="line-through"
                   size="sm"
                   weight={700}
-                  sx={{ lineHeight: 1 }}
-                >
+                  sx={{ lineHeight: 1 }}>
                   ${price}
                 </Text>
                 <Text size="xl" color="red" weight={700} sx={{ lineHeight: 1 }}>

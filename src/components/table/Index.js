@@ -12,18 +12,19 @@ import {
 import { IconPencil, IconTrash } from "@tabler/icons";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "../../config/Supabase";
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
+import { AuthContext } from "../../contexts/Index";
 
 export function DashboardTable({ titles }) {
   const theme = useMantineTheme();
   const navigate = useNavigate();
-  // const {data, getData } = useContext(AuthContext);
-  const [data, setData] = useState([]);
+  const { data, getData, getCategory } = useContext(AuthContext);
+  // const [data, setData] = useState([]);
 
-  const getData = async () => {
-    const { data, error } = await supabase.from("products").select();
-    setData(data);
-  };
+  // const getData = async () => {
+  //   const { data, error } = await supabase.from("products").select();
+  //   setData(data);
+  // };
 
   const toEdit = async (item) => {
     console.log("item Edit", item.id);
@@ -36,11 +37,12 @@ export function DashboardTable({ titles }) {
 
   const handleDeleteProduct = async (id) => {
     const { error } = await supabase.from("products").delete().eq(`id`, id);
+    getData();
   };
 
   React.useEffect(() => {
     getData();
-  }, [handleDeleteProduct]);
+  }, []);
 
   const rows = data.map((item) => (
     <tr key={item.id}>
@@ -65,6 +67,11 @@ export function DashboardTable({ titles }) {
       <td>
         <Text fz="sm" c="dimmed">
           {item.quantity}
+        </Text>
+      </td>
+      <td>
+        <Text fz="sm" c="dimmed">
+          {item.sale_price}
         </Text>
       </td>
       <td>

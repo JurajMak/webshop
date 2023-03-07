@@ -68,6 +68,7 @@ const AuthProvider = ({ children }) => {
     data,
     categories,
     getData,
+    getCategory,
   };
 
   React.useEffect(() => {

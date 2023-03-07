@@ -51,11 +51,17 @@ const Edit = () => {
     sale_price: "",
     salePercentage: "",
   });
+
+  const [prevCategory, setPrevCategory] = useState("");
   const navigate = useNavigate();
   const { state } = useLocation();
   const { name, description, price, quantity, category, salePercentage } =
     form.values;
   const [isSale, setSale] = useState(state.is_sale);
+
+  const percentageCalc = Math.round(
+    ((state.price - state.sale_price) / state.price) * 100
+  );
 
   const updateProductName = async (e) => {
     const { data, error } = await supabase
@@ -119,13 +125,30 @@ const Edit = () => {
     }
   };
 
-  // const updateProductCategory = async (id) => {
-  //   const { data } = await supabase
-  //     .from("categories")
-  //     .select("*")
-  //     .eq("name", category)
-  //     .single();
-  // };
+  const updateProductCategory = async () => {
+    const { data: categories } = await supabase
+      .from("categories")
+      .select("*")
+      .eq("name", category)
+      .single();
+
+    const { data, error } = await supabase
+      .from("products")
+      .update({
+        category_id: categories.id,
+      })
+      .match({ id: state.id });
+  };
+
+  const getProductCategory = async () => {
+    const { data } = await supabase
+      .from("categories")
+      .select("*")
+      .eq("id", state.category_id)
+      .single();
+    console.log(data);
+    setPrevCategory(data.name);
+  };
 
   const returnDashboard = async () => {
     navigate("/admin");
@@ -161,7 +184,13 @@ const Edit = () => {
       console.log("proslo", form.values);
     }
   };
-  console.log(form.values);
+  // console.log(state);
+  // console.log(state.name, state.id);
+  console.log(prevCategory);
+
+  React.useEffect(() => {
+    getProductCategory();
+  }, []);
 
   return (
     <div className={classes.wrapper}>
@@ -193,8 +222,8 @@ const Edit = () => {
         />
         <StyledButton onClick={updateProductPrice}>Edit price</StyledButton>
         <TextInput
-          label={`Set sale percentage: %`}
-          placeholder="%"
+          label={`Current sale % ${state.is_sale ? percentageCalc : ""}`}
+          placeholder={`Current sale % ${state.is_sale ? percentageCalc : ""}`}
           {...form.getInputProps("salePercentage")}
         />
         <SaleWrapper>
@@ -204,6 +233,7 @@ const Edit = () => {
 
           <Checkbox
             m="auto"
+            mt={20}
             checked={isSale}
             // value={isSale}
             onChange={handleIsSale}
@@ -221,13 +251,15 @@ const Edit = () => {
         </StyledButton>
 
         <TextInput
-          label="Category"
-          placeholder="Category"
+          label={`Category: ${prevCategory}`}
+          placeholder={prevCategory}
           {...form.getInputProps("category")}
         />
 
         <SaleWrapper>
-          <StyledButton onClick={returnDashboard}>Edit Category</StyledButton>
+          <StyledButton onClick={updateProductCategory}>
+            Edit Category
+          </StyledButton>
 
           <StyledButton type="submit">Update All</StyledButton>
           <StyledButton onClick={returnDashboard}>Return</StyledButton>

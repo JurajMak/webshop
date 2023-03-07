@@ -89,7 +89,7 @@ const ShoppingItem = ({ data, onQuantity, onDelete, onRemove }) => {
             </div>
             {is_sale && (
               <Badge variant="outline">
-                {((price - sale_price) / price) * 100}% off
+                {Math.round(((price - sale_price) / price) * 100)}% off
               </Badge>
             )}
           </Group>
@@ -108,27 +108,22 @@ const ShoppingItem = ({ data, onQuantity, onDelete, onRemove }) => {
           <Card.Section className={classes.section}>
             <Group spacing={30}>
               <div>
-                {/* <Text size="xl" weight={700} sx={{ lineHeight: 1 }}>
-                  $ {is_sale ? sale.toFixed(2) : total.toFixed()}
-                </Text> */}
                 {is_sale ? (
                   <div>
                     <Text
                       td="line-through"
                       size="sm"
                       weight={700}
-                      sx={{ lineHeight: 1 }}
-                    >
+                      sx={{ lineHeight: 1 }}>
                       ${total.toFixed(2)}
                     </Text>
                     <Text
                       size="xl"
                       color="red"
                       weight={700}
-                      sx={{ lineHeight: 1 }}
-                    >
+                      sx={{ lineHeight: 1 }}>
                       ${sale.toFixed(2)}
-                    </Text>{" "}
+                    </Text>
                   </div>
                 ) : (
                   <div>
@@ -142,8 +137,7 @@ const ShoppingItem = ({ data, onQuantity, onDelete, onRemove }) => {
                   color="dimmed"
                   weight={500}
                   sx={{ lineHeight: 1 }}
-                  mt={3}
-                ></Text>
+                  mt={3}></Text>
               </div>
             </Group>
           </Card.Section>
