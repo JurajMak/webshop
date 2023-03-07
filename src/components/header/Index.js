@@ -63,11 +63,12 @@ export function HeaderTabs({ data, onRemove, onDelete, onQuantity }) {
   const sumPrice = (item) => {
     return item
       .reduce((acc, cart) => {
-        return cart.quantity * cart.price + acc;
+        const total = cart.is_sale ? cart.sale_price : cart.price;
+        return cart.quantity * total + acc;
       }, 0)
       .toFixed(2);
   };
-  console.log(data);
+  console.log("heder", data);
   return (
     <Box>
       <Header height={60} px="md">
@@ -186,14 +187,10 @@ export function HeaderTabs({ data, onRemove, onDelete, onQuantity }) {
 
 export default HeaderTabs;
 
-// <Indicator
-// color="gold"
-// position="bottom-start"
-// inline
-// label={data.length}
-// size={20}
-// >
-// <Button onClick={() => setOpened(true)}>
-//   <IconShoppingCart size={25} />
-// </Button>
-// </Indicator>
+// const sumPrice = (item) => {
+//   return item
+//     .reduce((acc, cart) => {
+//       return cart.quantity * cart.price + acc;
+//     }, 0)
+//     .toFixed(2);
+// };

@@ -123,7 +123,7 @@ export default function AppShellLayout() {
     setShoppingData(savedData);
   }, []);
 
-  console.log("search", search);
+  console.log("search", shoppingData);
 
   return (
     <AppShell

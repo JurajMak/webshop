@@ -69,8 +69,9 @@ const useStyles = createStyles((theme) => ({
 
 const ShoppingItem = ({ data, onQuantity, onDelete, onRemove }) => {
   const { classes } = useStyles();
-  const { name, price, description, quantity, id } = data;
-  const sum = price * quantity;
+  const { name, price, description, quantity, id, sale_price, is_sale } = data;
+  const total = price * quantity;
+  const sale = sale_price * quantity;
   return (
     <CardWrapper>
       <DivReducer>
@@ -86,7 +87,11 @@ const ShoppingItem = ({ data, onQuantity, onDelete, onRemove }) => {
                 {name}
               </Text>
             </div>
-            {/* <Badge variant="outline">25% off</Badge> */}
+            {is_sale && (
+              <Badge variant="outline">
+                {((price - sale_price) / price) * 100}% off
+              </Badge>
+            )}
           </Group>
 
           <Card.Section className={classes.section} mt="xs">
@@ -103,9 +108,35 @@ const ShoppingItem = ({ data, onQuantity, onDelete, onRemove }) => {
           <Card.Section className={classes.section}>
             <Group spacing={30}>
               <div>
-                <Text size="xl" weight={700} sx={{ lineHeight: 1 }}>
-                  $ {sum.toFixed(2)}
-                </Text>
+                {/* <Text size="xl" weight={700} sx={{ lineHeight: 1 }}>
+                  $ {is_sale ? sale.toFixed(2) : total.toFixed()}
+                </Text> */}
+                {is_sale ? (
+                  <div>
+                    <Text
+                      td="line-through"
+                      size="sm"
+                      weight={700}
+                      sx={{ lineHeight: 1 }}
+                    >
+                      ${total.toFixed(2)}
+                    </Text>
+                    <Text
+                      size="xl"
+                      color="red"
+                      weight={700}
+                      sx={{ lineHeight: 1 }}
+                    >
+                      ${sale.toFixed(2)}
+                    </Text>{" "}
+                  </div>
+                ) : (
+                  <div>
+                    <Text size="xl" weight={700} sx={{ lineHeight: 1 }}>
+                      ${price}
+                    </Text>
+                  </div>
+                )}
                 <Text
                   size="sm"
                   color="dimmed"

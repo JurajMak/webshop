@@ -53,7 +53,8 @@ const Edit = () => {
   });
   const navigate = useNavigate();
   const { state } = useLocation();
-  const { name, description, price, quantity, category } = form.values;
+  const { name, description, price, quantity, category, salePercentage } =
+    form.values;
   const [isSale, setSale] = useState(state.is_sale);
 
   const updateProductName = async (e) => {
@@ -103,8 +104,23 @@ const Edit = () => {
     }
   };
 
-  const handleSalePrice = () => {};
+  const handleSalePrice = async () => {
+    let calc = Math.round((state.price / 100) * salePercentage);
+    let total = state.price - calc;
+    // console.log(total);
+    const { data, error } = await supabase
+      .from("products")
+      .update({ sale_price: total })
+      .match({ id: state.id });
+    if (error) {
+      console.log("nevalja", error.message);
+    } else {
+      console.log("proso", total);
+    }
 
+    // return state.price - calc;
+  };
+  // ((list price - actual price) / (list price)) * 100%
   // let a = 30;
   //   let b = 100;
   //   let c = (a / b) * 100;
@@ -153,6 +169,7 @@ const Edit = () => {
       console.log("proslo", form.values);
     }
   };
+  console.log(form.values);
 
   return (
     <div className={classes.wrapper}>
@@ -189,11 +206,14 @@ const Edit = () => {
           {...form.getInputProps("salePercentage")}
         />
         <SaleWrapper>
-          <StyledButton onClick={handleSalePrice}>Set sale</StyledButton>
+          {isSale && (
+            <StyledButton onClick={handleSalePrice}>Set sale</StyledButton>
+          )}
 
           <Checkbox
+            m="auto"
             checked={isSale}
-            value={isSale}
+            // value={isSale}
             onChange={handleIsSale}
             label="Item on Sale"
           />
@@ -213,10 +233,13 @@ const Edit = () => {
           placeholder="Category"
           {...form.getInputProps("category")}
         />
-        <StyledButton onClick={returnDashboard}>Edit Category</StyledButton>
 
-        <StyledButton type="submit">Update All</StyledButton>
-        <StyledButton onClick={returnDashboard}>Return</StyledButton>
+        <SaleWrapper>
+          <StyledButton onClick={returnDashboard}>Edit Category</StyledButton>
+
+          <StyledButton type="submit">Update All</StyledButton>
+          <StyledButton onClick={returnDashboard}>Return</StyledButton>
+        </SaleWrapper>
       </Form>
       {/* </Paper> */}
     </div>

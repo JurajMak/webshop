@@ -54,7 +54,7 @@ const useStyles = createStyles((theme) => ({
 
 export function ProductsCard({ data, onClick }) {
   const { classes } = useStyles();
-  const { name, price, description, quantity, id, sale_price } = data;
+  const { name, price, description, quantity, id, sale_price, is_sale } = data;
 
   return (
     <Card withBorder radius="md" className={classes.card}>
@@ -65,11 +65,15 @@ export function ProductsCard({ data, onClick }) {
       <Group position="apart" mt="md">
         <div>
           <Text weight={500}>{}</Text>
-          <Text size="xs" color="dimmed">
+          <Text size="lg" color="dimmed">
             {name}
           </Text>
         </div>
-        <Badge variant="outline">25% off</Badge>
+        {is_sale && (
+          <Badge variant="outline">
+            {((price - sale_price) / price) * 100}% off
+          </Badge>
+        )}
       </Group>
 
       <Card.Section className={classes.section} mt="md">
@@ -86,19 +90,42 @@ export function ProductsCard({ data, onClick }) {
       <Card.Section className={classes.section}>
         <Group spacing={30}>
           <div>
-            <Text size="xl" weight={700} sx={{ lineHeight: 1 }}>
-              ${price}
-            </Text>
             {/* <Text size="xl" weight={700} sx={{ lineHeight: 1 }}>
-              ${sale_price}
+              ${price}
             </Text> */}
-            <Text
+            {is_sale ? (
+              <div>
+                <Text
+                  td="line-through"
+                  size="sm"
+                  weight={700}
+                  sx={{ lineHeight: 1 }}
+                >
+                  ${price}
+                </Text>
+                <Text size="xl" color="red" weight={700} sx={{ lineHeight: 1 }}>
+                  ${sale_price}
+                </Text>{" "}
+              </div>
+            ) : (
+              <div>
+                <Text size="xl" weight={700} sx={{ lineHeight: 1 }}>
+                  ${price}
+                </Text>
+              </div>
+            )}
+
+            {/* <Text size="xl" weight={700} sx={{ lineHeight: 1 }}>
+                ${sale_price}
+              </Text> */}
+
+            {/* <Text
               size="sm"
               color="dimmed"
               weight={500}
               sx={{ lineHeight: 1 }}
               mt={3}
-            ></Text>
+            ></Text> */}
           </div>
 
           <Button radius="xl" style={{ flex: 1 }} onClick={onClick}>
