@@ -106,7 +106,7 @@ export function DashboardTable({ titles }) {
         withEdges
         value={activePage}
         onChange={setPage}
-        total={data.length / 10}
+        total={Math.round(data.length / 10)}
       />
     </ScrollArea>
   );
