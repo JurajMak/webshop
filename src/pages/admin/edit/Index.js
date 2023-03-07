@@ -117,15 +117,7 @@ const Edit = () => {
     } else {
       console.log("proso", total);
     }
-
-    // return state.price - calc;
   };
-  // ((list price - actual price) / (list price)) * 100%
-  // let a = 30;
-  //   let b = 100;
-  //   let c = (a / b) * 100;
-  //   let sum = b - c;
-  //   console.log(sum);
 
   // const updateProductCategory = async (id) => {
   //   const { data } = await supabase
