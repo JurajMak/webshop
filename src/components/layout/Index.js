@@ -4,10 +4,9 @@ import {
   Footer,
   Text,
   useMantineTheme,
-  Checkbox,
-  Group,
   Pagination,
-  Title,
+  Select,
+  Button,
 } from "@mantine/core";
 import ProductsCard from "../productCard/Index";
 import HeaderTabs from "../header/Index";
@@ -28,10 +27,14 @@ export default function AppShellLayout() {
   const [selectedCategories, setSelectedCategories] = useState([]);
   const [activePage, setPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(10);
+  const [value, setValue] = useState("");
 
   const lastPost = activePage * itemsPerPage;
   const firstPost = lastPost - itemsPerPage;
   const currentPost = data?.slice(firstPost, lastPost);
+  const searchPost = search?.slice(firstPost, lastPost);
+
+  const mappedCategories = categories?.map((item) => item.name);
 
   const handleAddCart = (e, item) => {
     const isExists = shoppingData?.some((cart) => {
@@ -102,17 +105,25 @@ export default function AppShellLayout() {
   };
 
   const handleSearchButtonClick = async (e) => {
-    const { data, error } = await supabase
+    const { data: categories } = await supabase
+      .from("categories")
+      .select("id")
+      .ilike("name", `%${value}%`);
+
+    const categoryIds = categories.map((category) => category.id);
+
+    const { data: productData } = await supabase
       .from("products")
       .select("*")
-      .ilike("name", `%${searchWord}%`);
+      .in("category_id", categoryIds);
 
-    if (error) {
-      console.error(error);
-    } else {
-      setSearch(data);
-      setIsSearching(true);
-    }
+    setSearch(productData);
+    setIsSearching(true);
+  };
+
+  const handleShowAll = (e) => {
+    e.preventDefault();
+    setIsSearching(false);
   };
 
   useEffect(() => {
@@ -128,7 +139,7 @@ export default function AppShellLayout() {
     setShoppingData(savedData);
   }, []);
 
-  console.log("search", data);
+  console.log("layout", search);
 
   return (
     <AppShell
@@ -152,23 +163,27 @@ export default function AppShellLayout() {
           <SearchBar
             placeholder="Search products"
             onChange={(e) => handleSearchText(e)}
-            onClick={handleSearchButtonClick}
             onKeyDown={(e) => handleSearchEnter(e)}></SearchBar>
-
-          <Checkbox.Group
-            orientation="vertical"
-            offset="md"
-            size="md"
-            spacing={30}
+          <Button radius="xl" w={100} mt={20} ml="auto" onClick={handleShowAll}>
+            Show All
+          </Button>
+          <p>Category</p>
+          <Select
+            searchable
+            clearable
+            placeholder="Categories"
+            value={value}
+            data={mappedCategories}
+            onChange={setValue}
+          />
+          <Button
+            radius="xl"
+            w={100}
             mt={20}
-            ml={30}>
-            <Text>Categories</Text>
-            {categories?.map((item) => {
-              return (
-                <Checkbox key={item.id} value={item.name} label={item.name} />
-              );
-            })}
-          </Checkbox.Group>
+            ml="auto"
+            onClick={handleSearchButtonClick}>
+            Search
+          </Button>
         </Navbar>
       }
       footer={
@@ -186,7 +201,7 @@ export default function AppShellLayout() {
       }>
       <Wrapper>
         {isSearching
-          ? search?.map((item) => (
+          ? searchPost?.map((item) => (
               <ProductsWrapper key={item.id}>
                 <ProductsCard
                   data={item}
@@ -202,14 +217,15 @@ export default function AppShellLayout() {
                 />
               </ProductsWrapper>
             ))}
-        <Pagination
-          mt="auto"
-          withEdges
-          value={activePage}
-          onChange={setPage}
-          total={Math.round(data.length / 10)}
-        />
       </Wrapper>
+      <Pagination
+        position="center"
+        mr={200}
+        withEdges
+        value={activePage}
+        onChange={setPage}
+        total={Math.round(data.length / 10)}
+      />
     </AppShell>
   );
 }

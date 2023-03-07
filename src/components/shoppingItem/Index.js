@@ -5,26 +5,11 @@ import {
   Group,
   Badge,
   createStyles,
-  Center,
-  Button,
-  UnstyledButton,
   ActionIcon,
 } from "@mantine/core";
-import {
-  IconShirt,
-  IconSquarePlus,
-  IconSquareMinus,
-  IconX,
-} from "@tabler/icons";
+import { IconSquarePlus, IconSquareMinus, IconX } from "@tabler/icons";
 import React, { useState, useEffect } from "react";
-import {
-  Wrapper,
-  DivReducer,
-  ButtonWrapper,
-  Transparent,
-  ImageWrapper,
-  CardWrapper,
-} from "./Styles";
+import { DivReducer, ButtonWrapper, CardWrapper } from "./Styles";
 
 const useStyles = createStyles((theme) => ({
   card: {
@@ -100,7 +85,6 @@ const ShoppingItem = ({ data, onQuantity, onDelete, onRemove }) => {
             </Text>
 
             <Group spacing={8} mb={-8}>
-              {/* <IconShirt size={15} /> */}
               {description}
             </Group>
           </Card.Section>

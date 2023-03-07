@@ -68,7 +68,7 @@ export function HeaderTabs({ data, onRemove, onDelete, onQuantity }) {
       }, 0)
       .toFixed(2);
   };
-  console.log("heder", data);
+  // console.log("heder", data);
   return (
     <Box>
       <Header height={60} px="md">
@@ -86,9 +86,9 @@ export function HeaderTabs({ data, onRemove, onDelete, onQuantity }) {
             <DrawerWrapper>
               {/* Drawer content */}
 
-              <DrawerHeader>
+              {/* <DrawerHeader>
                 <Text fz="lg">Shopping Cart</Text>
-              </DrawerHeader>
+              </DrawerHeader> */}
               <Shopping>
                 {data?.map((item) => {
                   return (
@@ -105,10 +105,10 @@ export function HeaderTabs({ data, onRemove, onDelete, onQuantity }) {
 
               <CheckoutWrapper>
                 <TextWrapper>
-                  <Text mb={30} ml={100} mt={50} fz="lg">
+                  <Text mb={30} ml={100} mt={20} fz="lg">
                     Total :
                   </Text>
-                  <Text mr={150} mt={50} fz="lg">
+                  <Text mr={150} mt={20} fz="lg">
                     $ {sumPrice(data)}
                   </Text>
                 </TextWrapper>

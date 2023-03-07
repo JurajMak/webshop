@@ -7,5 +7,5 @@ export const BtnWrapper = styled.div`
 `;
 
 export const Wrap = styled.div`
-  min-height: 100px;
+  position: relative;
 `;

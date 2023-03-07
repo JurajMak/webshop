@@ -4,7 +4,6 @@ import {
   Group,
   Text,
   ActionIcon,
-  Anchor,
   ScrollArea,
   useMantineTheme,
   Pagination,
@@ -16,7 +15,7 @@ import { supabase } from "../../config/Supabase";
 import React, { useState, useContext } from "react";
 import { AuthContext } from "../../contexts/Index";
 
-export function DashboardTable({ titles }) {
+export function DashboardTable({ titles, search, isSearching }) {
   const theme = useMantineTheme();
   const navigate = useNavigate();
   const { data, getData, getCategory } = useContext(AuthContext);
@@ -26,6 +25,7 @@ export function DashboardTable({ titles }) {
   const lastPost = activePage * itemsPerPage;
   const firstPost = lastPost - itemsPerPage;
   const currentPost = data?.slice(firstPost, lastPost);
+  const searchPost = search?.slice(firstPost, lastPost);
 
   const toEdit = async (item) => {
     console.log("item Edit", item.id);
@@ -45,51 +45,17 @@ export function DashboardTable({ titles }) {
     getData();
   }, []);
 
-  const rows = currentPost?.map((item) => (
-    <tr key={item.id}>
-      <td>
-        <Group spacing="sm">
-          <Text fz="sm" fw={500}>
-            {item.name}
-          </Text>
-        </Group>
-      </td>
-
-      <td>
-        <Badge variant={theme.colorScheme === "dark" ? "light" : "outline"}>
-          {item.description}
-        </Badge>
-      </td>
-      <td>
-        <Anchor component="button" size="sm">
-          $ {item.price}
-        </Anchor>
-      </td>
-      <td>
-        <Text fz="sm" c="dimmed">
-          {item.quantity}
-        </Text>
-      </td>
-      <td>
-        <Text fz="sm" c="dimmed">
-          {item.sale_price}
-        </Text>
-      </td>
-      <td>
-        <Group spacing={0} position="right">
-          <ActionIcon onClick={() => toEdit(item)}>
-            <IconPencil size="1rem" stroke={1.5} />
-          </ActionIcon>
-          <ActionIcon color="red" onClick={() => handleDeleteProduct(item.id)}>
-            <IconTrash size="1rem" stroke={1.5} />
-          </ActionIcon>
-        </Group>
-      </td>
-    </tr>
-  ));
+  console.log("table", isSearching);
 
   return (
     <ScrollArea>
+      <Pagination
+        m="auto"
+        withEdges
+        value={activePage}
+        onChange={setPage}
+        total={Math.round(data.length / 10)}
+      />
       <Table sx={{ minWidth: 800 }} verticalSpacing="sm">
         <thead>
           <tr>
@@ -98,16 +64,185 @@ export function DashboardTable({ titles }) {
             })}
           </tr>
         </thead>
-        <tbody>{rows}</tbody>
-      </Table>
+        <tbody>
+          {isSearching
+            ? searchPost?.map((item) => (
+                <tr key={item.id}>
+                  <td>
+                    <Group spacing="sm">
+                      <Text fz="sm" fw={500}>
+                        {item.name}
+                      </Text>
+                    </Group>
+                  </td>
 
-      <Pagination
-        mt="auto"
-        withEdges
-        value={activePage}
-        onChange={setPage}
-        total={Math.round(data.length / 10)}
-      />
+                  <td>
+                    <Badge
+                      variant={
+                        theme.colorScheme === "dark" ? "light" : "outline"
+                      }>
+                      {item.description}
+                    </Badge>
+                  </td>
+                  <td>
+                    <Text fz="sm" c="blue">
+                      $ {item.price}
+                    </Text>
+                  </td>
+                  <td>
+                    <Text fz="sm">{item.quantity}</Text>
+                  </td>
+                  <td>
+                    <Text fz="sm" c="blue">
+                      {item.sale_price}
+                    </Text>
+                  </td>
+                  <td>
+                    <Group spacing={0} position="right">
+                      <ActionIcon onClick={() => toEdit(item)}>
+                        <IconPencil size="1rem" stroke={1.5} />
+                      </ActionIcon>
+                      <ActionIcon
+                        color="red"
+                        onClick={() => handleDeleteProduct(item.id)}>
+                        <IconTrash size="1rem" stroke={1.5} />
+                      </ActionIcon>
+                    </Group>
+                  </td>
+                </tr>
+              ))
+            : currentPost?.map((item) => (
+                <tr key={item.id}>
+                  <td>
+                    <Group spacing="sm">
+                      <Text fz="sm" fw={500}>
+                        {item.name}
+                      </Text>
+                    </Group>
+                  </td>
+
+                  <td>
+                    <Badge
+                      variant={
+                        theme.colorScheme === "dark" ? "light" : "outline"
+                      }>
+                      {item.description}
+                    </Badge>
+                  </td>
+                  <td>
+                    <Text fz="sm" c="blue">
+                      $ {item.price}
+                    </Text>
+                  </td>
+                  <td>
+                    <Text fz="sm">{item.quantity}</Text>
+                  </td>
+                  <td>
+                    <Text fz="sm" c="blue">
+                      {item.sale_price}
+                    </Text>
+                  </td>
+                  <td>
+                    <Group spacing={0} position="right">
+                      <ActionIcon onClick={() => toEdit(item)}>
+                        <IconPencil size="1rem" stroke={1.5} />
+                      </ActionIcon>
+                      <ActionIcon
+                        color="red"
+                        onClick={() => handleDeleteProduct(item.id)}>
+                        <IconTrash size="1rem" stroke={1.5} />
+                      </ActionIcon>
+                    </Group>
+                  </td>
+                </tr>
+              ))}
+        </tbody>
+      </Table>
     </ScrollArea>
   );
 }
+
+// {currentPost?.map((item) => (
+//   <tr key={item.id}>
+//     <td>
+//       <Group spacing="sm">
+//         <Text fz="sm" fw={500}>
+//           {item.name}
+//         </Text>
+//       </Group>
+//     </td>
+
+//     <td>
+//       <Badge
+//         variant={theme.colorScheme === "dark" ? "light" : "outline"}>
+//         {item.description}
+//       </Badge>
+//     </td>
+//     <td>
+//       <Text fz="sm" c="blue">
+//         $ {item.price}
+//       </Text>
+//     </td>
+//     <td>
+//       <Text fz="sm">{item.quantity}</Text>
+//     </td>
+//     <td>
+//       <Text fz="sm" c="blue">
+//         {item.sale_price}
+//       </Text>
+//     </td>
+//     <td>
+//       <Group spacing={0} position="right">
+//         <ActionIcon onClick={() => toEdit(item)}>
+//           <IconPencil size="1rem" stroke={1.5} />
+//         </ActionIcon>
+//         <ActionIcon
+//           color="red"
+//           onClick={() => handleDeleteProduct(item.id)}>
+//           <IconTrash size="1rem" stroke={1.5} />
+//         </ActionIcon>
+//       </Group>
+//     </td>
+//   </tr>
+// ))}
+
+// const rows = currentPost?.map((item) => (
+//   <tr key={item.id}>
+//     <td>
+//       <Group spacing="sm">
+//         <Text fz="sm" fw={500}>
+//           {item.name}
+//         </Text>
+//       </Group>
+//     </td>
+
+//     <td>
+//       <Badge variant={theme.colorScheme === "dark" ? "light" : "outline"}>
+//         {item.description}
+//       </Badge>
+//     </td>
+//     <td>
+//       <Text fz="sm" c="blue">
+//         $ {item.price}
+//       </Text>
+//     </td>
+//     <td>
+//       <Text fz="sm">{item.quantity}</Text>
+//     </td>
+//     <td>
+//       <Text fz="sm" c="blue">
+//         {item.sale_price}
+//       </Text>
+//     </td>
+//     <td>
+//       <Group spacing={0} position="right">
+//         <ActionIcon onClick={() => toEdit(item)}>
+//           <IconPencil size="1rem" stroke={1.5} />
+//         </ActionIcon>
+//         <ActionIcon color="red" onClick={() => handleDeleteProduct(item.id)}>
+//           <IconTrash size="1rem" stroke={1.5} />
+//         </ActionIcon>
+//       </Group>
+//     </td>
+//   </tr>
+// ));

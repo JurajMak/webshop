@@ -9,7 +9,7 @@ export const CartBtn = styled.button`
 export const DrawerWrapper = styled.div`
   height: 1000px;
   display: grid;
-  grid-template-rows: 3% 68% 20%;
+  grid-template-rows: 67% 33%;
 `;
 
 export const CheckoutBtn = styled(Button)`

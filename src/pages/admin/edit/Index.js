@@ -125,6 +125,16 @@ const Edit = () => {
     }
   };
 
+  const getProductCategory = async () => {
+    const { data } = await supabase
+      .from("categories")
+      .select("*")
+      .eq("id", state.category_id)
+      .single();
+    console.log(data);
+    setPrevCategory(data.name);
+  };
+
   const updateProductCategory = async () => {
     const { data: categories } = await supabase
       .from("categories")
@@ -138,16 +148,6 @@ const Edit = () => {
         category_id: categories.id,
       })
       .match({ id: state.id });
-  };
-
-  const getProductCategory = async () => {
-    const { data } = await supabase
-      .from("categories")
-      .select("*")
-      .eq("id", state.category_id)
-      .single();
-    console.log(data);
-    setPrevCategory(data.name);
   };
 
   const returnDashboard = async () => {

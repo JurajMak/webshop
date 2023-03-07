@@ -110,10 +110,15 @@ export function ProductsCard({ data, onClick }) {
               </div>
             )}
           </div>
-
-          <Button size="xs" radius="xl" style={{ flex: 1 }} onClick={onClick}>
-            Add to cart
-          </Button>
+          {quantity > 1 ? (
+            <Button size="xs" radius="xl" style={{ flex: 1 }} onClick={onClick}>
+              Add to cart
+            </Button>
+          ) : (
+            <Badge variant="filled" size="lg" color="red" p={15}>
+              Out of Stock
+            </Badge>
+          )}
         </Group>
       </Card.Section>
     </Card>
