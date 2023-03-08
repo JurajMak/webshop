@@ -1,4 +1,11 @@
-import { Paper, createStyles, TextInput, Title, Checkbox } from "@mantine/core";
+import {
+  Paper,
+  createStyles,
+  TextInput,
+  Title,
+  Checkbox,
+  Loader,
+} from "@mantine/core";
 import { useNavigate } from "react-router-dom";
 import { useForm } from "@mantine/form";
 import { supabase } from "../../../config/Supabase";
@@ -44,6 +51,7 @@ const useStyles = createStyles((theme) => ({
 const Create = () => {
   const { classes } = useStyles();
   const { user } = useContext(AuthContext);
+  const [loading, setLoading] = useState(false);
   const form = useForm({
     name: "",
     description: "",
@@ -62,13 +70,8 @@ const Create = () => {
     navigate("/admin");
   };
 
-  // const handleSalePrice = async () => {
-  //   let calc = Math.round((price / 100) * salePercentage);
-  //   let total = price - calc;
-
-  // };
-
   const handleAddProduct = async () => {
+    setLoading(true);
     const { data: categories } = await supabase
       .from("categories")
       .select("*")
@@ -95,7 +98,11 @@ const Create = () => {
       category_id: categoryId,
       is_sale: checked,
       sale_price: total,
+      user_id: user.id,
     });
+
+    setLoading(false);
+    form.reset();
   };
 
   console.log(checked);
@@ -107,6 +114,10 @@ const Create = () => {
       </Title>
 
       <Form onSubmit={form.onSubmit(handleAddProduct)}>
+        <TextInput label="Category" {...form.getInputProps("category")} />
+        <StyledButton onClick={(e) => console.log("bla")}>
+          Add Category
+        </StyledButton>
         <TextInput label="Product name" {...form.getInputProps("name")} />
         <TextInput
           label="Description of product"
@@ -130,13 +141,10 @@ const Create = () => {
         )}
 
         <TextInput label="Quantity" {...form.getInputProps("quantity")} />
-        <TextInput
-          label="Category"
-          // placeholder="Category"
-          {...form.getInputProps("category")}
-        />
 
-        <StyledButton type="submit">Submit</StyledButton>
+        <StyledButton type="submit">
+          {loading ? <Loader /> : "Submit"}
+        </StyledButton>
         <StyledButton onClick={returnDashboard}>Return</StyledButton>
       </Form>
       {/* </Paper> */}

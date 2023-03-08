@@ -28,6 +28,7 @@ export default function AppShellLayout() {
   const [activePage, setPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(10);
   const [value, setValue] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const lastPost = activePage * itemsPerPage;
   const firstPost = lastPost - itemsPerPage;
@@ -79,6 +80,32 @@ export default function AppShellLayout() {
     }
   };
 
+  const handleAddQuantity = (e, item) => {
+    const isExists = shoppingData?.some((cart) => {
+      return cart.id === item.id;
+    });
+
+    if (isExists) {
+      setShoppingData(
+        shoppingData?.map((cart) => {
+          if (cart.id === item.id) {
+            const updatedItem = { ...cart, quantity: cart.quantity + 1 };
+            localStorage.setItem(
+              `shoppingData_${item.id}`,
+              JSON.stringify(updatedItem)
+            );
+            return updatedItem;
+          }
+          return cart;
+        })
+      );
+    } else {
+      const newItem = { ...item, quantity: 1 };
+      localStorage.setItem(`shoppingData_${item.id}`, JSON.stringify(newItem));
+      setShoppingData([...shoppingData, newItem]);
+    }
+  };
+
   const handleRemoveQuantity = (e, item) => {
     const isExists = shoppingData?.some((cart) => {
       return cart.id === item.id;
@@ -101,6 +128,15 @@ export default function AppShellLayout() {
         })
       );
     }
+  };
+
+  const handleDeleteAllCart = () => {
+    for (let key in localStorage) {
+      if (key.includes(`shoppingData_`)) {
+        localStorage.removeItem(key);
+      }
+    }
+    setShoppingData([]);
   };
 
   const handleDeleteItem = (e, id) => {
@@ -163,9 +199,6 @@ export default function AppShellLayout() {
     setShoppingData(savedData);
   }, []);
 
-  console.log("layout", shoppingData);
-  console.log("layout user", user?.id);
-
   return (
     <AppShell
       styles={{
@@ -218,10 +251,11 @@ export default function AppShellLayout() {
       }
       header={
         <HeaderTabs
-          data={shoppingData}
+          orders={shoppingData}
           onDelete={handleDeleteItem}
-          onQuantity={handleAddCart}
+          onQuantity={handleAddQuantity}
           onRemove={handleRemoveQuantity}
+          onClear={handleDeleteAllCart}
         />
       }>
       <Wrapper>

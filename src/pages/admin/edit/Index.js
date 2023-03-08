@@ -98,15 +98,43 @@ const Edit = () => {
     }
   };
 
+  // const updateProductQuantity = async (e) => {
+  //   const { data, error } = await supabase
+  //     .from("products")
+  //     .update({ quantity })
+  //     .match({ id: state.id });
+  //   if (error) {
+  //     console.log("nevalja", error.message);
+  //   } else {
+  //     console.log("proso", quantity);
+  //   }
+  // };
+
   const updateProductQuantity = async (e) => {
+    const { data: productData, error: productError } = await supabase
+      .from("products")
+      .select("quantity")
+      .eq("id", state.id)
+      .single();
+
+    if (productError) {
+      console.log("nevalja", productError.message);
+      return;
+    }
+
+    const existingQuantity = productData.quantity;
+
+    const updatedQuantity = existingQuantity + Number(quantity);
+
     const { data, error } = await supabase
       .from("products")
-      .update({ quantity })
+      .update({ quantity: updatedQuantity })
       .match({ id: state.id });
+
     if (error) {
       console.log("nevalja", error.message);
     } else {
-      console.log("proso", quantity);
+      console.log("proso", typeof existingQuantity);
     }
   };
 

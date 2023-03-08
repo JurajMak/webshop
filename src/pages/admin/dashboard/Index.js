@@ -1,6 +1,7 @@
 import React, { useContext, useState } from "react";
 import SearchBar from "../../../components/search/Index";
-import { DashboardTable } from "../../../components/table/Index";
+import { ProductsTable } from "../products/Index";
+import { OrderTable } from "../order/Index";
 import {
   AppShell,
   Navbar,
@@ -10,6 +11,7 @@ import {
   useMantineTheme,
   Button,
   Select,
+  Anchor,
 } from "@mantine/core";
 import { AuthContext } from "../../../contexts/Index";
 import { useNavigate } from "react-router-dom";
@@ -23,8 +25,10 @@ export default function Dashboard() {
   const [isSearching, setIsSearching] = useState(false);
   const [searchWord, setSearchWord] = useState("");
   const [search, setSearch] = useState([]);
+  const [swapTable, setSwapTable] = useState(false);
   const navigate = useNavigate();
   const titles = ["Name", "Description", "Price", "Quantity", "Sale price"];
+  const orderTitles = ["Order number", "Product name", "Price", "User name"];
 
   const navigateToCreate = async () => {
     navigate("/admin/products/create");
@@ -34,6 +38,11 @@ export default function Dashboard() {
 
   const handleSearchText = (e) => {
     setSearchWord(e.target.value);
+  };
+
+  const handleTableSwap = () => {
+    setSwapTable(!swapTable);
+    console.log(swapTable);
   };
 
   const handleSearchEnter = async (e) => {
@@ -74,6 +83,8 @@ export default function Dashboard() {
     setIsSearching(false);
   };
 
+  console.log(swapTable);
+
   return (
     <AppShell
       styles={{
@@ -99,7 +110,12 @@ export default function Dashboard() {
           <Button radius="xl" w={100} mt={20} ml="auto" onClick={handleShowAll}>
             Show All
           </Button>
-          <p>Orders</p>
+          <Anchor component="button" type="button" onClick={handleTableSwap}>
+            Products
+          </Anchor>
+          <Anchor component="button" type="button" onClick={handleTableSwap}>
+            Orders
+          </Anchor>
           <p>Category</p>
           <Select
             searchable
@@ -143,11 +159,19 @@ export default function Dashboard() {
           </div>
         </Header>
       }>
-      <DashboardTable
-        search={search}
-        titles={titles}
-        isSearching={isSearching}
-      />
+      {!swapTable ? (
+        <ProductsTable
+          search={search}
+          titles={titles}
+          isSearching={isSearching}
+        />
+      ) : (
+        <OrderTable
+          search={search}
+          isSearching={isSearching}
+          titles={orderTitles}
+        />
+      )}
     </AppShell>
   );
 }

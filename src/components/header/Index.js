@@ -5,13 +5,13 @@ import {
   Button,
   Box,
   Drawer,
-  Flex,
   Text,
   Indicator,
+  Loader,
 } from "@mantine/core";
 
 import { useNavigate } from "react-router-dom";
-import React, { useContext, useState, useEffect } from "react";
+import React, { useContext, useState } from "react";
 import { AuthContext } from "../../contexts/Index";
 import { supabase } from "../../config/Supabase";
 import { IconShoppingCart } from "@tabler/icons";
@@ -20,9 +20,6 @@ import {
   DrawerWrapper,
   CheckoutBtn,
   Shopping,
-  SelectedItems,
-  DrawerHeader,
-  SelectedItemsUser,
   CheckoutWrapper,
   TextWrapper,
 } from "./Styles";
@@ -47,11 +44,18 @@ const useStyles = createStyles((theme) => ({
   },
 }));
 
-export function HeaderTabs({ data, onRemove, onDelete, onQuantity }) {
+export function HeaderTabs({
+  orders,
+  onRemove,
+  onDelete,
+  onQuantity,
+  onClear,
+}) {
   const { classes } = useStyles();
   const [opened, setOpened] = useState(false);
   const navigate = useNavigate();
-  const { user, signOut } = useContext(AuthContext);
+  const { user, signOut, getData } = useContext(AuthContext);
+  const [loading, setLoading] = useState(false);
 
   const navigateLogin = async () => {
     navigate("/login");
@@ -68,8 +72,72 @@ export function HeaderTabs({ data, onRemove, onDelete, onQuantity }) {
       }, 0)
       .toFixed(2);
   };
-  console.log("heder", sumPrice(data));
-  console.log("hederUser", user?.id);
+
+  const totalString = sumPrice(orders);
+  const total = Number(totalString).toFixed();
+
+  const handleCheckout = async () => {
+    setLoading(true);
+    const { data, error } = await supabase
+      .from("orders")
+      .insert({ user_id: user.id, total: total });
+
+    if (error) {
+      console.error(error);
+      return;
+    }
+
+    const { data: orderData, error: orderError } = await supabase
+      .from("orders")
+      .select("id")
+      .order("created_at", { ascending: false })
+      .limit(1)
+      .eq("user_id", user.id);
+
+    if (orderError) {
+      console.error(orderError);
+      return;
+    }
+    const { data: products } = await supabase.from("products").select("*");
+    const orderId = orderData[0].id;
+
+    const { error: productError } = await supabase
+      .from("order_products")
+      .insert(
+        orders.map((item) => ({
+          product_id: item.id,
+          user_id: user.id,
+          order_id: orderId,
+        }))
+      );
+
+    if (productError) {
+      console.error(productError);
+      return;
+    }
+    const { productsError } = await supabase
+      .from("products")
+      .update(
+        orders.map((item) => ({
+          quantity:
+            products.find((product) => product.id === item.id).quantity -
+            item.quantity,
+        }))
+      )
+      .in(
+        "id",
+        orders.map((item) => item.id)
+      );
+
+    if (productsError) {
+      console.error(productsError);
+      return;
+    }
+    setLoading(false);
+    onClear();
+  };
+
+  console.log(loading);
   return (
     <Box>
       <Header height={60} px="md">
@@ -85,13 +153,8 @@ export function HeaderTabs({ data, onRemove, onDelete, onQuantity }) {
             padding="xs"
             size="xl">
             <DrawerWrapper>
-              {/* Drawer content */}
-
-              {/* <DrawerHeader>
-                <Text fz="lg">Shopping Cart</Text>
-              </DrawerHeader> */}
               <Shopping>
-                {data?.map((item) => {
+                {orders?.map((item) => {
                   return (
                     <ShoppingItem
                       key={item.id}
@@ -110,12 +173,15 @@ export function HeaderTabs({ data, onRemove, onDelete, onQuantity }) {
                     Total :
                   </Text>
                   <Text mr={150} mt={20} fz="lg">
-                    $ {sumPrice(data)}
+                    $ {sumPrice(orders)}
                   </Text>
                 </TextWrapper>
 
                 {user?.user_metadata.role === "user" ? (
-                  <CheckoutBtn>$ Checkout</CheckoutBtn>
+                  <CheckoutBtn onClick={handleCheckout}>
+                    {" "}
+                    {loading ? <Loader /> : "$ Checkout"}
+                  </CheckoutBtn>
                 ) : (
                   <CheckoutBtn onClick={navigateLogin}>
                     Log in to shop
@@ -127,14 +193,14 @@ export function HeaderTabs({ data, onRemove, onDelete, onQuantity }) {
           {user?.user_metadata.role === "user" ? (
             <Group className={classes.hiddenMobile}>
               Welcome {user.user_metadata.full_name} !
-              {data.length < 1 ? (
+              {orders.length < 1 ? (
                 ""
               ) : (
                 <Indicator
                   color="gold"
                   position="bottom-start"
                   inline
-                  label={data.length}
+                  label={orders.length}
                   size={30}
                   styles={{
                     common: {
@@ -150,14 +216,14 @@ export function HeaderTabs({ data, onRemove, onDelete, onQuantity }) {
             </Group>
           ) : (
             <Group className={classes.hiddenMobile}>
-              {data.length < 1 ? (
+              {orders.length < 1 ? (
                 ""
               ) : (
                 <Indicator
                   color="gold"
                   position="bottom-start"
                   inline
-                  label={data.length}
+                  label={orders.length}
                   size={30}
                   styles={{
                     common: {

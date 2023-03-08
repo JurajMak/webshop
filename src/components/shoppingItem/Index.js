@@ -8,7 +8,7 @@ import {
   ActionIcon,
 } from "@mantine/core";
 import { IconSquarePlus, IconSquareMinus, IconX } from "@tabler/icons";
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { DivReducer, ButtonWrapper, CardWrapper } from "./Styles";
 
 const useStyles = createStyles((theme) => ({
@@ -54,9 +54,11 @@ const useStyles = createStyles((theme) => ({
 
 const ShoppingItem = ({ data, onQuantity, onDelete, onRemove }) => {
   const { classes } = useStyles();
+
   const { name, price, description, quantity, id, sale_price, is_sale } = data;
   const total = price * quantity;
   const sale = sale_price * quantity;
+
   return (
     <CardWrapper>
       <DivReducer>

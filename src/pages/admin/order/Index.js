@@ -1,7 +1,131 @@
-import React from "react";
+import {
+  Badge,
+  Table,
+  Group,
+  Text,
+  ActionIcon,
+  ScrollArea,
+  useMantineTheme,
+  Pagination,
+  LoadingOverlay,
+} from "@mantine/core";
 
-const Order = () => {
-  return <div>Order</div>;
-};
+import { useNavigate } from "react-router-dom";
+import { supabase } from "../../../config/Supabase";
+import React, { useState, useContext } from "react";
+import { AuthContext } from "../../../contexts/Index";
+import { LoaderWrapper } from "./Styles";
 
-export default Order;
+export function OrderTable({ search, titles }) {
+  const theme = useMantineTheme();
+  const navigate = useNavigate();
+  const { data, getData, getCategory } = useContext(AuthContext);
+  const [activePage, setPage] = useState(1);
+  const [itemsPerPage, setItemsPerPage] = useState(13);
+  const [ordersInfo, setOrdersInfo] = useState([]);
+  const [ordersForRender, setOrdersForRender] = useState([]);
+  const [loading, setLoading] = useState(false);
+
+  const lastPost = activePage * itemsPerPage;
+  const firstPost = lastPost - itemsPerPage;
+  const currentPost = ordersForRender?.slice(firstPost, lastPost);
+  const searchPost = search?.slice(firstPost, lastPost);
+
+  const handleGetOrders = async () => {
+    setLoading(true);
+    const { data, error } = await supabase.from("orders").select(`
+    *,
+    order_products(
+      product_id,
+      products:products(name),
+      user_id,
+      profiles:profiles(full_name),
+      order_id,
+      orders:orders(total)
+    )
+  `);
+
+    setOrdersInfo(data);
+
+    setOrdersForRender(
+      data.flatMap((order) =>
+        order.order_products.map((product) => ({
+          id: order.id,
+          product_name: product.products.name,
+          profile_name: product.profiles.full_name,
+          total: order.total,
+        }))
+      )
+    );
+    setLoading(false);
+  };
+
+  React.useEffect(() => {
+    handleGetOrders();
+  }, []);
+  console.log("orders", ordersForRender);
+  return (
+    <ScrollArea>
+      <Pagination
+        m="auto"
+        withEdges
+        value={activePage}
+        onChange={setPage}
+        total={Math.round(data.length / 10)}
+      />
+      <Table sx={{ minWidth: 800 }} verticalSpacing="sm">
+        <thead>
+          <tr>
+            {titles?.map((item, index) => {
+              return <th key={index}>{item}</th>;
+            })}
+          </tr>
+        </thead>
+        <tbody>
+          {loading ? (
+            <LoaderWrapper>
+              <LoadingOverlay
+                visible={loading}
+                overlayBlur={2}
+                loaderProps={{ size: "xl" }}
+              />
+            </LoaderWrapper>
+          ) : (
+            currentPost?.map((item, index) => (
+              <tr key={index}>
+                <td>
+                  <Group spacing="xs">
+                    <Text fz="sm" fw={500}>
+                      {item.id}
+                    </Text>
+                  </Group>
+                </td>
+                <td>
+                  <Group spacing="xs">
+                    <Text fz="sm" fw={500}>
+                      {item.product_name}
+                    </Text>
+                  </Group>
+                </td>
+
+                <td>
+                  <Text fz="sm" c="blue">
+                    $ {item.total}
+                  </Text>
+                </td>
+                <td>
+                  <Text fz="sm"> {item.profile_name}</Text>
+                </td>
+                <td>
+                  <Text fz="sm" c="blue">
+                    {item.sale_price}
+                  </Text>
+                </td>
+              </tr>
+            ))
+          )}
+        </tbody>
+      </Table>
+    </ScrollArea>
+  );
+}

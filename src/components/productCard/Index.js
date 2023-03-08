@@ -8,7 +8,7 @@ import {
   Button,
 } from "@mantine/core";
 
-import React, { useState, useEffect, useContext } from "react";
+import React from "react";
 
 const useStyles = createStyles((theme) => ({
   card: {
@@ -81,7 +81,6 @@ export function ProductsCard({ data, onClick }) {
         </Text>
 
         <Group spacing={8} mb={-8}>
-          {/* <IconShirt /> */}
           {description}
         </Group>
       </Card.Section>
@@ -110,7 +109,7 @@ export function ProductsCard({ data, onClick }) {
               </div>
             )}
           </div>
-          {quantity > 1 ? (
+          {quantity >= 1 ? (
             <Button size="xs" radius="xl" style={{ flex: 1 }} onClick={onClick}>
               Add to cart
             </Button>
