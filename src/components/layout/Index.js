@@ -19,7 +19,7 @@ import SearchBar from "../search/Index";
 export default function AppShellLayout() {
   const theme = useMantineTheme();
   const [opened, setOpened] = useState(false);
-  const { data, setData, categories } = React.useContext(AuthContext);
+  const { data, setData, categories, user } = React.useContext(AuthContext);
   const [search, setSearch] = useState([]);
   const [searchWord, setSearchWord] = useState("");
   const [isSearching, setIsSearching] = useState(false);
@@ -71,7 +71,14 @@ export default function AppShellLayout() {
       return setShoppingData(
         shoppingData?.map((cart) => {
           if (cart.id === item.id && cart.quantity > 1) {
-            return { ...cart, quantity: cart.quantity - 1 };
+            const updatedItem = { ...cart, quantity: cart.quantity - 1 };
+            localStorage.setItem(
+              `shoppingData_${item.id}`,
+              JSON.stringify(updatedItem)
+            );
+            return updatedItem;
+          } else if (cart.id === item.id && cart.quantity > 1) {
+            localStorage.removeItem(`shoppingData_${item.id}`);
           }
           return cart;
         })
@@ -139,7 +146,8 @@ export default function AppShellLayout() {
     setShoppingData(savedData);
   }, []);
 
-  console.log("layout", search);
+  console.log("layout", shoppingData);
+  console.log("layout user", user?.id);
 
   return (
     <AppShell

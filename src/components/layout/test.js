@@ -67,13 +67,11 @@ export default function AppShellLayout() {
           p="md"
           hiddenBreakpoint="sm"
           hidden={!opened}
-          width={{ sm: 200, lg: 300 }}
-        >
+          width={{ sm: 200, lg: 300 }}>
           <Text>Search</Text>
           <InputWithButton
             onChange={(e) => setSearch(e.target.value)}
-            value={search}
-          ></InputWithButton>
+            value={search}></InputWithButton>
 
           {data
             .filter((item) => {
@@ -99,16 +97,14 @@ export default function AppShellLayout() {
           Application footer
         </Footer>
       }
-      header={<HeaderTabs data={data} />}
-    >
+      header={<HeaderTabs data={data} />}>
       <Wrapper>
         <Drawer
           opened={opened}
           onClose={() => setOpened(false)}
           title="Shopping Cart"
           padding="xl"
-          size="xl"
-        >
+          size="xl">
           {/* Drawer content */}
           <DrawerWrapper>
             {shoppingData?.map((item) => {
@@ -147,3 +143,52 @@ export default function AppShellLayout() {
     </AppShell>
   );
 }
+
+// const handleAddCart = (e, item) => {
+//   const isExists = shoppingData?.some((cart) => {
+//     return cart.id === item.id;
+//   });
+
+//   if (isExists) {
+//     setShoppingData(
+//       shoppingData?.map((cart) => {
+//         if (cart.id === item.id) {
+//           const updatedQuantity = cart.quantity + 1;
+//           if (updatedQuantity > item.quantity) {
+//             alert("Sorry, there are no more items available in stock");
+//             return cart;
+//           } else {
+//             const updatedItem = { ...cart, quantity: updatedQuantity };
+//             localStorage.setItem(
+//               `shoppingData_${item.id}`,
+//               JSON.stringify(updatedItem)
+//             );
+//             return updatedItem;
+//           }
+//         }
+//         return cart;
+//       })
+//     );
+//   } else {
+//     const newItem = { ...item, quantity: 1 };
+//     localStorage.setItem(`shoppingData_${item.id}`, JSON.stringify(newItem));
+//     setShoppingData([...shoppingData, newItem]);
+//   }
+// };
+
+// const handleRemoveQuantity = (e, item) => {
+//   const isExists = shoppingData?.some((cart) => {
+//     return cart.id === item.id;
+//   });
+
+//   if (isExists) {
+//     return setShoppingData(
+//       shoppingData?.map((cart) => {
+//         if (cart.id === item.id && cart.quantity > 1) {
+//           return { ...cart, quantity: cart.quantity - 1 };
+//         }
+//         return cart;
+//       })
+//     );
+//   }
+// };
