@@ -68,7 +68,8 @@ export function HeaderTabs({ data, onRemove, onDelete, onQuantity }) {
       }, 0)
       .toFixed(2);
   };
-  // console.log("heder", data);
+  console.log("heder", sumPrice(data));
+  console.log("hederUser", user?.id);
   return (
     <Box>
       <Header height={60} px="md">

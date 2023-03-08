@@ -45,7 +45,16 @@ export default function AppShellLayout() {
       setShoppingData(
         shoppingData?.map((cart) => {
           if (cart.id === item.id) {
-            const updatedItem = { ...cart, quantity: cart.quantity + 1 };
+            const updatedQuantity = cart.quantity + 1;
+            if (updatedQuantity > item.quantity) {
+              alert(
+                `Cannot add more items to cart remaining quantity : ${
+                  item.quantity - updatedQuantity + 1
+                }`
+              );
+              return cart;
+            }
+            const updatedItem = { ...cart, quantity: updatedQuantity };
             localStorage.setItem(
               `shoppingData_${item.id}`,
               JSON.stringify(updatedItem)
@@ -57,6 +66,14 @@ export default function AppShellLayout() {
       );
     } else {
       const newItem = { ...item, quantity: 1 };
+      if (newItem.quantity > item.quantity) {
+        alert(
+          `Cannot add more items to cart remaining quantity : ${
+            item.quantity - newItem.quantity + 1
+          }`
+        );
+        return;
+      }
       localStorage.setItem(`shoppingData_${item.id}`, JSON.stringify(newItem));
       setShoppingData([...shoppingData, newItem]);
     }
