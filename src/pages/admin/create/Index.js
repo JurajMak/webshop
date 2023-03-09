@@ -6,6 +6,7 @@ import {
   Checkbox,
   Loader,
   Button,
+  Text,
 } from "@mantine/core";
 import { useNavigate } from "react-router-dom";
 import { useForm } from "@mantine/form";
@@ -53,13 +54,16 @@ const Create = () => {
   const { classes } = useStyles();
   const { user } = useContext(AuthContext);
   const [loading, setLoading] = useState(false);
+  const [file, setFile] = useState(null);
   const form = useForm({
-    name: "",
-    description: "",
-    price: "",
-    quantity: "",
-    category: "",
-    salePercentage: "",
+    initialValues: {
+      name: "",
+      description: "",
+      price: "",
+      quantity: "",
+      category: "",
+      salePercentage: "",
+    },
   });
   const [checked, setChecked] = useState(false);
   const navigate = useNavigate();
@@ -73,13 +77,22 @@ const Create = () => {
 
   const handleCreateCategory = async () => {
     setLoading(true);
-
-    const { data, error } = await supabase
+    const { data: categories } = await supabase
       .from("categories")
-      .insert({ name: category, user_id: user.id });
+      .select("*")
+      .eq("name", category)
+      .single();
+
+    if (!categories) {
+      const { data, error } = await supabase
+        .from("categories")
+        .insert({ name: category, user_id: user.id });
+      if (error) {
+        console.log(error.message);
+      }
+    }
     setLoading(false);
   };
-
   const handleAddProduct = async () => {
     setLoading(true);
     const { data: categories } = await supabase
@@ -100,6 +113,7 @@ const Create = () => {
     });
 
     setLoading(false);
+    // form.reset();
   };
 
   console.log(checked);
@@ -111,6 +125,9 @@ const Create = () => {
       </Title>
 
       <Form onSubmit={form.onSubmit(handleAddProduct)}>
+        <Button variant="subtle" ml={350} onClick={() => form.reset()}>
+          New Entry
+        </Button>
         <TextInput label="Category" {...form.getInputProps("category")} />
         <Button mt={10} mb={10} onClick={handleCreateCategory}>
           Add Category
@@ -141,6 +158,17 @@ const Create = () => {
             label={`Set sale %`}
             {...form.getInputProps("salePercentage")}
           />
+        )}
+        {/* <Group position="center">
+          <FileButton onChange={setFile} accept="image/png,image/jpeg">
+            {(props) => <Button {...props}>Upload image</Button>}
+          </FileButton>
+        </Group> */}
+
+        {file && (
+          <Text size="sm" align="center" mt="sm">
+            Picked file: {file.name}
+          </Text>
         )}
 
         <TextInput label="Quantity" {...form.getInputProps("quantity")} />

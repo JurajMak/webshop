@@ -50,20 +50,29 @@ const useStyles = createStyles((theme) => ({
 const Edit = () => {
   const { classes } = useStyles();
   const form = useForm({
-    name: "",
-    description: "",
-    price: "",
-    quantity: "",
-    category: "",
-    sale_price: "",
-    salePercentage: "",
+    initialValues: {
+      name: "",
+      description: "",
+      price: "",
+      quantity: "",
+      category: "",
+      sale_price: "",
+      salePercentage: "",
+    },
   });
 
   const [prevCategory, setPrevCategory] = useState("");
   const navigate = useNavigate();
   const { state } = useLocation();
-  const { name, description, price, quantity, category, salePercentage } =
-    form.values;
+  const {
+    name,
+    description,
+    price,
+    quantity,
+    category,
+    salePercentage,
+    sale_price,
+  } = form.values;
   const [isSale, setSale] = useState(state.is_sale);
 
   const percentageCalc = Math.floor(
@@ -136,7 +145,7 @@ const Edit = () => {
   const handleSalePrice = async () => {
     let calc = Math.round((state.price / 100) * salePercentage);
     let total = state.price - calc;
-    // console.log(total);
+    console.log(typeof total);
     const { data, error } = await supabase
       .from("products")
       .update({ sale_price: total })
@@ -192,6 +201,18 @@ const Edit = () => {
   };
 
   const updateAll = async (e) => {
+    const { data: categories } = await supabase
+      .from("categories")
+      .select("*")
+      .eq("name", category)
+      .single();
+
+    const { data: a, error: b } = await supabase
+      .from("products")
+      .update({
+        category_id: categories.id,
+      })
+      .match({ id: state.id });
     const { data, error } = await supabase
       .from("products")
       .update({
@@ -206,6 +227,7 @@ const Edit = () => {
     } else {
       console.log("proslo", form.values);
     }
+    form.reset();
   };
 
   React.useEffect(() => {

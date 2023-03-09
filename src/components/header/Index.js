@@ -15,7 +15,7 @@ import { useNavigate } from "react-router-dom";
 import React, { useContext, useState } from "react";
 import { AuthContext } from "../../contexts/Index";
 import { supabase } from "../../config/Supabase";
-import { IconShoppingCart, IconX } from "@tabler/icons";
+import { IconShoppingCart, IconX, IconCheck } from "@tabler/icons";
 import ShoppingItem from "../shoppingItem/Index";
 import {
   DrawerWrapper,
@@ -59,6 +59,7 @@ export function HeaderTabs({
   const navigate = useNavigate();
   const { user, signOut, getData } = useContext(AuthContext);
   const [loading, setLoading] = useState(false);
+  const [payment, setPaymet] = useState(false);
 
   const navigateLogin = async () => {
     navigate("/login");
@@ -81,6 +82,7 @@ export function HeaderTabs({
 
   const handleCheckout = async () => {
     setLoading(true);
+    setPaymet(true);
     const { data, error } = await supabase
       .from("orders")
       .insert({ user_id: user.id, total: total });
@@ -140,7 +142,6 @@ export function HeaderTabs({
     onClear();
   };
 
-  console.log(notify);
   return (
     <Box>
       <Header height={60} px="md">
@@ -157,6 +158,17 @@ export function HeaderTabs({
             size="xl">
             <DrawerWrapper>
               <Shopping>
+                {payment && (
+                  <Notification
+                    onClick={() => setPaymet(false)}
+                    mb={50}
+                    icon={<IconCheck size="1.1rem" />}
+                    color="teal"
+                    title="Order Confirmed !">
+                    Thank you for your purchase! Enjoy your new products!"
+                  </Notification>
+                )}
+
                 {notify && (
                   <Notification
                     onClick={onNotify}

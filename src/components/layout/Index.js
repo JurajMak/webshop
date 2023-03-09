@@ -17,7 +17,7 @@ import { supabase } from "../../config/Supabase";
 import { AuthContext } from "../../contexts/Index";
 import React, { useState, useEffect, useContext } from "react";
 import SearchBar from "../search/Index";
-import { IconX, IconAlertCircle } from "@tabler/icons";
+import { IconX } from "@tabler/icons";
 
 export default function AppShellLayout() {
   const theme = useMantineTheme();
@@ -154,6 +154,9 @@ export default function AppShellLayout() {
   const handleSearchText = (e) => {
     setSearchWord(e.target.value);
   };
+  const handleCateogrySearch = (e) => {
+    setValue(e.target.value);
+  };
 
   const handleSearchEnter = async (e) => {
     if (e.key === "Enter") {
@@ -186,6 +189,25 @@ export default function AppShellLayout() {
 
     setSearch(productData);
     setIsSearching(true);
+  };
+
+  const handleCategoryEnter = async (e) => {
+    if (e.key === "Enter") {
+      const { data: categories } = await supabase
+        .from("categories")
+        .select("id")
+        .ilike("name", `%${value}%`);
+
+      const categoryIds = categories.map((category) => category.id);
+
+      const { data: productData } = await supabase
+        .from("products")
+        .select("*")
+        .in("category_id", categoryIds);
+
+      setSearch(productData);
+      setIsSearching(true);
+    }
   };
 
   const handleShowAll = (e) => {
@@ -250,6 +272,7 @@ export default function AppShellLayout() {
             value={value}
             data={mappedCategories}
             onChange={setValue}
+            onKeyDown={(e) => handleCategoryEnter(e)}
           />
           <Button
             variant="white"

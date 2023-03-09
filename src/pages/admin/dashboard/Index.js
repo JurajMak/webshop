@@ -94,6 +94,24 @@ export default function Dashboard() {
     e.preventDefault();
     setIsSearching(false);
   };
+  const handleCategoryEnter = async (e) => {
+    if (e.key === "Enter") {
+      const { data: categories } = await supabase
+        .from("categories")
+        .select("id")
+        .ilike("name", `%${value}%`);
+
+      const categoryIds = categories.map((category) => category.id);
+
+      const { data: productData } = await supabase
+        .from("products")
+        .select("*")
+        .in("category_id", categoryIds);
+
+      setSearch(productData);
+      setIsSearching(true);
+    }
+  };
 
   return (
     <AppShell
@@ -140,6 +158,7 @@ export default function Dashboard() {
             value={value}
             data={mappedCategories}
             onChange={setValue}
+            onKeyDown={(e) => handleCategoryEnter(e)}
           />
           <Button
             variant="white"
@@ -193,7 +212,7 @@ export default function Dashboard() {
               height: "100%",
             }}>
             <Text>Dashboard</Text>
-            <Text>Admin: {user.user_metadata.full_name}</Text>
+            <Text>Admin logged in : {user.user_metadata.full_name}</Text>
             <Button onClick={navigateToCreate}>Create</Button>
           </div>
         </Header>

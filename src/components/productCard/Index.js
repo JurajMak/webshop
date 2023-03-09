@@ -54,7 +54,7 @@ const useStyles = createStyles((theme) => ({
 
 export function ProductsCard({ data, onClick }) {
   const { classes } = useStyles();
-  const { name, price, description, quantity, id, sale_price, is_sale } = data;
+  const { name, price, description, quantity, sale_price, is_sale } = data;
 
   return (
     <Card withBorder radius="md" className={classes.card}>
@@ -75,7 +75,7 @@ export function ProductsCard({ data, onClick }) {
         </div>
         {is_sale && (
           <Badge variant="outline" size="lg">
-            {Math.round(((price - sale_price) / price) * 100)}% off
+            {Math.floor(((price - sale_price) / price) * 100)}% off
           </Badge>
         )}
       </Group>

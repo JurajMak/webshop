@@ -4,6 +4,7 @@ import {
   Checkbox,
   Title,
   ActionIcon,
+  Button,
 } from "@mantine/core";
 import { useNavigate } from "react-router-dom";
 import { IconAt, IconEye, IconEyeOff } from "@tabler/icons";
@@ -12,7 +13,7 @@ import React, { useState } from "react";
 import { AuthContext } from "../../contexts/Index";
 import { supabase } from "../../config/Supabase";
 
-import { Form, StyledButton } from "../login/Styles";
+import { Form } from "../login/Styles";
 const useStyles = createStyles((theme) => ({
   wrapper: {
     minHeight: 900,
@@ -74,10 +75,10 @@ const RegisterForm = () => {
       },
     });
 
-    if (data && is_admin) {
-      navigate("/admin");
-      return;
-    }
+    // if (data && is_admin) {
+    //   navigate("/admin");
+    //   return;
+    // }
     navigate("/login");
   };
 
@@ -124,10 +125,16 @@ const RegisterForm = () => {
           {...form.getInputProps("password")}
         />
 
-        <Checkbox label="Is Admin" {...form.getInputProps("is_admin")} />
+        <Checkbox
+          label="Are you admin?"
+          mt={10}
+          {...form.getInputProps("is_admin")}
+        />
 
-        <StyledButton type="submit">Submit</StyledButton>
-        <StyledButton onClick={returnHome}>Return</StyledButton>
+        <Button mt={10} mr={20} type="submit">
+          Submit
+        </Button>
+        <Button onClick={returnHome}>Return</Button>
       </Form>
 
       {/* </Paper> */}

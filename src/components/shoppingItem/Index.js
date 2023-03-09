@@ -82,7 +82,7 @@ const ShoppingItem = ({ cartData, onQuantity, onDelete, onRemove }) => {
             </div>
             {is_sale && (
               <Badge variant="outline" size="lg">
-                {Math.round(((price - sale_price) / price) * 100)}% off
+                {Math.floor(((price - sale_price) / price) * 100)}% off
               </Badge>
             )}
           </Group>
