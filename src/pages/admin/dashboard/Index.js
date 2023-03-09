@@ -36,7 +36,7 @@ export default function Dashboard() {
     "Sale price",
     "Edit | Delete",
   ];
-  const orderTitles = ["Order number", "Price", "User name"];
+  const orderTitles = ["Order number", "Checkout Amount", "User name"];
 
   const navigateToCreate = async () => {
     navigate("/admin/products/create");

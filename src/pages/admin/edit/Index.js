@@ -66,7 +66,7 @@ const Edit = () => {
     form.values;
   const [isSale, setSale] = useState(state.is_sale);
 
-  const percentageCalc = Math.round(
+  const percentageCalc = Math.floor(
     ((state.price - state.sale_price) / state.price) * 100
   );
 
@@ -104,18 +104,6 @@ const Edit = () => {
       console.log("proso", price);
     }
   };
-
-  // const updateProductQuantity = async (e) => {
-  //   const { data, error } = await supabase
-  //     .from("products")
-  //     .update({ quantity })
-  //     .match({ id: state.id });
-  //   if (error) {
-  //     console.log("nevalja", error.message);
-  //   } else {
-  //     console.log("proso", quantity);
-  //   }
-  // };
 
   const updateProductQuantity = async (e) => {
     const { data: productData, error: productError } = await supabase

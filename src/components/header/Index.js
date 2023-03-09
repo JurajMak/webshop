@@ -8,13 +8,14 @@ import {
   Text,
   Indicator,
   Loader,
+  Notification,
 } from "@mantine/core";
 
 import { useNavigate } from "react-router-dom";
 import React, { useContext, useState } from "react";
 import { AuthContext } from "../../contexts/Index";
 import { supabase } from "../../config/Supabase";
-import { IconShoppingCart } from "@tabler/icons";
+import { IconShoppingCart, IconX } from "@tabler/icons";
 import ShoppingItem from "../shoppingItem/Index";
 import {
   DrawerWrapper,
@@ -50,6 +51,8 @@ export function HeaderTabs({
   onDelete,
   onQuantity,
   onClear,
+  notify,
+  onNotify,
 }) {
   const { classes } = useStyles();
   const [opened, setOpened] = useState(false);
@@ -137,7 +140,7 @@ export function HeaderTabs({
     onClear();
   };
 
-  console.log(loading);
+  console.log(notify);
   return (
     <Box>
       <Header height={60} px="md">
@@ -154,11 +157,22 @@ export function HeaderTabs({
             size="xl">
             <DrawerWrapper>
               <Shopping>
+                {notify && (
+                  <Notification
+                    onClick={onNotify}
+                    icon={<IconX size="1.1rem" />}
+                    w={380}
+                    h={50}
+                    color="red">
+                    Cannot add more of that product to cart remaining quantity
+                    is 0
+                  </Notification>
+                )}
                 {orders?.map((item) => {
                   return (
                     <ShoppingItem
                       key={item.id}
-                      data={item}
+                      cartData={item}
                       onRemove={onRemove}
                       onQuantity={onQuantity}
                       onDelete={onDelete}
@@ -166,7 +180,6 @@ export function HeaderTabs({
                   );
                 })}
               </Shopping>
-
               <CheckoutWrapper>
                 <TextWrapper>
                   <Text mb={30} ml={100} mt={20} fz="lg" fw={500}>

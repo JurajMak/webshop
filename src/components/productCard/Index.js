@@ -55,11 +55,12 @@ const useStyles = createStyles((theme) => ({
 export function ProductsCard({ data, onClick }) {
   const { classes } = useStyles();
   const { name, price, description, quantity, id, sale_price, is_sale } = data;
-  // "https://i.imgur.com/ZL52Q2D.png"
+
   return (
     <Card withBorder radius="md" className={classes.card}>
       <Card.Section className={classes.imageSection}>
         <Image
+          // fit="cover"
           src="https://i.imgur.com/ZL52Q2D.png"
           alt="No image to display"
         />

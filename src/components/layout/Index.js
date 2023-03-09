@@ -7,6 +7,8 @@ import {
   Pagination,
   Select,
   Button,
+  Notification,
+  Alert,
 } from "@mantine/core";
 import ProductsCard from "../productCard/Index";
 import HeaderTabs from "../header/Index";
@@ -15,6 +17,7 @@ import { supabase } from "../../config/Supabase";
 import { AuthContext } from "../../contexts/Index";
 import React, { useState, useEffect, useContext } from "react";
 import SearchBar from "../search/Index";
+import { IconX, IconAlertCircle } from "@tabler/icons";
 
 export default function AppShellLayout() {
   const theme = useMantineTheme();
@@ -29,6 +32,7 @@ export default function AppShellLayout() {
   const [itemsPerPage, setItemsPerPage] = useState(10);
   const [value, setValue] = useState("");
   const [loading, setLoading] = useState(false);
+  const [notify, setNotify] = useState(false);
 
   const lastPost = activePage * itemsPerPage;
   const firstPost = lastPost - itemsPerPage;
@@ -48,11 +52,8 @@ export default function AppShellLayout() {
           if (cart.id === item.id) {
             const updatedQuantity = cart.quantity + 1;
             if (updatedQuantity > item.quantity) {
-              alert(
-                `Cannot add more items to cart remaining quantity : ${
-                  item.quantity - updatedQuantity + 1
-                }`
-              );
+              setNotify(true);
+
               return cart;
             }
             const updatedItem = { ...cart, quantity: updatedQuantity };
@@ -68,11 +69,8 @@ export default function AppShellLayout() {
     } else {
       const newItem = { ...item, quantity: 1 };
       if (newItem.quantity > item.quantity) {
-        alert(
-          `Cannot add more items to cart remaining quantity : ${
-            item.quantity - newItem.quantity + 1
-          }`
-        );
+        setNotify(true);
+
         return;
       }
       localStorage.setItem(`shoppingData_${item.id}`, JSON.stringify(newItem));
@@ -81,29 +79,38 @@ export default function AppShellLayout() {
   };
 
   const handleAddQuantity = (e, item) => {
-    const isExists = shoppingData?.some((cart) => {
-      return cart.id === item.id;
-    });
+    const dataItem = data.find((dataItem) => dataItem.id === item.id);
 
-    if (isExists) {
-      setShoppingData(
-        shoppingData?.map((cart) => {
-          if (cart.id === item.id) {
-            const updatedItem = { ...cart, quantity: cart.quantity + 1 };
-            localStorage.setItem(
-              `shoppingData_${item.id}`,
-              JSON.stringify(updatedItem)
-            );
-            return updatedItem;
-          }
-          return cart;
-        })
-      );
-    } else {
-      const newItem = { ...item, quantity: 1 };
-      localStorage.setItem(`shoppingData_${item.id}`, JSON.stringify(newItem));
-      setShoppingData([...shoppingData, newItem]);
+    const cartItemIndex = shoppingData.findIndex(
+      (cartItem) => cartItem.id === item.id
+    );
+    const cartItem = shoppingData[cartItemIndex];
+
+    if (cartItem && cartItem.quantity >= dataItem.quantity) {
+      setNotify(true);
+      return;
     }
+
+    const updatedCartItem = cartItem
+      ? { ...cartItem, quantity: cartItem.quantity + 1 }
+      : { ...item, quantity: 1 };
+
+    const updatedShoppingData = [...shoppingData];
+    if (cartItemIndex >= 0) {
+      updatedShoppingData[cartItemIndex] = updatedCartItem;
+    } else {
+      updatedShoppingData.push(updatedCartItem);
+    }
+
+    localStorage.setItem(
+      `shoppingData_${item.id}`,
+      JSON.stringify(updatedCartItem)
+    );
+
+    setShoppingData(updatedShoppingData);
+    console.log("database quant", dataItem);
+    console.log("index of item in shopData array", cartItemIndex);
+    console.log("item added to cart", cartItem);
   };
 
   const handleRemoveQuantity = (e, item) => {
@@ -185,6 +192,9 @@ export default function AppShellLayout() {
     e.preventDefault();
     setIsSearching(false);
   };
+  const handleNotification = () => {
+    setNotify(false);
+  };
 
   useEffect(() => {
     const savedData = [];
@@ -198,7 +208,7 @@ export default function AppShellLayout() {
 
     setShoppingData(savedData);
   }, []);
-  console.log("search", searchPost);
+
   return (
     <AppShell
       styles={{
@@ -264,8 +274,20 @@ export default function AppShellLayout() {
           onQuantity={handleAddQuantity}
           onRemove={handleRemoveQuantity}
           onClear={handleDeleteAllCart}
+          notify={notify}
+          onNotify={handleNotification}
         />
       }>
+      {notify && (
+        <Notification
+          ml={100}
+          onClick={handleNotification}
+          icon={<IconX size="1.1rem" />}
+          w={380}
+          color="red">
+          Cannot add more of that product to cart remaining quantity is 0
+        </Notification>
+      )}
       <Wrapper>
         {isSearching
           ? searchPost?.map((item) => (

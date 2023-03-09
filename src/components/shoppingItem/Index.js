@@ -53,13 +53,15 @@ const useStyles = createStyles((theme) => ({
   },
 }));
 
-const ShoppingItem = ({ data, onQuantity, onDelete, onRemove }) => {
+const ShoppingItem = ({ cartData, onQuantity, onDelete, onRemove }) => {
   const { classes } = useStyles();
 
-  const { name, price, description, quantity, id, sale_price, is_sale } = data;
+  const { name, price, description, quantity, id, sale_price, is_sale } =
+    cartData;
   const total = price * quantity;
   const sale = sale_price * quantity;
   // "https://i.imgur.com/ZL52Q2D.png"
+  // console.log("shoping", cartData);
   return (
     <CardWrapper>
       <DivReducer>
@@ -134,14 +136,14 @@ const ShoppingItem = ({ data, onQuantity, onDelete, onRemove }) => {
         </Card>
       </DivReducer>
       <ButtonWrapper>
-        <ActionIcon mt={20} ml={40} onClick={(e) => onDelete(e, data.id)}>
+        <ActionIcon mt={20} ml={40} onClick={(e) => onDelete(e, cartData.id)}>
           <IconX size={30} />
         </ActionIcon>
         <div style={{ display: "flex" }}>
-          <ActionIcon mb={80} onClick={(e) => onRemove(e, data)}>
+          <ActionIcon mb={80} onClick={(e) => onRemove(e, cartData)}>
             <IconSquareMinus size={30} />
           </ActionIcon>
-          <ActionIcon mb={80} onClick={(e) => onQuantity(e, data)}>
+          <ActionIcon mb={80} onClick={(e) => onQuantity(e, cartData)}>
             <IconSquarePlus size={30} />
           </ActionIcon>
         </div>

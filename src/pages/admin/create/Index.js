@@ -65,7 +65,7 @@ const Create = () => {
   const navigate = useNavigate();
   const { name, description, price, quantity, category, salePercentage } =
     form.values;
-  let calc = Math.round((price / 100) * salePercentage);
+  let calc = Math.floor((price / 100) * salePercentage);
   let total = price - calc;
   const returnDashboard = async () => {
     navigate("/admin");

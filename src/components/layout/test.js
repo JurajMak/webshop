@@ -192,3 +192,29 @@ export default function AppShellLayout() {
 //     );
 //   }
 // };
+
+// const handleAddQuantity = (e, item) => {
+//   const isExists = shoppingData?.some((cart) => {
+//     return cart.id === item.id;
+//   });
+
+//   if (isExists) {
+//     setShoppingData(
+//       shoppingData?.map((cart) => {
+//         if (cart.id === item.id) {
+//           const updatedItem = { ...cart, quantity: cart.quantity + 1 };
+//           localStorage.setItem(
+//             `shoppingData_${item.id}`,
+//             JSON.stringify(updatedItem)
+//           );
+//           return updatedItem;
+//         }
+//         return cart;
+//       })
+//     );
+//   } else {
+//     const newItem = { ...item, quantity: 1 };
+//     localStorage.setItem(`shoppingData_${item.id}`, JSON.stringify(newItem));
+//     setShoppingData([...shoppingData, newItem]);
+//   }
+// };

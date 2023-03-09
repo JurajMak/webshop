@@ -113,13 +113,15 @@ export function OrderTable({ titles }) {
         </thead>
         <tbody>
           {loading ? (
-            <LoaderWrapper>
-              <LoadingOverlay
-                visible={loading}
-                overlayBlur={2}
-                loaderProps={{ size: "xl" }}
-              />
-            </LoaderWrapper>
+            <tr>
+              <LoaderWrapper>
+                <LoadingOverlay
+                  visible={loading}
+                  overlayBlur={2}
+                  loaderProps={{ size: "xl" }}
+                />
+              </LoaderWrapper>
+            </tr>
           ) : (
             currentPost?.map((item, index) => (
               <tr key={index}>
@@ -159,3 +161,48 @@ export function OrderTable({ titles }) {
     </ScrollArea>
   );
 }
+
+// <tbody>
+// {loading ? (
+//   <LoaderWrapper>
+//     <LoadingOverlay
+//       visible={loading}
+//       overlayBlur={2}
+//       loaderProps={{ size: "xl" }}
+//     />
+//   </LoaderWrapper>
+// ) : (
+//   currentPost?.map((item, index) => (
+//     <tr key={index}>
+//       <td>
+//         <Group spacing="xs">
+//           <Text fz="sm" fw={500}>
+//             {item.id}
+//           </Text>
+//         </Group>
+//       </td>
+//       {/* <td>
+//         <Group spacing="xs">
+//           <Text fz="sm" fw={500}>
+//             {item.product_name}
+//           </Text>
+//         </Group>
+//       </td> */}
+
+//       <td>
+//         <Text fz="sm" c="blue">
+//           $ {item.total}
+//         </Text>
+//       </td>
+//       <td>
+//         <Text fz="sm"> {item.profile_name}</Text>
+//       </td>
+//       <td>
+//         <Text fz="sm" c="blue">
+//           {item.sale_price}
+//         </Text>
+//       </td>
+//     </tr>
+//   ))
+// )}
+// </tbody>
