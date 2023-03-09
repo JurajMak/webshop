@@ -75,10 +75,6 @@ const RegisterForm = () => {
       },
     });
 
-    // if (data && is_admin) {
-    //   navigate("/admin");
-    //   return;
-    // }
     navigate("/login");
   };
 

@@ -48,6 +48,8 @@ export function ProductsTable({ titles, search, isSearching }) {
     setLoading(false);
   }, []);
 
+  console.log("products", data);
+
   return (
     <ScrollArea>
       <Pagination

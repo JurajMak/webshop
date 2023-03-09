@@ -11,7 +11,6 @@ import {
   useMantineTheme,
   Button,
   Select,
-  Anchor,
 } from "@mantine/core";
 import { AuthContext } from "../../../contexts/Index";
 import { useNavigate } from "react-router-dom";
@@ -139,17 +138,10 @@ export default function Dashboard() {
             variant="white"
             radius="xl"
             w={100}
-            // mt={20}
             ml="auto"
             onClick={handleShowAll}>
             Show All
           </Button>
-          {/* <Anchor component="button" type="button" onClick={handleTableSwap}>
-            Products
-          </Anchor>
-          <Anchor component="button" type="button" onClick={handleTableSwap}>
-            Orders
-          </Anchor> */}
 
           <Select
             searchable

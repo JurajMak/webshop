@@ -76,7 +76,7 @@ export function OrderTable({ titles }) {
     );
 
     if (error) {
-      console.log("Error fetching orders:", error.message);
+      console.log("nevalja", error.message);
       return;
     }
 
