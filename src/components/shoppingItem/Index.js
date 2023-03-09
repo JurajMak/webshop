@@ -10,6 +10,7 @@ import {
 import { IconSquarePlus, IconSquareMinus, IconX } from "@tabler/icons";
 import React from "react";
 import { DivReducer, ButtonWrapper, CardWrapper } from "./Styles";
+import image from "../../assets/login.jpg";
 
 const useStyles = createStyles((theme) => ({
   card: {
@@ -58,13 +59,16 @@ const ShoppingItem = ({ data, onQuantity, onDelete, onRemove }) => {
   const { name, price, description, quantity, id, sale_price, is_sale } = data;
   const total = price * quantity;
   const sale = sale_price * quantity;
-
+  // "https://i.imgur.com/ZL52Q2D.png"
   return (
     <CardWrapper>
       <DivReducer>
         <Card withBorder radius="md" className={classes.card}>
           <Card.Section className={classes.imageSection}>
-            <Image src="https://i.imgur.com/ZL52Q2D.png" alt="Tesla Model S" />
+            <Image
+              src="https://i.imgur.com/ZL52Q2D.png"
+              alt="No image to display"
+            />
           </Card.Section>
 
           <Group position="apart" mt="md">

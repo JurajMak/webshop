@@ -1,5 +1,6 @@
 import React, { createContext, useState, useEffect } from "react";
 import { supabase } from "../config/Supabase";
+import { LoadingOverlay } from "@mantine/core";
 
 export const AuthContext = createContext(null);
 
@@ -100,7 +101,15 @@ const AuthProvider = ({ children }) => {
 
   return (
     <AuthContext.Provider value={value}>
-      {!isLoading && children}
+      {!isLoading ? (
+        children
+      ) : (
+        <LoadingOverlay
+          visible={isLoading}
+          overlayBlur={2}
+          loaderProps={{ size: "xl" }}
+        />
+      )}
     </AuthContext.Provider>
   );
 };

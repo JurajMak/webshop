@@ -20,10 +20,6 @@ export const ButtonWrapper = styled.div`
   justify-content: space-between;
 `;
 
-export const StyledButton = styled(Button)`
-  margin: 10px;
-`;
-
 export const TitleHeader = styled.h1`
   text-align: center;
 `;

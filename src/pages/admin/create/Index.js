@@ -5,12 +5,13 @@ import {
   Title,
   Checkbox,
   Loader,
+  Button,
 } from "@mantine/core";
 import { useNavigate } from "react-router-dom";
 import { useForm } from "@mantine/form";
 import { supabase } from "../../../config/Supabase";
 
-import { Form, StyledButton } from "./Styles";
+import { Form } from "./Styles";
 import React, { useContext, useState } from "react";
 import { AuthContext } from "../../../contexts/Index";
 const useStyles = createStyles((theme) => ({
@@ -70,6 +71,15 @@ const Create = () => {
     navigate("/admin");
   };
 
+  const handleCreateCategory = async () => {
+    setLoading(true);
+
+    const { data, error } = await supabase
+      .from("categories")
+      .insert({ name: category, user_id: user.id });
+    setLoading(false);
+  };
+
   const handleAddProduct = async () => {
     setLoading(true);
     const { data: categories } = await supabase
@@ -78,31 +88,18 @@ const Create = () => {
       .eq("name", category)
       .single();
 
-    let categoryId;
-
-    if (!categories) {
-      const { data: addCategory } = await supabase
-        .from("categories")
-        .insert({ name: category, user_id: user.id });
-
-      categoryId = addCategory.id;
-    } else {
-      categoryId = categories.id;
-    }
-
     const { data, error } = await supabase.from("products").insert({
       name,
       description,
       price,
       quantity,
-      category_id: categoryId,
+      category_id: categories.id,
       is_sale: checked,
       sale_price: total,
       user_id: user.id,
     });
 
     setLoading(false);
-    form.reset();
   };
 
   console.log(checked);
@@ -115,26 +112,32 @@ const Create = () => {
 
       <Form onSubmit={form.onSubmit(handleAddProduct)}>
         <TextInput label="Category" {...form.getInputProps("category")} />
-        <StyledButton onClick={(e) => console.log("bla")}>
+        <Button mt={10} mb={10} onClick={handleCreateCategory}>
           Add Category
-        </StyledButton>
-        <TextInput label="Product name" {...form.getInputProps("name")} />
+        </Button>
         <TextInput
+          mb={10}
+          label="Product name"
+          {...form.getInputProps("name")}
+        />
+        <TextInput
+          mb={10}
           label="Description of product"
           {...form.getInputProps("description")}
         />
 
-        <TextInput label="Price" {...form.getInputProps("price")} />
+        <TextInput mb={20} label="Price" {...form.getInputProps("price")} />
 
         <Checkbox
           m="auto"
-          mt={10}
+          mb={10}
           checked={checked}
           onChange={(e) => setChecked(e.target.checked)}
           label="Set item on Sale"
         />
         {checked && (
           <TextInput
+            mb={10}
             label={`Set sale %`}
             {...form.getInputProps("salePercentage")}
           />
@@ -142,10 +145,10 @@ const Create = () => {
 
         <TextInput label="Quantity" {...form.getInputProps("quantity")} />
 
-        <StyledButton type="submit">
-          {loading ? <Loader /> : "Submit"}
-        </StyledButton>
-        <StyledButton onClick={returnDashboard}>Return</StyledButton>
+        <Button type="submit">{loading ? <Loader /> : "Submit"}</Button>
+        <Button mt={20} ml={30} onClick={returnDashboard}>
+          Return
+        </Button>
       </Form>
       {/* </Paper> */}
     </div>

@@ -1,10 +1,17 @@
-import { Paper, createStyles, TextInput, Title, Checkbox } from "@mantine/core";
+import {
+  Paper,
+  createStyles,
+  TextInput,
+  Title,
+  Checkbox,
+  Button,
+} from "@mantine/core";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useForm } from "@mantine/form";
 import React, { useState } from "react";
 import { supabase } from "../../../config/Supabase";
 
-import { Form, StyledButton, SaleWrapper } from "./Styles";
+import { Form, SaleWrapper } from "./Styles";
 const useStyles = createStyles((theme) => ({
   wrapper: {
     minHeight: 900,
@@ -216,11 +223,11 @@ const Edit = () => {
   React.useEffect(() => {
     getProductCategory();
   }, []);
-
+  console.log("edit", state.id);
   return (
     <div className={classes.wrapper}>
       {/* <Paper className={classes.form} radius={0} p={30}> */}
-      <Title order={2} className={classes.title} align="center" pt={50} mb={50}>
+      <Title order={2} className={classes.title} align="center" pt={30} mb={20}>
         Edit product
       </Title>
 
@@ -230,22 +237,26 @@ const Edit = () => {
           placeholder={state.name}
           {...form.getInputProps("name")}
         />
-        <StyledButton onClick={updateProductName}>Edit product</StyledButton>
+        <Button mt={20} mb={20} onClick={updateProductName}>
+          Edit product
+        </Button>
         <TextInput
           label={`Description: ${state.description}`}
           placeholder={state.description}
           {...form.getInputProps("description")}
         />
-        <StyledButton onClick={updateProductDescription}>
+        <Button mt={20} mb={20} onClick={updateProductDescription}>
           Edit description
-        </StyledButton>
+        </Button>
 
         <TextInput
           label={`Price: $ ${state.price}`}
           placeholder={state.price}
           {...form.getInputProps("price")}
         />
-        <StyledButton onClick={updateProductPrice}>Edit price</StyledButton>
+        <Button mt={20} mb={20} onClick={updateProductPrice}>
+          Edit price
+        </Button>
         <TextInput
           label={`Current sale % ${state.is_sale ? percentageCalc : ""}`}
           placeholder={`Current sale % ${state.is_sale ? percentageCalc : ""}`}
@@ -253,7 +264,9 @@ const Edit = () => {
         />
         <SaleWrapper>
           {isSale && (
-            <StyledButton onClick={handleSalePrice}>Set sale</StyledButton>
+            <Button mt={20} mb={20} onClick={handleSalePrice}>
+              Set sale
+            </Button>
           )}
 
           <Checkbox
@@ -271,9 +284,9 @@ const Edit = () => {
           placeholder={state.quantity}
           {...form.getInputProps("quantity")}
         />
-        <StyledButton onClick={updateProductQuantity}>
+        <Button mt={10} mb={10} onClick={updateProductQuantity}>
           Edit quantity
-        </StyledButton>
+        </Button>
 
         <TextInput
           label={`Category: ${prevCategory}`}
@@ -282,12 +295,16 @@ const Edit = () => {
         />
 
         <SaleWrapper>
-          <StyledButton onClick={updateProductCategory}>
+          <Button mt={20} onClick={updateProductCategory}>
             Edit Category
-          </StyledButton>
+          </Button>
 
-          <StyledButton type="submit">Update All</StyledButton>
-          <StyledButton onClick={returnDashboard}>Return</StyledButton>
+          <Button mt={20} type="submit">
+            Update All
+          </Button>
+          <Button mt={20} onClick={returnDashboard}>
+            Return
+          </Button>
         </SaleWrapper>
       </Form>
       {/* </Paper> */}

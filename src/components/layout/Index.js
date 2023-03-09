@@ -198,7 +198,7 @@ export default function AppShellLayout() {
 
     setShoppingData(savedData);
   }, []);
-
+  console.log("search", searchPost);
   return (
     <AppShell
       styles={{
@@ -217,16 +217,23 @@ export default function AppShellLayout() {
           hiddenBreakpoint="sm"
           hidden={!opened}
           width={{ sm: 200, lg: 300 }}>
-          <Text>Search</Text>
+          <Text m={20}>Search</Text>
           <SearchBar
             placeholder="Search products"
             onChange={(e) => handleSearchText(e)}
             onKeyDown={(e) => handleSearchEnter(e)}></SearchBar>
-          <Button radius="xl" w={100} mt={20} ml="auto" onClick={handleShowAll}>
+          <Button
+            variant="white"
+            radius="xl"
+            w={100}
+            // mt={20}
+            ml="auto"
+            onClick={handleShowAll}>
             Show All
           </Button>
-          <p>Category</p>
+          <Text m={20}>Category</Text>
           <Select
+            radius={50}
             searchable
             clearable
             placeholder="Categories"
@@ -235,9 +242,10 @@ export default function AppShellLayout() {
             onChange={setValue}
           />
           <Button
+            variant="white"
             radius="xl"
             w={100}
-            mt={20}
+            // mt={20}
             ml="auto"
             onClick={handleSearchButtonClick}>
             Search
@@ -283,7 +291,11 @@ export default function AppShellLayout() {
         withEdges
         value={activePage}
         onChange={setPage}
-        total={Math.round(data.length / 10)}
+        total={
+          isSearching
+            ? Math.round(searchPost.length / 10)
+            : Math.round(data.length / 10)
+        }
       />
     </AppShell>
   );

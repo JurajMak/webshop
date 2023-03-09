@@ -25,10 +25,18 @@ export default function Dashboard() {
   const [isSearching, setIsSearching] = useState(false);
   const [searchWord, setSearchWord] = useState("");
   const [search, setSearch] = useState([]);
-  const [swapTable, setSwapTable] = useState(false);
+  const [swapProduct, setSwapProduct] = useState(true);
+  const [swapOrder, setSwapOrder] = useState(false);
   const navigate = useNavigate();
-  const titles = ["Name", "Description", "Price", "Quantity", "Sale price"];
-  const orderTitles = ["Order number", "Product name", "Price", "User name"];
+  const titles = [
+    "Name",
+    "Description",
+    "Price",
+    "Quantity",
+    "Sale price",
+    "Edit | Delete",
+  ];
+  const orderTitles = ["Order number", "Price", "User name"];
 
   const navigateToCreate = async () => {
     navigate("/admin/products/create");
@@ -40,9 +48,13 @@ export default function Dashboard() {
     setSearchWord(e.target.value);
   };
 
-  const handleTableSwap = () => {
-    setSwapTable(!swapTable);
-    console.log(swapTable);
+  const handleSwapProduct = () => {
+    setSwapProduct(true);
+    setSwapOrder(false);
+  };
+  const handleSwapOrder = () => {
+    setSwapProduct(false);
+    setSwapOrder(true);
   };
 
   const handleSearchEnter = async (e) => {
@@ -83,8 +95,6 @@ export default function Dashboard() {
     setIsSearching(false);
   };
 
-  console.log(swapTable);
-
   return (
     <AppShell
       styles={{
@@ -107,16 +117,22 @@ export default function Dashboard() {
             onChange={(e) => handleSearchText(e)}
             onKeyDown={(e) => handleSearchEnter(e)}
           />
-          <Button radius="xl" w={100} mt={20} ml="auto" onClick={handleShowAll}>
+          <Button
+            variant="white"
+            radius="xl"
+            w={100}
+            // mt={20}
+            ml="auto"
+            onClick={handleShowAll}>
             Show All
           </Button>
-          <Anchor component="button" type="button" onClick={handleTableSwap}>
+          {/* <Anchor component="button" type="button" onClick={handleTableSwap}>
             Products
           </Anchor>
           <Anchor component="button" type="button" onClick={handleTableSwap}>
             Orders
-          </Anchor>
-          <p>Category</p>
+          </Anchor> */}
+
           <Select
             searchable
             clearable
@@ -126,12 +142,35 @@ export default function Dashboard() {
             onChange={setValue}
           />
           <Button
+            variant="white"
             radius="xl"
             w={100}
-            mt={20}
+            // mt={20}
             ml="auto"
             onClick={handleSearchButtonClick}>
             Search
+          </Button>
+          <Button
+            mt={10}
+            ml="auto"
+            mr="auto"
+            w={150}
+            variant="white"
+            radius="md"
+            size="xl"
+            onClick={handleSwapProduct}>
+            Products
+          </Button>
+          <Button
+            mb={10}
+            variant="white"
+            ml="auto"
+            mr="auto"
+            w={150}
+            radius="md"
+            size="xl"
+            onClick={handleSwapOrder}>
+            Orders
           </Button>
 
           <Button mt={400} onClick={signOut}>
@@ -159,7 +198,7 @@ export default function Dashboard() {
           </div>
         </Header>
       }>
-      {!swapTable ? (
+      {swapProduct ? (
         <ProductsTable
           search={search}
           titles={titles}

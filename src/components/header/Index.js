@@ -169,10 +169,10 @@ export function HeaderTabs({
 
               <CheckoutWrapper>
                 <TextWrapper>
-                  <Text mb={30} ml={100} mt={20} fz="lg">
+                  <Text mb={30} ml={100} mt={20} fz="lg" fw={500}>
                     Total :
                   </Text>
-                  <Text mr={150} mt={20} fz="lg">
+                  <Text mr={150} mt={20} fz="lg" fw={500}>
                     $ {sumPrice(orders)}
                   </Text>
                 </TextWrapper>

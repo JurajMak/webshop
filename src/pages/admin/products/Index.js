@@ -44,6 +44,7 @@ export function ProductsTable({ titles, search, isSearching }) {
   React.useEffect(() => {
     getData();
   }, []);
+  console.log(isSearching);
 
   return (
     <ScrollArea>
@@ -52,7 +53,11 @@ export function ProductsTable({ titles, search, isSearching }) {
         withEdges
         value={activePage}
         onChange={setPage}
-        total={Math.round(data.length / 10)}
+        total={
+          isSearching
+            ? Math.round(searchPost.length / 10)
+            : Math.round(data.length / 10)
+        }
       />
       <Table sx={{ minWidth: 800 }} verticalSpacing="sm">
         <thead>
@@ -75,12 +80,7 @@ export function ProductsTable({ titles, search, isSearching }) {
                   </td>
 
                   <td>
-                    <Badge
-                      variant={
-                        theme.colorScheme === "dark" ? "light" : "outline"
-                      }>
-                      {item.description}
-                    </Badge>
+                    <Text fz="sm">{item.description}</Text>
                   </td>
                   <td>
                     <Text fz="sm" c="blue">
@@ -92,7 +92,7 @@ export function ProductsTable({ titles, search, isSearching }) {
                   </td>
                   <td>
                     <Text fz="sm" c="blue">
-                      {item.sale_price}
+                      $ {item.sale_price}
                     </Text>
                   </td>
                   <td>
@@ -120,28 +120,27 @@ export function ProductsTable({ titles, search, isSearching }) {
                   </td>
 
                   <td>
-                    <Badge
-                      variant={
-                        theme.colorScheme === "dark" ? "light" : "outline"
-                      }>
+                    <Text fz="sm" fw={500}>
                       {item.description}
-                    </Badge>
+                    </Text>
                   </td>
                   <td>
-                    <Text fz="sm" c="blue">
+                    <Text fz="sm" c="blue" fw={500}>
                       $ {item.price}
                     </Text>
                   </td>
                   <td>
-                    <Text fz="sm">{item.quantity}</Text>
-                  </td>
-                  <td>
-                    <Text fz="sm" c="blue">
-                      {item.sale_price}
+                    <Text fz="sm" fw={500}>
+                      {item.quantity}
                     </Text>
                   </td>
                   <td>
-                    <Group spacing={0} position="right">
+                    <Text fz="sm" c="blue" fw={500}>
+                      $ {item.sale_price}
+                    </Text>
+                  </td>
+                  <td>
+                    <Group>
                       <ActionIcon onClick={() => toEdit(item)}>
                         <IconPencil size="1rem" stroke={1.5} />
                       </ActionIcon>
