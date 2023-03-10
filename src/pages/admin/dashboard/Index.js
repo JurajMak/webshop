@@ -28,6 +28,7 @@ export default function Dashboard() {
   const [swapOrder, setSwapOrder] = useState(false);
   const navigate = useNavigate();
   const titles = [
+    "Image",
     "Name",
     "Description",
     "Price",
@@ -128,7 +129,8 @@ export default function Dashboard() {
           p="md"
           hiddenBreakpoint="sm"
           hidden={!opened}
-          width={{ sm: 200, lg: 300 }}>
+          width={{ sm: 200, lg: 300 }}
+        >
           <SearchBar
             placeholder="Search"
             onChange={(e) => handleSearchText(e)}
@@ -139,7 +141,8 @@ export default function Dashboard() {
             radius="xl"
             w={100}
             ml="auto"
-            onClick={handleShowAll}>
+            onClick={handleShowAll}
+          >
             Show All
           </Button>
 
@@ -158,7 +161,8 @@ export default function Dashboard() {
             w={100}
             // mt={20}
             ml="auto"
-            onClick={handleSearchButtonClick}>
+            onClick={handleSearchButtonClick}
+          >
             Search
           </Button>
           <Button
@@ -169,7 +173,8 @@ export default function Dashboard() {
             variant="white"
             radius="md"
             size="xl"
-            onClick={handleSwapProduct}>
+            onClick={handleSwapProduct}
+          >
             Products
           </Button>
           <Button
@@ -180,7 +185,8 @@ export default function Dashboard() {
             w={150}
             radius="md"
             size="xl"
-            onClick={handleSwapOrder}>
+            onClick={handleSwapOrder}
+          >
             Orders
           </Button>
 
@@ -202,13 +208,15 @@ export default function Dashboard() {
               justifyContent: "space-between",
               alignItems: "center",
               height: "100%",
-            }}>
+            }}
+          >
             <Text>Dashboard</Text>
             <Text>Admin logged in : {user.user_metadata.full_name}</Text>
             <Button onClick={navigateToCreate}>Create</Button>
           </div>
         </Header>
-      }>
+      }
+    >
       {swapProduct ? (
         <ProductsTable
           search={search}

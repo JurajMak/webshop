@@ -9,3 +9,8 @@ export const BtnWrapper = styled.div`
 export const Wrap = styled.div`
   position: relative;
 `;
+
+export const ImageWrap = styled.img`
+  object-fit: cover;
+  width: 80px;
+`;

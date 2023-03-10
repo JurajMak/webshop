@@ -10,7 +10,6 @@ import {
   LoadingOverlay,
 } from "@mantine/core";
 
-import { useNavigate } from "react-router-dom";
 import { supabase } from "../../../config/Supabase";
 import React, { useState, useContext } from "react";
 import { AuthContext } from "../../../contexts/Index";
@@ -18,13 +17,13 @@ import { LoaderWrapper } from "./Styles";
 
 export function OrderTable({ titles }) {
   const theme = useMantineTheme();
-  const navigate = useNavigate();
+
   const { data, getData, getCategory } = useContext(AuthContext);
   const [activePage, setPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(15);
   const [ordersInfo, setOrdersInfo] = useState([]);
   const [ordersForRender, setOrdersForRender] = useState([]);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   const lastPost = activePage * itemsPerPage;
   const firstPost = lastPost - itemsPerPage;
@@ -83,17 +82,18 @@ export function OrderTable({ titles }) {
     setOrdersForRender(
       data.flatMap((order) => ({
         id: order.id,
-        profile_name: order.order_products[0].profiles.full_name,
+        profile_name: order?.order_products[0]?.profiles?.full_name,
         total: order.total,
       }))
     );
     setLoading(false);
+    // console.log(data);
   };
 
   React.useEffect(() => {
     handleGetOrders();
   }, []);
-  console.log("orders", ordersForRender);
+
   return (
     <ScrollArea>
       <Pagination
@@ -101,7 +101,7 @@ export function OrderTable({ titles }) {
         withEdges
         value={activePage}
         onChange={setPage}
-        total={Math.round(data.length / 15)}
+        total={Math.ceil(data.length / 15)}
       />
       <Table sx={{ minWidth: 800 }} verticalSpacing="sm">
         <thead>

@@ -10,7 +10,7 @@ import {
 import { IconSquarePlus, IconSquareMinus, IconX } from "@tabler/icons";
 import React from "react";
 import { DivReducer, ButtonWrapper, CardWrapper } from "./Styles";
-import image from "../../assets/login.jpg";
+import home from "../../assets/login.jpg";
 
 const useStyles = createStyles((theme) => ({
   card: {
@@ -56,7 +56,7 @@ const useStyles = createStyles((theme) => ({
 const ShoppingItem = ({ cartData, onQuantity, onDelete, onRemove }) => {
   const { classes } = useStyles();
 
-  const { name, price, description, quantity, id, sale_price, is_sale } =
+  const { name, price, description, quantity, id, sale_price, is_sale, image } =
     cartData;
   const total = price * quantity;
   const sale = sale_price * quantity;
@@ -68,7 +68,9 @@ const ShoppingItem = ({ cartData, onQuantity, onDelete, onRemove }) => {
         <Card withBorder radius="md" className={classes.card}>
           <Card.Section className={classes.imageSection}>
             <Image
-              src="https://i.imgur.com/ZL52Q2D.png"
+              height={150}
+              maw={220}
+              src={image ? image : home}
               alt="No image to display"
             />
           </Card.Section>
@@ -106,14 +108,16 @@ const ShoppingItem = ({ cartData, onQuantity, onDelete, onRemove }) => {
                       td="line-through"
                       size="sm"
                       weight={700}
-                      sx={{ lineHeight: 1 }}>
+                      sx={{ lineHeight: 1 }}
+                    >
                       ${total.toFixed(2)}
                     </Text>
                     <Text
                       size="xl"
                       color="red"
                       weight={700}
-                      sx={{ lineHeight: 1 }}>
+                      sx={{ lineHeight: 1 }}
+                    >
                       ${sale.toFixed(2)}
                     </Text>
                   </div>
@@ -129,7 +133,8 @@ const ShoppingItem = ({ cartData, onQuantity, onDelete, onRemove }) => {
                   color="dimmed"
                   weight={500}
                   sx={{ lineHeight: 1 }}
-                  mt={3}></Text>
+                  mt={3}
+                ></Text>
               </div>
             </Group>
           </Card.Section>

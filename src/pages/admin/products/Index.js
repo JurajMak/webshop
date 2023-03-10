@@ -7,6 +7,7 @@ import {
   useMantineTheme,
   Pagination,
   LoadingOverlay,
+  Image,
 } from "@mantine/core";
 
 import { IconPencil, IconTrash } from "@tabler/icons";
@@ -15,6 +16,8 @@ import { supabase } from "../../../config/Supabase";
 import React, { useState, useContext } from "react";
 import { AuthContext } from "../../../contexts/Index";
 import { LoaderWrapper } from "../order/Styles";
+import { ImageWrap } from "./Styles";
+import altimg from "../../../assets/login.jpg";
 
 export function ProductsTable({ titles, search, isSearching }) {
   const theme = useMantineTheme();
@@ -48,8 +51,6 @@ export function ProductsTable({ titles, search, isSearching }) {
     setLoading(false);
   }, []);
 
-  console.log("products", data);
-
   return (
     <ScrollArea>
       <Pagination
@@ -59,8 +60,8 @@ export function ProductsTable({ titles, search, isSearching }) {
         onChange={setPage}
         total={
           isSearching
-            ? Math.round(searchPost.length / 10)
-            : Math.round(data.length / 10)
+            ? Math.ceil(searchPost.length / 10)
+            : Math.ceil(data.length / 10)
         }
       />
       <Table sx={{ minWidth: 800 }} verticalSpacing="sm">
@@ -85,6 +86,12 @@ export function ProductsTable({ titles, search, isSearching }) {
           ) : isSearching ? (
             searchPost?.map((item) => (
               <tr key={item.id}>
+                <td>
+                  <ImageWrap
+                    src={item.image ? item.image : altimg}
+                    alt="No image"
+                  ></ImageWrap>
+                </td>
                 <td>
                   <Group spacing="sm">
                     <Text fz="sm" fw={500}>
@@ -116,7 +123,8 @@ export function ProductsTable({ titles, search, isSearching }) {
                     </ActionIcon>
                     <ActionIcon
                       color="red"
-                      onClick={() => handleDeleteProduct(item.id)}>
+                      onClick={() => handleDeleteProduct(item.id)}
+                    >
                       <IconTrash size="1rem" stroke={1.5} />
                     </ActionIcon>
                   </Group>
@@ -126,6 +134,13 @@ export function ProductsTable({ titles, search, isSearching }) {
           ) : (
             currentPost?.map((item) => (
               <tr key={item.id}>
+                <td>
+                  <ImageWrap
+                    fit="cover"
+                    src={item.image ? item.image : altimg}
+                    alt="No image"
+                  ></ImageWrap>
+                </td>
                 <td>
                   <Group spacing="sm">
                     <Text fz="sm" fw={500}>
@@ -161,7 +176,8 @@ export function ProductsTable({ titles, search, isSearching }) {
                     </ActionIcon>
                     <ActionIcon
                       color="red"
-                      onClick={() => handleDeleteProduct(item.id)}>
+                      onClick={() => handleDeleteProduct(item.id)}
+                    >
                       <IconTrash size="1rem" stroke={1.5} />
                     </ActionIcon>
                   </Group>

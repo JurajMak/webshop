@@ -7,6 +7,9 @@ import {
   Loader,
   Button,
   Text,
+  Group,
+  FileButton,
+  NumberInput,
 } from "@mantine/core";
 import { useNavigate } from "react-router-dom";
 import { useForm } from "@mantine/form";
@@ -54,7 +57,10 @@ const Create = () => {
   const { classes } = useStyles();
   const { user } = useContext(AuthContext);
   const [loading, setLoading] = useState(false);
-  const [file, setFile] = useState(null);
+  const [file, setFile] = useState([]);
+  const [filepath, setFilePath] = useState("");
+  const [percent, setPercent] = React.useState(0);
+
   const form = useForm({
     initialValues: {
       name: "",
@@ -62,17 +68,37 @@ const Create = () => {
       price: "",
       quantity: "",
       category: "",
-      salePercentage: "",
+      sale_price: "",
+      image: "",
     },
   });
   const [checked, setChecked] = useState(false);
   const navigate = useNavigate();
-  const { name, description, price, quantity, category, salePercentage } =
+  const { name, description, price, quantity, category, sale_price, image } =
     form.values;
-  let calc = Math.floor((price / 100) * salePercentage);
-  let total = price - calc;
+
   const returnDashboard = async () => {
     navigate("/admin");
+  };
+  const getImage = (filePath) => {
+    const { data, error } = supabase.storage
+      .from("avatars")
+      .getPublicUrl(filepath);
+
+    console.log(data);
+    form.setFieldValue("image", data.publicUrl + filePath);
+  };
+
+  const handleImageAdd = async (file) => {
+    const filename = `${Date.now()}-${file.name}`;
+    const { data, error } = await supabase.storage
+      .from("avatars")
+      .upload(filename, file, {
+        cacheControl: "3600",
+        upsert: false,
+      });
+    console.log(data);
+    data && getImage(data.path);
   };
 
   const handleCreateCategory = async () => {
@@ -95,6 +121,7 @@ const Create = () => {
   };
   const handleAddProduct = async () => {
     setLoading(true);
+
     const { data: categories } = await supabase
       .from("categories")
       .select("*")
@@ -108,15 +135,15 @@ const Create = () => {
       quantity,
       category_id: categories.id,
       is_sale: checked,
-      sale_price: total,
+      sale_price: checked ? sale_price : null,
       user_id: user.id,
+      image,
     });
 
     setLoading(false);
     // form.reset();
   };
-
-  console.log(checked);
+  console.log(form.values);
   return (
     <div className={classes.wrapper}>
       {/* <Paper className={classes.form} radius={0} p={30}> */}
@@ -130,7 +157,7 @@ const Create = () => {
         </Button>
         <TextInput label="Category" {...form.getInputProps("category")} />
         <Button mt={10} mb={10} onClick={handleCreateCategory}>
-          Add Category
+          Add or Set Category
         </Button>
         <TextInput
           mb={10}
@@ -143,35 +170,54 @@ const Create = () => {
           {...form.getInputProps("description")}
         />
 
-        <TextInput mb={20} label="Price" {...form.getInputProps("price")} />
+        <NumberInput mb={20} label="Price" {...form.getInputProps("price")} />
 
         <Checkbox
           m="auto"
           mb={10}
           checked={checked}
-          onChange={(e) => setChecked(e.target.checked)}
+          onChange={(e) => {
+            setChecked(e.target.checked);
+            if (!e.target.checked) {
+              form.setFieldValue("salePercentage", "");
+            }
+          }}
           label="Set item on Sale"
         />
         {checked && (
-          <TextInput
+          <NumberInput
             mb={10}
             label={`Set sale %`}
-            {...form.getInputProps("salePercentage")}
+            onChange={(number) => {
+              let calc = Math.floor((price / 100) * number);
+              let total = price - calc;
+
+              form.setFieldValue("sale_price", total);
+              setPercent(number);
+            }}
+            value={percent}
           />
         )}
-        {/* <Group position="center">
-          <FileButton onChange={setFile} accept="image/png,image/jpeg">
-            {(props) => <Button {...props}>Upload image</Button>}
+
+        <Group>
+          <FileButton
+            onChange={(file) => {
+              handleImageAdd(file);
+              return setFile(file);
+            }}
+            accept="image/png,image/jpeg,image/jpg"
+          >
+            {(props) => <Button {...props}>Pick image</Button>}
           </FileButton>
-        </Group> */}
+        </Group>
 
         {file && (
-          <Text size="sm" align="center" mt="sm">
+          <Text size="sm" mt="sm">
             Picked file: {file.name}
           </Text>
         )}
 
-        <TextInput label="Quantity" {...form.getInputProps("quantity")} />
+        <NumberInput label="Quantity" {...form.getInputProps("quantity")} />
 
         <Button type="submit">{loading ? <Loader /> : "Submit"}</Button>
         <Button mt={20} ml={30} onClick={returnDashboard}>

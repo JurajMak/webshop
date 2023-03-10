@@ -150,12 +150,14 @@ export function HeaderTabs({
           <Group
             sx={{ height: "100%" }}
             spacing={0}
-            className={classes.hiddenMobile}></Group>
+            className={classes.hiddenMobile}
+          ></Group>
           <Drawer
             opened={opened}
             onClose={() => setOpened(false)}
             padding="xs"
-            size="xl">
+            size="xl"
+          >
             <DrawerWrapper>
               <Shopping>
                 {payment && (
@@ -164,8 +166,9 @@ export function HeaderTabs({
                     mb={50}
                     icon={<IconCheck size="1.1rem" />}
                     color="teal"
-                    title="Order Confirmed !">
-                    Thank you for your purchase! Enjoy your new products!"
+                    title="Order Confirmed !"
+                  >
+                    Thank you for your purchase! Enjoy your new products!
                   </Notification>
                 )}
 
@@ -175,7 +178,8 @@ export function HeaderTabs({
                     icon={<IconX size="1.1rem" />}
                     w={380}
                     h={50}
-                    color="red">
+                    color="red"
+                  >
                     Cannot add more of that product to cart remaining quantity
                     is 0
                   </Notification>
@@ -231,7 +235,8 @@ export function HeaderTabs({
                     common: {
                       color: "black",
                     },
-                  }}>
+                  }}
+                >
                   <Button onClick={() => setOpened(true)}>
                     <IconShoppingCart size={25} />
                   </Button>
@@ -254,7 +259,8 @@ export function HeaderTabs({
                     common: {
                       color: "black",
                     },
-                  }}>
+                  }}
+                >
                   <Button onClick={() => setOpened(true)}>
                     <IconShoppingCart size={25} />
                   </Button>

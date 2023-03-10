@@ -5,11 +5,18 @@ import {
   Title,
   Checkbox,
   Button,
+  Image,
+  FileButton,
+  Text,
+  Group,
+  filterProps,
+  NumberInput,
 } from "@mantine/core";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useForm } from "@mantine/form";
 import React, { useState } from "react";
 import { supabase } from "../../../config/Supabase";
+import { ImageWrap } from "../products/Styles";
 
 import { Form, SaleWrapper } from "./Styles";
 const useStyles = createStyles((theme) => ({
@@ -58,6 +65,7 @@ const Edit = () => {
       category: "",
       sale_price: "",
       salePercentage: "",
+      image: "",
     },
   });
 
@@ -72,12 +80,47 @@ const Edit = () => {
     category,
     salePercentage,
     sale_price,
+    image,
   } = form.values;
   const [isSale, setSale] = useState(state.is_sale);
+  const [file, setFile] = useState([]);
+  const [filepath, setFilePath] = useState("");
+  const [imageUrl, setImageUrl] = useState("");
 
   const percentageCalc = Math.floor(
     ((state.price - state.sale_price) / state.price) * 100
   );
+  const [percent, setPercent] = React.useState(
+    state.is_sale ? percentageCalc : ""
+  );
+
+  // const handleSaveImage = async () => {
+  //   const { data, err } = await supabase
+  //     .from("products")
+  //     .update({ image: imageUrl })
+  //     .match({ id: state.id });
+  // };
+
+  const getImage = (filePath) => {
+    const { data, error } = supabase.storage
+      .from("avatars")
+      .getPublicUrl(filepath);
+
+    console.log(data);
+    form.setFieldValue("image", data.publicUrl + filePath);
+  };
+
+  const handleImageAdd = async (file) => {
+    const filename = `${Date.now()}-${file.name}`;
+    const { data, error } = await supabase.storage
+      .from("avatars")
+      .upload(filename, file, {
+        cacheControl: "3600",
+        upsert: false,
+      });
+    console.log(data);
+    data && getImage(data.path);
+  };
 
   const updateProductName = async (e) => {
     const { data, error } = await supabase
@@ -207,12 +250,16 @@ const Edit = () => {
       .eq("name", category)
       .single();
 
-    const { data: a, error: b } = await supabase
-      .from("products")
-      .update({
-        category_id: categories.id,
-      })
-      .match({ id: state.id });
+    if (category !== "") {
+      const { data: a, error: b } = await supabase
+        .from("products")
+        .update({
+          category_id: categories.id,
+        })
+        .match({ id: state.id });
+      return;
+    }
+
     const { data, error } = await supabase
       .from("products")
       .update({
@@ -220,6 +267,8 @@ const Edit = () => {
         description: description || undefined,
         price: price || undefined,
         quantity: quantity || undefined,
+        sale_price: isSale ? sale_price : null,
+        image,
       })
       .match({ id: state.id });
     if (error) {
@@ -233,7 +282,7 @@ const Edit = () => {
   React.useEffect(() => {
     getProductCategory();
   }, []);
-  console.log("edit", state.id);
+  console.log("edit", form.values);
   return (
     <div className={classes.wrapper}>
       {/* <Paper className={classes.form} radius={0} p={30}> */}
@@ -242,6 +291,39 @@ const Edit = () => {
       </Title>
 
       <Form onSubmit={form.onSubmit(updateAll)}>
+        <Image maw={300} src={state.image} alt="No image"></Image>
+        <Group>
+          <FileButton
+            mt={10}
+            onChange={(file) => {
+              handleImageAdd(file);
+              return setFile(file);
+            }}
+            accept="image/png,image/jpeg,image/jpg"
+          >
+            {(props) => <Button {...props}>Change Image</Button>}
+          </FileButton>
+        </Group>
+
+        {file && (
+          <>
+            <Text size="sm" mt="sm">
+              Picked file: {file.name}
+            </Text>
+            {/* <Button
+              variant="white"
+              mr="auto"
+              ml="auto"
+              onClick={handleImageAdd}
+            >
+              Set Image
+            </Button>
+            <Button variant="white" ml={10} onClick={getImage}>
+              Get Image
+            </Button>
+            <Button onClick={handleSaveImage}> Save Image</Button> */}
+          </>
+        )}
         <TextInput
           label={`Product name : ${state.name}`}
           placeholder={state.name}
@@ -259,7 +341,7 @@ const Edit = () => {
           Edit description
         </Button>
 
-        <TextInput
+        <NumberInput
           label={`Price: $ ${state.price}`}
           placeholder={state.price}
           {...form.getInputProps("price")}
@@ -267,10 +349,22 @@ const Edit = () => {
         <Button mt={20} mb={20} onClick={updateProductPrice}>
           Edit price
         </Button>
-        <TextInput
+        {/* <NumberInput
           label={`Current sale % ${state.is_sale ? percentageCalc : ""}`}
           placeholder={`Current sale % ${state.is_sale ? percentageCalc : ""}`}
           {...form.getInputProps("salePercentage")}
+        /> */}
+        <NumberInput
+          mb={10}
+          label={`Current sale %`}
+          onChange={(number) => {
+            let calc = Math.floor((state.price / 100) * number);
+            let total = state.price - calc;
+
+            form.setFieldValue("sale_price", total);
+            setPercent(number);
+          }}
+          value={percent}
         />
         <SaleWrapper>
           {isSale && (
@@ -283,13 +377,12 @@ const Edit = () => {
             m="auto"
             mt={20}
             checked={isSale}
-            // value={isSale}
             onChange={handleIsSale}
             label="Item on Sale"
           />
         </SaleWrapper>
 
-        <TextInput
+        <NumberInput
           label={`Quantity: ${state.quantity} pcs`}
           placeholder={state.quantity}
           {...form.getInputProps("quantity")}
@@ -310,8 +403,9 @@ const Edit = () => {
           </Button>
 
           <Button mt={20} type="submit">
-            Update All
+            Submit
           </Button>
+
           <Button mt={20} onClick={returnDashboard}>
             Return
           </Button>

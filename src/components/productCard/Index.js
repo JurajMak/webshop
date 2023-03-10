@@ -9,7 +9,7 @@ import {
 } from "@mantine/core";
 
 import React from "react";
-import image from "../../assets/login.jpg";
+import home from "../../assets/login.jpg";
 
 const useStyles = createStyles((theme) => ({
   card: {
@@ -54,14 +54,16 @@ const useStyles = createStyles((theme) => ({
 
 export function ProductsCard({ data, onClick }) {
   const { classes } = useStyles();
-  const { name, price, description, quantity, sale_price, is_sale } = data;
+  const { name, price, description, quantity, sale_price, is_sale, image } =
+    data;
 
   return (
     <Card withBorder radius="md" className={classes.card}>
       <Card.Section className={classes.imageSection}>
         <Image
-          // fit="cover"
-          src="https://i.imgur.com/ZL52Q2D.png"
+          height={150}
+          maw={220}
+          src={image ? image : home}
           alt="No image to display"
         />
       </Card.Section>
@@ -99,7 +101,8 @@ export function ProductsCard({ data, onClick }) {
                   td="line-through"
                   size="sm"
                   weight={700}
-                  sx={{ lineHeight: 1 }}>
+                  sx={{ lineHeight: 1 }}
+                >
                   ${price}
                 </Text>
                 <Text size="xl" color="red" weight={700} sx={{ lineHeight: 1 }}>

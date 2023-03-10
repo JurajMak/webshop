@@ -59,6 +59,7 @@ export default function AppShellLayout() {
             const updatedItem = { ...cart, quantity: updatedQuantity };
             localStorage.setItem(
               `shoppingData_${item.id}`,
+
               JSON.stringify(updatedItem)
             );
             return updatedItem;
@@ -248,19 +249,22 @@ export default function AppShellLayout() {
           p="md"
           hiddenBreakpoint="sm"
           hidden={!opened}
-          width={{ sm: 200, lg: 300 }}>
+          width={{ sm: 200, lg: 300 }}
+        >
           <Text m={20}>Search</Text>
           <SearchBar
             placeholder="Search products"
             onChange={(e) => handleSearchText(e)}
-            onKeyDown={(e) => handleSearchEnter(e)}></SearchBar>
+            onKeyDown={(e) => handleSearchEnter(e)}
+          ></SearchBar>
           <Button
             variant="white"
             radius="xl"
             w={100}
             // mt={20}
             ml="auto"
-            onClick={handleShowAll}>
+            onClick={handleShowAll}
+          >
             Show All
           </Button>
           <Text m={20}>Category</Text>
@@ -280,7 +284,8 @@ export default function AppShellLayout() {
             w={100}
             // mt={20}
             ml="auto"
-            onClick={handleSearchButtonClick}>
+            onClick={handleSearchButtonClick}
+          >
             Search
           </Button>
         </Navbar>
@@ -300,14 +305,16 @@ export default function AppShellLayout() {
           notify={notify}
           onNotify={handleNotification}
         />
-      }>
+      }
+    >
       {notify && (
         <Notification
           ml={100}
           onClick={handleNotification}
           icon={<IconX size="1.1rem" />}
           w={380}
-          color="red">
+          color="red"
+        >
           Cannot add more of that product to cart remaining quantity is 0
         </Notification>
       )}
@@ -338,8 +345,8 @@ export default function AppShellLayout() {
         onChange={setPage}
         total={
           isSearching
-            ? Math.round(searchPost.length / 10)
-            : Math.round(data.length / 10)
+            ? Math.ceil(searchPost.length / 10)
+            : Math.ceil(data.length / 10)
         }
       />
     </AppShell>
