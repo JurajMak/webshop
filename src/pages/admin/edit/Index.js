@@ -263,12 +263,13 @@ const Edit = () => {
     const { data, error } = await supabase
       .from("products")
       .update({
-        name: name || undefined,
-        description: description || undefined,
-        price: price || undefined,
-        quantity: quantity || undefined,
-        sale_price: isSale ? sale_price : null,
-        image,
+        name: name === "" ? state.name : name,
+        description: description === "" ? state.description : description,
+        price: price === "" ? state.price : price,
+        quantity: quantity === "" ? state.quantity : quantity,
+        sale_price:
+          isSale && sale_price === "" ? state.sale_price : isSale && sale_price,
+        image: image === "" ? state.image : image,
       })
       .match({ id: state.id });
     if (error) {
