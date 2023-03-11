@@ -94,13 +94,6 @@ const Edit = () => {
     state.is_sale ? percentageCalc : ""
   );
 
-  // const handleSaveImage = async () => {
-  //   const { data, err } = await supabase
-  //     .from("products")
-  //     .update({ image: imageUrl })
-  //     .match({ id: state.id });
-  // };
-
   const getImage = (filePath) => {
     const { data, error } = supabase.storage
       .from("avatars")

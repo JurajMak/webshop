@@ -8,9 +8,10 @@ import {
   Pagination,
   LoadingOverlay,
   Image,
+  Notification,
 } from "@mantine/core";
 
-import { IconPencil, IconTrash } from "@tabler/icons";
+import { IconPencil, IconTrash, IconX } from "@tabler/icons";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "../../../config/Supabase";
 import React, { useState, useContext } from "react";
@@ -24,8 +25,9 @@ export function ProductsTable({ titles, search, isSearching }) {
   const navigate = useNavigate();
   const { data, getData, getCategory } = useContext(AuthContext);
   const [activePage, setPage] = useState(1);
-  const [itemsPerPage, setItemsPerPage] = useState(13);
+  const [itemsPerPage, setItemsPerPage] = useState(10);
   const [loading, setLoading] = useState(true);
+  const [errorDelete, setErrorDelete] = useState(false);
 
   const lastPost = activePage * itemsPerPage;
   const firstPost = lastPost - itemsPerPage;
@@ -37,12 +39,26 @@ export function ProductsTable({ titles, search, isSearching }) {
     navigate(`/admin/products/${item.id}`, { state: item });
   };
 
-  const handleClick = (e, item) => {
-    console.log("item Delete", item.id);
-  };
-
   const handleDeleteProduct = async (id) => {
-    const { error } = await supabase.from("products").delete().eq(`id`, id);
+    const { data: orders, error: err } = await supabase
+      .from("order_products")
+      .select("order_id")
+      .eq("product_id", id);
+
+    if (err) {
+      console.error(err.message);
+      return;
+    }
+
+    if (orders.length > 0) {
+      setErrorDelete(true);
+      return;
+    }
+
+    const { error } = await supabase.from("products").delete().eq("id", id);
+    if (error) {
+      console.log(error.message);
+    }
     getData();
   };
 
@@ -53,6 +69,18 @@ export function ProductsTable({ titles, search, isSearching }) {
 
   return (
     <ScrollArea>
+      {errorDelete && (
+        <Notification
+          ml="auto"
+          mr="auto"
+          onClick={() => setErrorDelete(false)}
+          icon={<IconX size="1.1rem" />}
+          w={380}
+          color="red"
+        >
+          This product is part of an order and cannot be deleted
+        </Notification>
+      )}
       <Pagination
         m="auto"
         withEdges
