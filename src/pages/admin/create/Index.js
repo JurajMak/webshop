@@ -207,7 +207,7 @@ const Create = () => {
             }}
             accept="image/png,image/jpeg,image/jpg"
           >
-            {(props) => <Button {...props}>Pick image</Button>}
+            {(props) => <Button {...props}>Upload image</Button>}
           </FileButton>
         </Group>
 

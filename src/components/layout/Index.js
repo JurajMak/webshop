@@ -345,8 +345,8 @@ export default function AppShellLayout() {
         onChange={setPage}
         total={
           isSearching
-            ? Math.ceil(searchPost.length / 10)
-            : Math.ceil(data.length / 10)
+            ? Math.ceil(searchPost?.length / 10)
+            : Math.ceil(data?.length / 10)
         }
       />
     </AppShell>
