@@ -67,11 +67,13 @@ export default function AppShellLayout() {
           p="md"
           hiddenBreakpoint="sm"
           hidden={!opened}
-          width={{ sm: 200, lg: 300 }}>
+          width={{ sm: 200, lg: 300 }}
+        >
           <Text>Search</Text>
           <InputWithButton
             onChange={(e) => setSearch(e.target.value)}
-            value={search}></InputWithButton>
+            value={search}
+          ></InputWithButton>
 
           {data
             .filter((item) => {
@@ -97,14 +99,16 @@ export default function AppShellLayout() {
           Application footer
         </Footer>
       }
-      header={<HeaderTabs data={data} />}>
+      header={<HeaderTabs data={data} />}
+    >
       <Wrapper>
         <Drawer
           opened={opened}
           onClose={() => setOpened(false)}
           title="Shopping Cart"
           padding="xl"
-          size="xl">
+          size="xl"
+        >
           {/* Drawer content */}
           <DrawerWrapper>
             {shoppingData?.map((item) => {
@@ -216,5 +220,52 @@ export default function AppShellLayout() {
 //     const newItem = { ...item, quantity: 1 };
 //     localStorage.setItem(`shoppingData_${item.id}`, JSON.stringify(newItem));
 //     setShoppingData([...shoppingData, newItem]);
+//   }
+// };
+
+// import { useState } from 'react';
+// import { useQuery } from 'react-query';
+// import API_SERVICES from 'path/to/api/services';
+
+// export default function EventList() {
+//   const [page, setPage] = useState(1);
+//   const { data: comingEvents, isSuccess, isFetching, fetchNextPage } = useQuery(['comingEvents', page], () => API_SERVICES.EVENT.getEvents({ page }));
+
+//   if (!isSuccess) {
+//     return <p>Loading...</p>;
+//   }
+
+//   const handleLoadMore = () => {
+//     fetchNextPage();
+//     setPage(page + 1);
+//   };
+
+//   return (
+//     <>
+//       {comingEvents.pages.map((pageData) =>
+//         pageData.data.map((event) => (
+//           <div key={event.id}>
+//             <h2>{event.title}</h2>
+//             <p>{event.description}</p>
+//           </div>
+//         ))
+//       )}
+
+//       {isFetching && <p>Loading more...</p>}
+//       {!isFetching && comingEvents.hasNextPage && (
+//         <button onClick={handleLoadMore}>Load more</button>
+//       )}
+//     </>
+//   );
+// }
+
+// infinite scroll
+
+// const handleScroll = async (e) => {
+//   const { scrollHeight, scrollTop } = document.documentElement;
+//   if (!fetching && scrollHeight - scrollTop <= window.innerHeight * 1.5) {
+//     fetching = true;
+//     if (hasNextPage) await fetchNextPage();
+//     fetching = false;
 //   }
 // };
