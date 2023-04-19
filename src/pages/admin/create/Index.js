@@ -10,11 +10,12 @@ import {
   Group,
   FileButton,
   NumberInput,
+  Image,
 } from "@mantine/core";
 import { useNavigate } from "react-router-dom";
 import { useForm } from "@mantine/form";
 import { supabase } from "../../../config/Supabase";
-
+import uploadFile from "../../../utils/uploadFile";
 import { Form } from "./Styles";
 import React, { useContext, useState } from "react";
 import { AuthContext } from "../../../contexts/Index";
@@ -80,25 +81,13 @@ const Create = () => {
   const returnDashboard = async () => {
     navigate("/admin");
   };
-  const getImage = (filePath) => {
-    const { data, error } = supabase.storage
-      .from("avatars")
-      .getPublicUrl(filepath);
 
-    console.log("data", data);
-    form.setFieldValue("image", data.publicUrl + filePath);
-  };
-
-  const handleImageAdd = async (file) => {
-    const filename = `${Date.now()}-${file.name}`;
-    const { data, error } = await supabase.storage
-      .from("avatars")
-      .upload(filename, file, {
-        cacheControl: "3600",
-        upsert: false,
-      });
-    console.log(data);
-    data && getImage(data.path);
+  const handleUploadImage = async (file) => {
+    const url = await uploadFile({
+      file,
+      storageName: `uploads/${user.id}`,
+    });
+    form.setFieldValue("image", url);
   };
 
   const handleCreateCategory = async () => {
@@ -143,7 +132,8 @@ const Create = () => {
     setLoading(false);
     // form.reset();
   };
-  console.log(form.values);
+  // console.log(form.values);
+
   return (
     <div className={classes.wrapper}>
       {/* <Paper className={classes.form} radius={0} p={30}> */}
@@ -207,7 +197,7 @@ const Create = () => {
         <Group>
           <FileButton
             onChange={(file) => {
-              handleImageAdd(file);
+              handleUploadImage(file);
               return setFile(file);
             }}
             accept="image/png,image/jpeg,image/jpg">
@@ -216,9 +206,24 @@ const Create = () => {
         </Group>
 
         {file && (
-          <Text size="sm" mt="sm">
-            Picked file: {file.name}
-          </Text>
+          <Group style={{ flex: 1 }}>
+            <Group>
+              <Text size="sm" mt="sm">
+                Picked file: {file.name}
+              </Text>
+              <Text size="md">Image preview</Text>
+            </Group>
+            {image && (
+              <Image
+                mr="auto"
+                ml="auto"
+                src={image}
+                maw={300}
+                alt="Random image"
+                width="100%"
+              />
+            )}
+          </Group>
         )}
 
         <NumberInput label="Quantity" {...form.getInputProps("quantity")} />
