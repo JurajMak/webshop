@@ -40,12 +40,12 @@ export function ProductsTable({ titles, search, isSearching }) {
     navigate(`/admin/products/${item.id}`, { state: item });
   };
 
-  const handleDeleteProduct = async (id) => {
+  const handleDeleteProduct = async (data) => {
     if (user.id === data.user_id) {
       const { data: orders, error: err } = await supabase
         .from("order_products")
         .select("order_id")
-        .eq("product_id", id);
+        .eq("product_id", data.id);
 
       if (err) {
         console.error(err.message);
@@ -57,7 +57,10 @@ export function ProductsTable({ titles, search, isSearching }) {
         return;
       }
 
-      const { error } = await supabase.from("products").delete().eq("id", id);
+      const { error } = await supabase
+        .from("products")
+        .delete()
+        .eq("id", data.id);
       if (error) {
         console.log(error.message);
       }
@@ -166,7 +169,7 @@ export function ProductsTable({ titles, search, isSearching }) {
                     </ActionIcon>
                     <ActionIcon
                       color="red"
-                      onClick={() => handleDeleteProduct(item.id)}>
+                      onClick={() => handleDeleteProduct(item)}>
                       <IconTrash size="1rem" stroke={1.5} />
                     </ActionIcon>
                   </Group>
@@ -217,7 +220,7 @@ export function ProductsTable({ titles, search, isSearching }) {
                     </ActionIcon>
                     <ActionIcon
                       color="red"
-                      onClick={() => handleDeleteProduct(item.id)}>
+                      onClick={() => handleDeleteProduct(item)}>
                       <IconTrash size="1rem" stroke={1.5} />
                     </ActionIcon>
                   </Group>
