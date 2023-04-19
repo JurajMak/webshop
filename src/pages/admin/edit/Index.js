@@ -263,7 +263,7 @@ const Edit = () => {
   React.useEffect(() => {
     getProductCategory();
   }, []);
-  console.log("state", typeof state.sale_price);
+
   return (
     <div className={classes.wrapper}>
       {/* <Paper className={classes.form} radius={0} p={30}> */}
