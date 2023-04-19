@@ -270,13 +270,13 @@ const Edit = () => {
     } else {
       console.log("proslo", form.values);
     }
-    form.reset();
+    // form.reset();
   };
 
   React.useEffect(() => {
     getProductCategory();
   }, []);
-  console.log("edit", form.values);
+  console.log("state", state);
   return (
     <div className={classes.wrapper}>
       {/* <Paper className={classes.form} radius={0} p={30}> */}
@@ -293,8 +293,7 @@ const Edit = () => {
               handleImageAdd(file);
               return setFile(file);
             }}
-            accept="image/png,image/jpeg,image/jpg"
-          >
+            accept="image/png,image/jpeg,image/jpg">
             {(props) => <Button {...props}>Change Image</Button>}
           </FileButton>
         </Group>
@@ -336,6 +335,7 @@ const Edit = () => {
         </Button>
 
         <NumberInput
+          precision={2}
           label={`Price: $ ${state.price}`}
           placeholder={state.price}
           {...form.getInputProps("price")}
@@ -343,19 +343,16 @@ const Edit = () => {
         <Button mt={20} mb={20} onClick={updateProductPrice}>
           Edit price
         </Button>
-        {/* <NumberInput
-          label={`Current sale % ${state.is_sale ? percentageCalc : ""}`}
-          placeholder={`Current sale % ${state.is_sale ? percentageCalc : ""}`}
-          {...form.getInputProps("salePercentage")}
-        /> */}
+
         <NumberInput
           mb={10}
-          label={`Current sale %`}
+          label={percent > 0 ? `Current sale ${percent} %` : `Current sale 0 %`}
           onChange={(number) => {
-            let calc = Math.floor((state.price / 100) * number);
+            // let calc = Math.floor((state.price / 100) * number);
+            let calc = (state.price / 100) * number;
             let total = state.price - calc;
 
-            form.setFieldValue("sale_price", total);
+            form.setFieldValue("sale_price", total.toFixed(2));
             setPercent(number);
           }}
           value={percent}

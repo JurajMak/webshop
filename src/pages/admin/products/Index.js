@@ -23,11 +23,12 @@ import altimg from "../../../assets/login.jpg";
 export function ProductsTable({ titles, search, isSearching }) {
   const theme = useMantineTheme();
   const navigate = useNavigate();
-  const { data, getData, getCategory } = useContext(AuthContext);
+  const { data, getData, getCategory, user } = useContext(AuthContext);
   const [activePage, setPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(10);
   const [loading, setLoading] = useState(true);
   const [errorDelete, setErrorDelete] = useState(false);
+  const [notValidUser, setNotValidUser] = useState(false);
 
   const lastPost = activePage * itemsPerPage;
   const firstPost = lastPost - itemsPerPage;
@@ -40,32 +41,37 @@ export function ProductsTable({ titles, search, isSearching }) {
   };
 
   const handleDeleteProduct = async (id) => {
-    const { data: orders, error: err } = await supabase
-      .from("order_products")
-      .select("order_id")
-      .eq("product_id", id);
+    if (user.id === data.user_id) {
+      const { data: orders, error: err } = await supabase
+        .from("order_products")
+        .select("order_id")
+        .eq("product_id", id);
 
-    if (err) {
-      console.error(err.message);
-      return;
-    }
+      if (err) {
+        console.error(err.message);
+        return;
+      }
 
-    if (orders.length > 0) {
-      setErrorDelete(true);
-      return;
-    }
+      if (orders.length > 0) {
+        setErrorDelete(true);
+        return;
+      }
 
-    const { error } = await supabase.from("products").delete().eq("id", id);
-    if (error) {
-      console.log(error.message);
+      const { error } = await supabase.from("products").delete().eq("id", id);
+      if (error) {
+        console.log(error.message);
+      }
+      getData();
+    } else {
+      setNotValidUser(true);
     }
-    getData();
   };
 
   React.useEffect(() => {
     getData();
     setLoading(false);
   }, []);
+  console.log("prod", data);
 
   return (
     <ScrollArea>
@@ -76,9 +82,19 @@ export function ProductsTable({ titles, search, isSearching }) {
           onClick={() => setErrorDelete(false)}
           icon={<IconX size="1.1rem" />}
           w={380}
-          color="red"
-        >
-          This product is part of an order and cannot be deleted
+          color="red">
+          This product is part of an order and cannot be deleted!
+        </Notification>
+      )}
+      {notValidUser && (
+        <Notification
+          ml="auto"
+          mr="auto"
+          onClick={() => setNotValidUser(false)}
+          icon={<IconX size="1.1rem" />}
+          w={380}
+          color="red">
+          Cannot delete product of other users!
         </Notification>
       )}
       <Pagination
@@ -117,8 +133,7 @@ export function ProductsTable({ titles, search, isSearching }) {
                 <td>
                   <ImageWrap
                     src={item.image ? item.image : altimg}
-                    alt="No image"
-                  ></ImageWrap>
+                    alt="No image"></ImageWrap>
                 </td>
                 <td>
                   <Group spacing="sm">
@@ -151,8 +166,7 @@ export function ProductsTable({ titles, search, isSearching }) {
                     </ActionIcon>
                     <ActionIcon
                       color="red"
-                      onClick={() => handleDeleteProduct(item.id)}
-                    >
+                      onClick={() => handleDeleteProduct(item.id)}>
                       <IconTrash size="1rem" stroke={1.5} />
                     </ActionIcon>
                   </Group>
@@ -166,8 +180,7 @@ export function ProductsTable({ titles, search, isSearching }) {
                   <ImageWrap
                     fit="cover"
                     src={item.image ? item.image : altimg}
-                    alt="No image"
-                  ></ImageWrap>
+                    alt="No image"></ImageWrap>
                 </td>
                 <td>
                   <Group spacing="sm">
@@ -204,8 +217,7 @@ export function ProductsTable({ titles, search, isSearching }) {
                     </ActionIcon>
                     <ActionIcon
                       color="red"
-                      onClick={() => handleDeleteProduct(item.id)}
-                    >
+                      onClick={() => handleDeleteProduct(item.id)}>
                       <IconTrash size="1rem" stroke={1.5} />
                     </ActionIcon>
                   </Group>
