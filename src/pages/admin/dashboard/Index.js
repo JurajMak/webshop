@@ -112,8 +112,6 @@ export default function Dashboard() {
       setIsSearching(true);
     }
   };
-  console.log("user", user.id);
-  console.log("data", data);
 
   return (
     <AppShell

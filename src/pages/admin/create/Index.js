@@ -132,7 +132,6 @@ const Create = () => {
     setLoading(false);
     // form.reset();
   };
-  // console.log(form.values);
 
   return (
     <div className={classes.wrapper}>
