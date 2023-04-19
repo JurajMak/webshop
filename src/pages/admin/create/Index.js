@@ -85,7 +85,7 @@ const Create = () => {
       .from("avatars")
       .getPublicUrl(filepath);
 
-    console.log(data);
+    console.log("data", data);
     form.setFieldValue("image", data.publicUrl + filePath);
   };
 
@@ -170,7 +170,12 @@ const Create = () => {
           {...form.getInputProps("description")}
         />
 
-        <NumberInput mb={20} label="Price" {...form.getInputProps("price")} />
+        <NumberInput
+          precision={2}
+          mb={20}
+          label="Price"
+          {...form.getInputProps("price")}
+        />
 
         <Checkbox
           m="auto"
@@ -189,10 +194,10 @@ const Create = () => {
             mb={10}
             label={`Set sale %`}
             onChange={(number) => {
-              let calc = Math.floor((price / 100) * number);
+              let calc = (price / 100) * number;
               let total = price - calc;
 
-              form.setFieldValue("sale_price", total);
+              form.setFieldValue("sale_price", total.toFixed(2));
               setPercent(number);
             }}
             value={percent}
@@ -205,8 +210,7 @@ const Create = () => {
               handleImageAdd(file);
               return setFile(file);
             }}
-            accept="image/png,image/jpeg,image/jpg"
-          >
+            accept="image/png,image/jpeg,image/jpg">
             {(props) => <Button {...props}>Upload image</Button>}
           </FileButton>
         </Group>
