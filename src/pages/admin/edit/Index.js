@@ -65,7 +65,6 @@ const Edit = () => {
       quantity: "",
       category: "",
       sale_price: null,
-      salePercentage: "",
       image: "",
     },
   });
@@ -73,23 +72,16 @@ const Edit = () => {
   const [prevCategory, setPrevCategory] = useState("");
   const navigate = useNavigate();
   const { state } = useLocation();
-  const {
-    name,
-    description,
-    price,
-    quantity,
-    category,
-    salePercentage,
-    sale_price,
-    image,
-  } = form.values;
+  const { name, description, price, quantity, category, sale_price, image } =
+    form.values;
   const [isSale, setSale] = useState(state.is_sale);
-  const [file, setFile] = useState([]);
+  const [file, setFile] = useState("");
   const [loading, setLoading] = useState(false);
 
   const percentageCalc = Math.floor(
     ((state.price - state.sale_price) / state.price) * 100
   );
+
   const [percent, setPercent] = React.useState(
     state.is_sale ? percentageCalc : null
   );
@@ -175,22 +167,22 @@ const Edit = () => {
     setLoading(false);
   };
 
-  const handleSalePrice = async () => {
-    setLoading(true);
-    let calc = Math.round((state.price / 100) * salePercentage);
-    let total = state.price - calc;
-    console.log(typeof total);
-    const { data, error } = await supabase
-      .from("products")
-      .update({ sale_price: total })
-      .match({ id: state.id });
-    if (error) {
-      console.log("nevalja", error.message);
-    } else {
-      console.log("proso", total);
-    }
-    setLoading(false);
-  };
+  // const handleSalePrice = async () => {
+  //   setLoading(true);
+  //   let calc = Math.round((state.price / 100) * salePercentage);
+  //   let total = state.price - calc;
+  //   console.log(typeof total);
+  //   const { data, error } = await supabase
+  //     .from("products")
+  //     .update({ sale_price: total })
+  //     .match({ id: state.id });
+  //   if (error) {
+  //     console.log("nevalja", error.message);
+  //   } else {
+  //     console.log("proso", total);
+  //   }
+  //   setLoading(false);
+  // };
 
   const getProductCategory = async () => {
     const { data } = await supabase
@@ -272,7 +264,7 @@ const Edit = () => {
     } else {
       console.log("proslo", form.values);
     }
-    // form.reset();
+
     setLoading(false);
   };
 
@@ -280,9 +272,7 @@ const Edit = () => {
     getProductCategory();
   }, []);
 
-  console.log("percent", percent);
-  console.log("price", price);
-  console.log("saleprice", sale_price);
+  console.log("file", file);
 
   return (
     <div className={classes.wrapper}>
@@ -366,7 +356,6 @@ const Edit = () => {
             //   setPercent(number);
             // }}
             onChange={(number) => {
-              // let calc = Math.floor((state.price / 100) * number);
               let total;
 
               if (price === null) {

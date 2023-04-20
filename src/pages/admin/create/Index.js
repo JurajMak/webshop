@@ -58,7 +58,7 @@ const Create = () => {
   const { classes } = useStyles();
   const { user } = useContext(AuthContext);
   const [loading, setLoading] = useState(false);
-  const [file, setFile] = useState([]);
+  const [file, setFile] = useState("");
   const [percent, setPercent] = React.useState(0);
 
   const form = useForm({
