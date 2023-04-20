@@ -8,6 +8,7 @@ import {
   Text,
   Indicator,
   Loader,
+  Divider,
 } from "@mantine/core";
 
 import { useNavigate } from "react-router-dom";
@@ -16,6 +17,7 @@ import { AuthContext } from "../../contexts/Index";
 import { supabase } from "../../config/Supabase";
 import { IconShoppingCart } from "@tabler/icons";
 import ShoppingItem from "../shoppingItem/Index";
+import { CartItem } from "../cartItem/Index";
 import { handlePaymentNotification } from "../notifications/checkoutNotification";
 import {
   DrawerWrapper,
@@ -157,7 +159,14 @@ export function HeaderTabs({
               <Shopping>
                 {orders?.map((item) => {
                   return (
-                    <ShoppingItem
+                    // <ShoppingItem
+                    //   key={item.id}
+                    //   cartData={item}
+                    //   onRemove={onRemove}
+                    //   onQuantity={onQuantity}
+                    //   onDelete={onDelete}
+                    // />
+                    <CartItem
                       key={item.id}
                       cartData={item}
                       onRemove={onRemove}
@@ -167,7 +176,9 @@ export function HeaderTabs({
                   );
                 })}
               </Shopping>
+
               <CheckoutWrapper>
+                <Divider size="md" mt={5} />
                 <TextWrapper>
                   <Text mb={30} ml={100} mt={20} fz="lg" fw={500}>
                     Total :
