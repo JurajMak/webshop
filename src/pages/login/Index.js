@@ -61,7 +61,6 @@ export function UserLogin() {
     email: "",
     password: "",
   });
-  const [opened, setOpened] = useState(false);
 
   const navigate = useNavigate();
   const { signIn, setUser, user } = React.useContext(AuthContext);
@@ -98,7 +97,13 @@ export function UserLogin() {
   return (
     <div className={classes.wrapper}>
       {/* <Paper className={classes.form} radius={0} p={30}> */}
-      <Title order={2} className={classes.title} align="center" mt="md" mb={50}>
+
+      <Title
+        order={2}
+        className={classes.title}
+        align="center"
+        pt={100}
+        mb={50}>
         Welcome back!
       </Title>
 
@@ -120,8 +125,7 @@ export function UserLogin() {
             <ActionIcon
               onClick={() =>
                 type === "text" ? settype("password") : settype("text")
-              }
-            >
+              }>
               {type === "password" ? <IconEye /> : <IconEyeOff />}
             </ActionIcon>
           }
@@ -138,6 +142,7 @@ export function UserLogin() {
           Register
         </Anchor>
       </Text>
+
       {/* </Paper> */}
     </div>
   );

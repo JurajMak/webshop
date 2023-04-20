@@ -10,6 +10,7 @@ import {
   Text,
   Group,
   NumberInput,
+  Loader,
 } from "@mantine/core";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useForm } from "@mantine/form";
@@ -84,25 +85,27 @@ const Edit = () => {
   } = form.values;
   const [isSale, setSale] = useState(state.is_sale);
   const [file, setFile] = useState([]);
-  const [filepath, setFilePath] = useState("");
-  const [imageUrl, setImageUrl] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const percentageCalc = Math.floor(
     ((state.price - state.sale_price) / state.price) * 100
   );
   const [percent, setPercent] = React.useState(
-    state.is_sale ? percentageCalc : ""
+    state.is_sale ? percentageCalc : null
   );
 
   const handleUploadImage = async (file) => {
+    setLoading(true);
     const url = await uploadFile({
       file,
       storageName: `uploads/${user.id}`,
     });
     form.setFieldValue("image", url);
+    setLoading(false);
   };
 
   const updateProductName = async (e) => {
+    setLoading(true);
     const { data, error } = await supabase
       .from("products")
       .update({ name })
@@ -112,8 +115,10 @@ const Edit = () => {
     } else {
       console.log("proso", name);
     }
+    setLoading(false);
   };
   const updateProductDescription = async (e) => {
+    setLoading(true);
     const { data, error } = await supabase
       .from("products")
       .update({ description })
@@ -123,9 +128,11 @@ const Edit = () => {
     } else {
       console.log("proso", description);
     }
+    setLoading(false);
   };
 
   const updateProductPrice = async (e) => {
+    setLoading(true);
     const { data, error } = await supabase
       .from("products")
       .update({ price })
@@ -135,9 +142,11 @@ const Edit = () => {
     } else {
       console.log("proso", price);
     }
+    setLoading(false);
   };
 
   const updateProductQuantity = async (e) => {
+    setLoading(true);
     const { data: productData, error: productError } = await supabase
       .from("products")
       .select("quantity")
@@ -163,9 +172,11 @@ const Edit = () => {
     } else {
       console.log("proso", typeof existingQuantity);
     }
+    setLoading(false);
   };
 
   const handleSalePrice = async () => {
+    setLoading(true);
     let calc = Math.round((state.price / 100) * salePercentage);
     let total = state.price - calc;
     console.log(typeof total);
@@ -178,6 +189,7 @@ const Edit = () => {
     } else {
       console.log("proso", total);
     }
+    setLoading(false);
   };
 
   const getProductCategory = async () => {
@@ -191,6 +203,7 @@ const Edit = () => {
   };
 
   const updateProductCategory = async () => {
+    setLoading(true);
     const { data: categories } = await supabase
       .from("categories")
       .select("*")
@@ -203,6 +216,7 @@ const Edit = () => {
         category_id: categories.id,
       })
       .match({ id: state.id });
+    setLoading(false);
   };
 
   const returnDashboard = async () => {
@@ -224,6 +238,7 @@ const Edit = () => {
   };
 
   const updateAll = async (e) => {
+    setLoading(true);
     const { data: categories } = await supabase
       .from("categories")
       .select("*")
@@ -246,8 +261,8 @@ const Edit = () => {
         name: name === "" ? state.name : name,
         description: description === "" ? state.description : description,
         price: price === null ? state.price : price,
-        quantity: quantity === "" ? state.quantity : quantity,
-        sale_price: sale_price === null ? null : sale_price,
+        quantity: quantity === "" ? state.quantity : state.quantity + quantity,
+        sale_price: sale_price === null ? state.sale_price : sale_price,
         image: image === "" ? state.image : image,
       })
 
@@ -258,11 +273,16 @@ const Edit = () => {
       console.log("proslo", form.values);
     }
     // form.reset();
+    setLoading(false);
   };
 
   React.useEffect(() => {
     getProductCategory();
   }, []);
+
+  console.log("percent", percent);
+  console.log("price", price);
+  console.log("saleprice", sale_price);
 
   return (
     <div className={classes.wrapper}>
@@ -309,17 +329,12 @@ const Edit = () => {
           placeholder={state.name}
           {...form.getInputProps("name")}
         />
-        <Button mt={20} mb={20} onClick={updateProductName}>
-          Edit product
-        </Button>
+
         <TextInput
           label={`Description: ${state.description}`}
           placeholder={state.description}
           {...form.getInputProps("description")}
         />
-        <Button mt={20} mb={20} onClick={updateProductDescription}>
-          Edit description
-        </Button>
 
         <NumberInput
           precision={2}
@@ -327,9 +342,6 @@ const Edit = () => {
           placeholder={state.price}
           {...form.getInputProps("price")}
         />
-        <Button mt={20} mb={20} onClick={updateProductPrice}>
-          Edit price
-        </Button>
 
         <Checkbox
           m="auto"
@@ -345,10 +357,26 @@ const Edit = () => {
             label={
               percent > 0 ? `Current sale ${percent} %` : `Current sale 0 %`
             }
+            // onChange={(number) => {
+            //   // let calc = Math.floor((state.price / 100) * number);
+            //   let calc = (state.price / 100) * number;
+            //   let total = state.price - calc;
+
+            //   form.setFieldValue("sale_price", total.toFixed(2));
+            //   setPercent(number);
+            // }}
             onChange={(number) => {
               // let calc = Math.floor((state.price / 100) * number);
-              let calc = (state.price / 100) * number;
-              let total = state.price - calc;
+              let total;
+
+              if (price === null) {
+                let calc = (state.price / 100) * number;
+                total = state.price - calc;
+              }
+              if (price !== null) {
+                let calc = (price / 100) * number;
+                total = price - calc;
+              }
 
               form.setFieldValue("sale_price", total.toFixed(2));
               setPercent(number);
@@ -357,22 +385,11 @@ const Edit = () => {
           />
         )}
 
-        <SaleWrapper>
-          {isSale && (
-            <Button mt={20} mb={20} onClick={handleSalePrice}>
-              Set sale
-            </Button>
-          )}
-        </SaleWrapper>
-
         <NumberInput
           label={`Quantity: ${state.quantity} pcs`}
           placeholder={state.quantity}
           {...form.getInputProps("quantity")}
         />
-        <Button mt={10} mb={10} onClick={updateProductQuantity}>
-          Edit quantity
-        </Button>
 
         <TextInput
           label={`Category: ${prevCategory}`}
@@ -386,7 +403,7 @@ const Edit = () => {
           </Button>
 
           <Button mt={20} type="submit">
-            Submit
+            {loading ? <Loader color="white" size="sm" /> : "Submit"}
           </Button>
 
           <Button mt={20} onClick={returnDashboard}>
