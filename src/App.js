@@ -1,14 +1,17 @@
 import React from "react";
-import { GlobalStyles, MantineProvider } from "@mantine/core";
+import { MantineProvider } from "@mantine/core";
+import { NotificationsProvider } from "@mantine/notifications";
 import RenderRoutes from "./routes/Index";
 import AuthProvider from "./contexts/Index";
 
 const App = () => {
   return (
     <MantineProvider withGlobalStyles withNormalizeCSS>
-      <AuthProvider>
-        <RenderRoutes />
-      </AuthProvider>
+      <NotificationsProvider position="top-center" zIndex={2077} limit={1}>
+        <AuthProvider>
+          <RenderRoutes />
+        </AuthProvider>
+      </NotificationsProvider>
     </MantineProvider>
   );
 };

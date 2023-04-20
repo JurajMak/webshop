@@ -7,8 +7,6 @@ import {
   Pagination,
   Select,
   Button,
-  Notification,
-  Alert,
 } from "@mantine/core";
 import ProductsCard from "../productCard/Index";
 import HeaderTabs from "../header/Index";
@@ -17,22 +15,19 @@ import { supabase } from "../../config/Supabase";
 import { AuthContext } from "../../contexts/Index";
 import React, { useState, useEffect, useContext } from "react";
 import SearchBar from "../search/Index";
-import { IconX } from "@tabler/icons";
+import { handleQuantityNotification } from "../notifications/warningNotification";
 
 export default function AppShellLayout() {
   const theme = useMantineTheme();
   const [opened, setOpened] = useState(false);
-  const { data, setData, categories, user } = React.useContext(AuthContext);
+  const { data, getData, categories, user } = React.useContext(AuthContext);
   const [search, setSearch] = useState([]);
   const [searchWord, setSearchWord] = useState("");
   const [isSearching, setIsSearching] = useState(false);
   const [shoppingData, setShoppingData] = useState([]);
-  const [selectedCategories, setSelectedCategories] = useState([]);
   const [activePage, setPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(10);
   const [value, setValue] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [notify, setNotify] = useState(false);
 
   const lastPost = activePage * itemsPerPage;
   const firstPost = lastPost - itemsPerPage;
@@ -52,7 +47,7 @@ export default function AppShellLayout() {
           if (cart.id === item.id) {
             const updatedQuantity = cart.quantity + 1;
             if (updatedQuantity > item.quantity) {
-              setNotify(true);
+              handleQuantityNotification();
 
               return cart;
             }
@@ -70,7 +65,7 @@ export default function AppShellLayout() {
     } else {
       const newItem = { ...item, quantity: 1 };
       if (newItem.quantity > item.quantity) {
-        setNotify(true);
+        handleQuantityNotification();
 
         return;
       }
@@ -88,7 +83,8 @@ export default function AppShellLayout() {
     const cartItem = shoppingData[cartItemIndex];
 
     if (cartItem && cartItem.quantity >= dataItem.quantity) {
-      setNotify(true);
+      // setNotify(true);
+      handleQuantityNotification();
       return;
     }
 
@@ -142,6 +138,7 @@ export default function AppShellLayout() {
       }
     }
     setShoppingData([]);
+    getData();
   };
 
   const handleDeleteItem = (e, id) => {
@@ -212,9 +209,6 @@ export default function AppShellLayout() {
     e.preventDefault();
     setIsSearching(false);
   };
-  const handleNotification = () => {
-    setNotify(false);
-  };
 
   useEffect(() => {
     const savedData = [];
@@ -256,7 +250,6 @@ export default function AppShellLayout() {
             variant="white"
             radius="xl"
             w={100}
-            // mt={20}
             ml="auto"
             onClick={handleShowAll}>
             Show All
@@ -276,7 +269,6 @@ export default function AppShellLayout() {
             variant="white"
             radius="xl"
             w={100}
-            // mt={20}
             ml="auto"
             onClick={handleSearchButtonClick}>
             Search
@@ -295,20 +287,8 @@ export default function AppShellLayout() {
           onQuantity={handleAddQuantity}
           onRemove={handleRemoveQuantity}
           onClear={handleDeleteAllCart}
-          notify={notify}
-          onNotify={handleNotification}
         />
       }>
-      {notify && (
-        <Notification
-          ml={100}
-          onClick={handleNotification}
-          icon={<IconX size="1.1rem" />}
-          w={380}
-          color="red">
-          Cannot add more of that product to cart remaining quantity is 0
-        </Notification>
-      )}
       <Wrapper>
         {isSearching
           ? searchPost?.map((item) => (

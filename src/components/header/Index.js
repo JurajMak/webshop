@@ -8,15 +8,15 @@ import {
   Text,
   Indicator,
   Loader,
-  Notification,
 } from "@mantine/core";
 
 import { useNavigate } from "react-router-dom";
 import React, { useContext, useState } from "react";
 import { AuthContext } from "../../contexts/Index";
 import { supabase } from "../../config/Supabase";
-import { IconShoppingCart, IconX, IconCheck } from "@tabler/icons";
+import { IconShoppingCart } from "@tabler/icons";
 import ShoppingItem from "../shoppingItem/Index";
+import { handlePaymentNotification } from "../notifications/checkoutNotification";
 import {
   DrawerWrapper,
   CheckoutBtn,
@@ -51,15 +51,12 @@ export function HeaderTabs({
   onDelete,
   onQuantity,
   onClear,
-  notify,
-  onNotify,
 }) {
   const { classes } = useStyles();
   const [opened, setOpened] = useState(false);
   const navigate = useNavigate();
   const { user, signOut, getData } = useContext(AuthContext);
   const [loading, setLoading] = useState(false);
-  const [payment, setPaymet] = useState(false);
 
   const navigateLogin = async () => {
     navigate("/login");
@@ -82,7 +79,6 @@ export function HeaderTabs({
 
   const handleCheckout = async () => {
     setLoading(true);
-    setPaymet(true);
     const { data, error } = await supabase
       .from("orders")
       .insert({ user_id: user.id, total: total });
@@ -139,6 +135,7 @@ export function HeaderTabs({
       return;
     }
     setLoading(false);
+    handlePaymentNotification();
     onClear();
   };
 
@@ -150,40 +147,14 @@ export function HeaderTabs({
           <Group
             sx={{ height: "100%" }}
             spacing={0}
-            className={classes.hiddenMobile}
-          ></Group>
+            className={classes.hiddenMobile}></Group>
           <Drawer
             opened={opened}
             onClose={() => setOpened(false)}
             padding="xs"
-            size="xl"
-          >
+            size="xl">
             <DrawerWrapper>
               <Shopping>
-                {payment && (
-                  <Notification
-                    onClick={() => setPaymet(false)}
-                    mb={50}
-                    icon={<IconCheck size="1.1rem" />}
-                    color="teal"
-                    title="Order Confirmed !"
-                  >
-                    Thank you for your purchase! Enjoy your new products!
-                  </Notification>
-                )}
-
-                {notify && (
-                  <Notification
-                    onClick={onNotify}
-                    icon={<IconX size="1.1rem" />}
-                    w={380}
-                    h={50}
-                    color="red"
-                  >
-                    Cannot add more of that product to cart remaining quantity
-                    is 0
-                  </Notification>
-                )}
                 {orders?.map((item) => {
                   return (
                     <ShoppingItem
@@ -208,8 +179,11 @@ export function HeaderTabs({
 
                 {user?.user_metadata.role === "user" ? (
                   <CheckoutBtn onClick={handleCheckout}>
-                    {" "}
-                    {loading ? <Loader /> : "$ Checkout"}
+                    {loading ? (
+                      <Loader color="white" size="sm" />
+                    ) : (
+                      "$ Checkout"
+                    )}
                   </CheckoutBtn>
                 ) : (
                   <CheckoutBtn onClick={navigateLogin}>
@@ -235,8 +209,7 @@ export function HeaderTabs({
                     common: {
                       color: "black",
                     },
-                  }}
-                >
+                  }}>
                   <Button onClick={() => setOpened(true)}>
                     <IconShoppingCart size={25} />
                   </Button>
@@ -259,8 +232,7 @@ export function HeaderTabs({
                     common: {
                       color: "black",
                     },
-                  }}
-                >
+                  }}>
                   <Button onClick={() => setOpened(true)}>
                     <IconShoppingCart size={25} />
                   </Button>

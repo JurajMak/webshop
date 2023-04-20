@@ -52,7 +52,7 @@ const useStyles = createStyles((theme) => ({
   },
 }));
 
-export function ProductsCard({ data, onClick }) {
+export function ProductsCard({ data, onClick, notify }) {
   const { classes } = useStyles();
   const { name, price, description, quantity, sale_price, is_sale, image } =
     data;
@@ -101,8 +101,7 @@ export function ProductsCard({ data, onClick }) {
                   td="line-through"
                   size="sm"
                   weight={700}
-                  sx={{ lineHeight: 1 }}
-                >
+                  sx={{ lineHeight: 1 }}>
                   ${price}
                 </Text>
                 <Text size="xl" color="red" weight={700} sx={{ lineHeight: 1 }}>

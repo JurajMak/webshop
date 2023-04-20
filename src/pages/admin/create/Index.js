@@ -59,7 +59,6 @@ const Create = () => {
   const { user } = useContext(AuthContext);
   const [loading, setLoading] = useState(false);
   const [file, setFile] = useState([]);
-  const [filepath, setFilePath] = useState("");
   const [percent, setPercent] = React.useState(0);
 
   const form = useForm({
@@ -227,7 +226,9 @@ const Create = () => {
 
         <NumberInput label="Quantity" {...form.getInputProps("quantity")} />
 
-        <Button type="submit">{loading ? <Loader /> : "Submit"}</Button>
+        <Button type="submit">
+          {loading ? <Loader color="white" size="sm" /> : "Submit"}
+        </Button>
         <Button mt={20} ml={30} onClick={returnDashboard}>
           Return
         </Button>
