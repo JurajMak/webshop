@@ -97,8 +97,6 @@ const AuthProvider = ({ children }) => {
     getCategory();
   }, []);
 
-  console.log(categories);
-
   return (
     <AuthContext.Provider value={value}>
       {!isLoading ? (
