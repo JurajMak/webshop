@@ -1,46 +1,19 @@
 import { Table, Group, Text, ScrollArea, LoadingOverlay } from "@mantine/core";
-import { supabase } from "../../../config/Supabase";
 import React, { useState } from "react";
 import { LoaderWrapper } from "./Styles";
+import { useQuery } from "@tanstack/react-query";
+import { getOrders } from "../../../api/orders";
 
 export function OrderTable({ titles }) {
-  const [ordersForRender, setOrdersForRender] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const { data, isLoading, isSucces, refetch } = useQuery({
+    queryKey: ["orders"],
+    queryFn: () => getOrders(),
+  });
 
-  const handleGetOrders = async () => {
-    setLoading(true);
-    const { data, error } = await supabase.from("orders").select(
-      `
-        *,
-        order_products(
-          product_id,
-          products:products(name),
-          user_id,
-          profiles:profiles(full_name),
-          order_id,
-          orders:orders(total)
-        )
-      `
-    );
+  // React.useEffect(() => {
 
-    if (error) {
-      console.log("nevalja", error.message);
-      return;
-    }
-
-    setOrdersForRender(
-      data.flatMap((order) => ({
-        id: order.id,
-        profile_name: order?.order_products[0]?.profiles?.full_name,
-        total: order.total,
-      }))
-    );
-    setLoading(false);
-  };
-
-  React.useEffect(() => {
-    handleGetOrders();
-  }, []);
+  //   refetch();
+  // }, []);
 
   return (
     <ScrollArea>
@@ -53,18 +26,18 @@ export function OrderTable({ titles }) {
           </tr>
         </thead>
         <tbody>
-          {loading ? (
+          {isLoading ? (
             <tr>
               <LoaderWrapper>
                 <LoadingOverlay
-                  visible={loading}
+                  visible={isLoading}
                   overlayBlur={2}
                   loaderProps={{ size: "xl" }}
                 />
               </LoaderWrapper>
             </tr>
           ) : (
-            ordersForRender?.map((item, index) => (
+            data?.map((item, index) => (
               <tr key={index}>
                 <td>
                   <Group spacing="xs">
