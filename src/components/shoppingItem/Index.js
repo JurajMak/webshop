@@ -108,23 +108,21 @@ const ShoppingItem = ({ cartData, onQuantity, onDelete, onRemove }) => {
                       td="line-through"
                       size="sm"
                       weight={700}
-                      sx={{ lineHeight: 1 }}
-                    >
+                      sx={{ lineHeight: 1 }}>
                       ${total.toFixed(2)}
                     </Text>
                     <Text
                       size="xl"
                       color="red"
                       weight={700}
-                      sx={{ lineHeight: 1 }}
-                    >
+                      sx={{ lineHeight: 1 }}>
                       ${sale.toFixed(2)}
                     </Text>
                   </div>
                 ) : (
                   <div>
                     <Text size="xl" weight={700} sx={{ lineHeight: 1 }}>
-                      ${price}
+                      ${total.toFixed(2)}
                     </Text>
                   </div>
                 )}
@@ -133,8 +131,7 @@ const ShoppingItem = ({ cartData, onQuantity, onDelete, onRemove }) => {
                   color="dimmed"
                   weight={500}
                   sx={{ lineHeight: 1 }}
-                  mt={3}
-                ></Text>
+                  mt={3}></Text>
               </div>
             </Group>
           </Card.Section>
