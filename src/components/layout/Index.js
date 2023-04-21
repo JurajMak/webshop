@@ -21,13 +21,12 @@ import { useInfiniteQuery } from "@tanstack/react-query";
 export default function AppShellLayout() {
   const theme = useMantineTheme();
   const [opened, setOpened] = useState(false);
-  const { categories, user } = React.useContext(AuthContext);
+  const { user } = React.useContext(AuthContext);
   const [search, setSearch] = useState("");
+  const [selectValue, setSelectValue] = useState(null);
   const [searchWord, setSearchWord] = useState("");
-  const [isSearching, setIsSearching] = useState(false);
   const [shoppingData, setShoppingData] = useState([]);
   const [value, setValue] = useState("");
-  const [selectValue, setSelectValue] = useState(null);
 
   const {
     data,
@@ -47,8 +46,6 @@ export default function AppShellLayout() {
       },
     }
   );
-
-  const mappedCategories = categories?.map((item) => item.name);
 
   const handleAddCart = (e, item) => {
     const isExists = shoppingData?.some((cart) => {
@@ -97,7 +94,6 @@ export default function AppShellLayout() {
     const cartItem = shoppingData[cartItemIndex];
 
     if (cartItem && cartItem.quantity >= dataItem.quantity) {
-      // setNotify(true);
       handleQuantityNotification();
       return;
     }
@@ -168,10 +164,9 @@ export default function AppShellLayout() {
       setSearchWord(search);
     }
   };
-
-  const handleShowAll = (e) => {
-    e.preventDefault();
-    setIsSearching(false);
+  const handleShowAll = () => {
+    setSearchWord("");
+    setValue("");
   };
 
   useEffect(() => {
@@ -206,7 +201,7 @@ export default function AppShellLayout() {
           hidden={!opened}
           width={{ sm: 200, lg: 300 }}>
           <Select
-            ml="auto"
+            mx="auto"
             onChange={(value) => {
               return setSelectValue(value);
             }}
@@ -235,7 +230,7 @@ export default function AppShellLayout() {
             Show All
           </Button>
           <Text m={20}>Category</Text>
-          <Select
+          {/* <Select
             radius={50}
             searchable
             clearable
@@ -243,8 +238,7 @@ export default function AppShellLayout() {
             value={value}
             data={mappedCategories}
             onChange={setValue}
-            // onKeyDown={(e) => handleCategoryEnter(e)}
-          />
+          /> */}
           <Button
             variant="white"
             radius="xl"

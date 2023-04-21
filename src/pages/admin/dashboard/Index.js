@@ -144,7 +144,7 @@ export default function Dashboard() {
             Show All
           </Button>
 
-          <Select
+          {/* <Select
             searchable
             clearable
             placeholder="Categories"
@@ -152,16 +152,16 @@ export default function Dashboard() {
             data={mappedCategories}
             onChange={setValue}
             onKeyDown={(e) => handleCategoryEnter(e)}
-          />
-          <Button
+          /> */}
+          {/* <Button
             variant="white"
             radius="xl"
             w={100}
-            // mt={20}
+            
             ml="auto"
             onClick={handleSearchButtonClick}>
             Search
-          </Button>
+          </Button> */}
           <Button
             mt={10}
             ml="auto"
