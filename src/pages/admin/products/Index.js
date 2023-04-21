@@ -5,10 +5,8 @@ import {
   ActionIcon,
   ScrollArea,
   useMantineTheme,
-  Pagination,
   LoadingOverlay,
   Image,
-  Notification,
 } from "@mantine/core";
 
 import { IconPencil, IconTrash, IconX } from "@tabler/icons";
@@ -24,23 +22,13 @@ import {
   handleUserProductNotification,
 } from "../../../components/notifications/warningNotification";
 
-export function ProductsTable({ titles, search, isSearching }) {
+export function ProductsTable({ titles, search }) {
   const theme = useMantineTheme();
   const navigate = useNavigate();
-  const { data, getData, getCategory, user } = useContext(AuthContext);
-  const [activePage, setPage] = useState(1);
-  const [itemsPerPage, setItemsPerPage] = useState(10);
+  const { data, getData, user } = useContext(AuthContext);
   const [loading, setLoading] = useState(true);
-  const [errorDelete, setErrorDelete] = useState(false);
-  const [notValidUser, setNotValidUser] = useState(false);
-
-  const lastPost = activePage * itemsPerPage;
-  const firstPost = lastPost - itemsPerPage;
-  const currentPost = data?.slice(firstPost, lastPost);
-  const searchPost = search?.slice(firstPost, lastPost);
 
   const toEdit = async (item) => {
-    console.log("item Edit", item.id);
     navigate(`/admin/products/${item.id}`, { state: item });
   };
 
@@ -78,21 +66,9 @@ export function ProductsTable({ titles, search, isSearching }) {
     getData();
     setLoading(false);
   }, []);
-  console.log("prod", data);
 
   return (
     <ScrollArea>
-      <Pagination
-        m="auto"
-        withEdges
-        value={activePage}
-        onChange={setPage}
-        total={
-          isSearching
-            ? Math.ceil(searchPost.length / 10)
-            : Math.ceil(data.length / 10)
-        }
-      />
       <Table sx={{ minWidth: 800 }} verticalSpacing="sm">
         <thead>
           <tr>
@@ -112,54 +88,8 @@ export function ProductsTable({ titles, search, isSearching }) {
                 />
               </LoaderWrapper>
             </tr>
-          ) : isSearching ? (
-            searchPost?.map((item) => (
-              <tr key={item.id}>
-                <td>
-                  <ImageWrap
-                    src={item.image ? item.image : altimg}
-                    alt="No image"></ImageWrap>
-                </td>
-                <td>
-                  <Group spacing="sm">
-                    <Text fz="sm" fw={500}>
-                      {item.name}
-                    </Text>
-                  </Group>
-                </td>
-
-                <td>
-                  <Text fz="sm">{item.description}</Text>
-                </td>
-                <td>
-                  <Text fz="sm" c="blue">
-                    $ {item.price}
-                  </Text>
-                </td>
-                <td>
-                  <Text fz="sm">{item.quantity}</Text>
-                </td>
-                <td>
-                  <Text fz="sm" c="blue">
-                    $ {item.sale_price}
-                  </Text>
-                </td>
-                <td>
-                  <Group spacing={0}>
-                    <ActionIcon onClick={() => toEdit(item)}>
-                      <IconPencil size="1rem" stroke={1.5} />
-                    </ActionIcon>
-                    <ActionIcon
-                      color="red"
-                      onClick={() => handleDeleteProduct(item)}>
-                      <IconTrash size="1rem" stroke={1.5} />
-                    </ActionIcon>
-                  </Group>
-                </td>
-              </tr>
-            ))
           ) : (
-            currentPost?.map((item) => (
+            data?.map((item) => (
               <tr key={item.id}>
                 <td>
                   <ImageWrap
