@@ -83,7 +83,7 @@ export function CartItem({ cartData, onQuantity, onDelete, onRemove }) {
                 ) : (
                   <div>
                     <Text size="xl" weight={700} sx={{ lineHeight: 1 }}>
-                      ${price}
+                      ${total.toFixed(2)}
                     </Text>
                   </div>
                 )}
