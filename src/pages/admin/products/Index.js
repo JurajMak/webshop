@@ -22,6 +22,7 @@ import {
   handleUserProductNotification,
 } from "../../../components/notifications/warningNotification";
 import { getProducts } from "../../../api/products";
+import { handleInfiniteScroll } from "../../../utils/infiniteScroll";
 import {
   QueryClient,
   useInfiniteQuery,
@@ -88,8 +89,16 @@ export function ProductsTable({ titles, search }) {
   };
 
   React.useEffect(() => {
+    document.addEventListener("scroll", (e) =>
+      handleInfiniteScroll(e, hasNextPage, fetchNextPage)
+    );
     refetch();
-  }, []);
+    return () => {
+      document.removeEventListener("scroll", (e) =>
+        handleInfiniteScroll(e, hasNextPage, fetchNextPage)
+      );
+    };
+  }, [search, fetchNextPage, hasNextPage]);
 
   return (
     <ScrollArea>
