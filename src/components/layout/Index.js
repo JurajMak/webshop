@@ -8,6 +8,7 @@ import {
   Button,
   Loader,
   Flex,
+  LoadingOverlay,
 } from "@mantine/core";
 import ProductsCard from "../productCard/Index";
 import HeaderTabs from "../header/Index";
@@ -34,6 +35,7 @@ export default function AppShellLayout() {
   const {
     data,
     isSuccess,
+    isLoading,
     error,
     fetchNextPage,
     hasNextPage,
@@ -277,7 +279,13 @@ export default function AppShellLayout() {
         />
       }>
       <Wrapper>
-        {isSuccess &&
+        {isLoading ? (
+          <LoadingOverlay
+            visible={isLoading}
+            overlayBlur={6}
+            loaderProps={{ size: "xl" }}
+          />
+        ) : (
           data?.pages?.map((group, i) => (
             <React.Fragment key={i}>
               {group?.map((item) => {
@@ -291,7 +299,8 @@ export default function AppShellLayout() {
                 );
               })}
             </React.Fragment>
-          ))}
+          ))
+        )}
       </Wrapper>
       {isFetchingNextPage && hasNextPage && (
         <Flex direction="column">

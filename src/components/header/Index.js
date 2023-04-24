@@ -57,7 +57,7 @@ export function HeaderTabs({
   const { classes } = useStyles();
   const [opened, setOpened] = useState(false);
   const navigate = useNavigate();
-  const { user, signOut, getData } = useContext(AuthContext);
+  const { user, signOut } = useContext(AuthContext);
   const [loading, setLoading] = useState(false);
 
   const navigateLogin = async () => {

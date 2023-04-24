@@ -5,22 +5,8 @@ import { LoadingOverlay } from "@mantine/core";
 export const AuthContext = createContext(null);
 
 const AuthProvider = ({ children }) => {
-  const [data, setData] = useState([]);
-  const [products, setProducts] = useState([]);
-  const [categories, setCategories] = useState([]);
-
   const [user, setUser] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
-
-  const getData = async () => {
-    const { data, error } = await supabase.from("products").select();
-    setData(data);
-  };
-
-  const getCategory = async () => {
-    const { data, error } = await supabase.from("categories").select();
-    setCategories(data);
-  };
 
   const signIn = async ({ email, password }) => {
     const { data, error } = await supabase.auth.signInWithPassword({
@@ -66,10 +52,6 @@ const AuthProvider = ({ children }) => {
     signOut,
     user,
     setUser,
-    data,
-    categories,
-    getData,
-    getCategory,
     isLoading,
   };
 
@@ -93,8 +75,6 @@ const AuthProvider = ({ children }) => {
         setUser(null);
       }
     });
-    getData();
-    getCategory();
   }, []);
 
   return (

@@ -19,6 +19,8 @@ import uploadFile from "../../../utils/uploadFile";
 import { Form } from "./Styles";
 import React, { useContext, useState } from "react";
 import { AuthContext } from "../../../contexts/Index";
+import { createCategory } from "../../../api/categories";
+import { QueryClient, useMutation } from "@tanstack/react-query";
 const useStyles = createStyles((theme) => ({
   wrapper: {
     minHeight: 900,
@@ -60,6 +62,7 @@ const Create = () => {
   const [loading, setLoading] = useState(false);
   const [file, setFile] = useState("");
   const [percent, setPercent] = React.useState(0);
+  const queryClient = new QueryClient();
 
   const form = useForm({
     initialValues: {
@@ -89,24 +92,50 @@ const Create = () => {
     form.setFieldValue("image", url);
   };
 
-  const handleCreateCategory = async () => {
-    setLoading(true);
-    const { data: categories } = await supabase
-      .from("categories")
-      .select("*")
-      .eq("name", category)
-      .single();
+  // const createEventMutation = useMutation({
+  //   mutationFn: (event) => API_SERVICES.EVENT.createOrUpdateEvent(event),
+  //   onSuccess: () => {
+  //     queryClient.invalidateQueries(["events", user.id]);
+  //     setFile("");
+  //     form.reset();
+  //   },
+  // });
 
-    if (!categories) {
-      const { data, error } = await supabase
-        .from("categories")
-        .insert({ name: category, user_id: user.id });
-      if (error) {
-        console.log(error.message);
-      }
-    }
-    setLoading(false);
+  // const handleSubmit = async () => {
+  //   await createEventMutation.mutateAsync(form.values);
+  // };
+
+  const createCategoryMutation = useMutation({
+    mutationFn: (item) => createCategory(item),
+    onSuccess: () => {
+      queryClient.invalidateQueries(["categories", user.id]);
+    },
+  });
+
+  const handleCreateCategory = async () => {
+    await createCategoryMutation.mutateAsync(category, user);
   };
+
+  // const handleCreateCategory = async () => {
+  //   setLoading(true);
+  //   const { data: categories } = await supabase
+  //     .from("categories")
+  //     .select("*")
+  //     .eq("name", category)
+  //     .single();
+
+  //   if (!categories) {
+  //     const { data, error } = await supabase
+  //       .from("categories")
+  //       .insert({ name: category, user_id: user.id })
+  //       .single();
+  //     if (error) {
+  //       console.log(error.message);
+  //     }
+  //   }
+  //   setLoading(false);
+  // };
+
   const handleAddProduct = async () => {
     setLoading(true);
 
@@ -129,12 +158,12 @@ const Create = () => {
     });
 
     setLoading(false);
-    // form.reset();
   };
   const handleNewEntry = () => {
     form.reset();
     setChecked(false);
     setPercent(0);
+    setFile("");
   };
 
   return (

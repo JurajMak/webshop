@@ -5,8 +5,9 @@ import {
   ActionIcon,
   ScrollArea,
   useMantineTheme,
-  LoadingOverlay,
   Image,
+  Flex,
+  Loader,
 } from "@mantine/core";
 
 import { IconPencil, IconTrash, IconX } from "@tabler/icons";
@@ -41,6 +42,7 @@ export function ProductsTable({ titles, search }) {
   };
   const {
     data,
+    isSuccess,
     isLoading,
     error,
     fetchNextPage,
@@ -111,76 +113,80 @@ export function ProductsTable({ titles, search }) {
           </tr>
         </thead>
         <tbody>
-          {isLoading ? (
-            <tr>
-              <LoaderWrapper>
-                <LoadingOverlay
-                  visible={isLoading}
-                  overlayBlur={6}
-                  loaderProps={{ size: "xl" }}
-                />
-              </LoaderWrapper>
-            </tr>
-          ) : (
-            data?.pages?.map((group, i) => (
-              <React.Fragment key={i}>
-                {group?.map((item) => {
-                  return (
-                    <tr key={item.id}>
-                      <td>
-                        <ImageWrap
-                          fit="cover"
-                          src={item.image ? item.image : altimg}
-                          alt="No image"></ImageWrap>
-                      </td>
-                      <td>
-                        <Group spacing="sm">
-                          <Text fz="sm" fw={500}>
-                            {item.name}
-                          </Text>
-                        </Group>
-                      </td>
+          {data?.pages?.map((group, i) => (
+            <React.Fragment key={i}>
+              {group?.map((item) => {
+                return (
+                  <tr key={item.id}>
+                    <td>
+                      <ImageWrap
+                        fit="cover"
+                        src={item.image ? item.image : altimg}
+                        alt="No image"></ImageWrap>
+                    </td>
+                    <td>
+                      <Group spacing="sm">
+                        <Text fz="sm" fw={500}>
+                          {item.name}
+                        </Text>
+                      </Group>
+                    </td>
 
-                      <td>
-                        <Text fz="sm" fw={500}>
-                          {item.description}
-                        </Text>
-                      </td>
-                      <td>
-                        <Text fz="sm" c="blue" fw={500}>
-                          $ {item.price}
-                        </Text>
-                      </td>
-                      <td>
-                        <Text fz="sm" fw={500}>
-                          {item.quantity}
-                        </Text>
-                      </td>
-                      <td>
-                        <Text fz="sm" c="blue" fw={500}>
-                          $ {item.sale_price}
-                        </Text>
-                      </td>
-                      <td>
-                        <Group>
-                          <ActionIcon onClick={() => toEdit(item)}>
-                            <IconPencil size="1rem" stroke={1.5} />
-                          </ActionIcon>
-                          <ActionIcon
-                            color="red"
-                            onClick={() => handleDeleteProduct(item)}>
-                            <IconTrash size="1rem" stroke={1.5} />
-                          </ActionIcon>
-                        </Group>
-                      </td>
-                    </tr>
-                  );
-                })}
-              </React.Fragment>
-            ))
-          )}
+                    <td>
+                      <Text fz="sm" fw={500}>
+                        {item.description}
+                      </Text>
+                    </td>
+                    <td>
+                      <Text fz="sm" c="blue" fw={500}>
+                        $ {item.price}
+                      </Text>
+                    </td>
+                    <td>
+                      <Text fz="sm" fw={500}>
+                        {item.quantity}
+                      </Text>
+                    </td>
+                    <td>
+                      <Text fz="sm" c="blue" fw={500}>
+                        $ {item.sale_price}
+                      </Text>
+                    </td>
+                    <td>
+                      <Group>
+                        <ActionIcon onClick={() => toEdit(item)}>
+                          <IconPencil size="1rem" stroke={1.5} />
+                        </ActionIcon>
+                        <ActionIcon
+                          color="red"
+                          onClick={() => handleDeleteProduct(item)}>
+                          <IconTrash size="1rem" stroke={1.5} />
+                        </ActionIcon>
+                      </Group>
+                    </td>
+                  </tr>
+                );
+              })}
+            </React.Fragment>
+          ))}
         </tbody>
       </Table>
+
+      {isFetchingNextPage && hasNextPage && (
+        <Flex direction="column">
+          <Text mx="auto" fz="lg" fw="bold">
+            Loading more products
+          </Text>
+          <Loader mx="auto" size={50}></Loader>
+        </Flex>
+      )}
+      {!hasNextPage && (
+        <Flex direction="column" mx="auto">
+          <Text mx="auto" fz="lg" fw="bold">
+            No more products to load
+          </Text>
+        </Flex>
+      )}
     </ScrollArea>
   );
 }

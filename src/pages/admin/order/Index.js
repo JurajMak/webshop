@@ -26,43 +26,31 @@ export function OrderTable({ titles }) {
           </tr>
         </thead>
         <tbody>
-          {isLoading ? (
-            <tr>
-              <LoaderWrapper>
-                <LoadingOverlay
-                  visible={isLoading}
-                  overlayBlur={2}
-                  loaderProps={{ size: "xl" }}
-                />
-              </LoaderWrapper>
-            </tr>
-          ) : (
-            data?.map((item, index) => (
-              <tr key={index}>
-                <td>
-                  <Group spacing="xs">
-                    <Text fz="sm" fw={500}>
-                      {item.id}
-                    </Text>
-                  </Group>
-                </td>
+          {data?.map((item, index) => (
+            <tr key={index}>
+              <td>
+                <Group spacing="xs">
+                  <Text fz="sm" fw={500}>
+                    {item.id}
+                  </Text>
+                </Group>
+              </td>
 
-                <td>
-                  <Text fz="sm" c="blue">
-                    $ {item.total}
-                  </Text>
-                </td>
-                <td>
-                  <Text fz="sm"> {item.profile_name}</Text>
-                </td>
-                <td>
-                  <Text fz="sm" c="blue">
-                    {item.sale_price}
-                  </Text>
-                </td>
-              </tr>
-            ))
-          )}
+              <td>
+                <Text fz="sm" c="blue">
+                  $ {item.total}
+                </Text>
+              </td>
+              <td>
+                <Text fz="sm"> {item.profile_name}</Text>
+              </td>
+              <td>
+                <Text fz="sm" c="blue">
+                  {item.sale_price}
+                </Text>
+              </td>
+            </tr>
+          ))}
         </tbody>
       </Table>
     </ScrollArea>
