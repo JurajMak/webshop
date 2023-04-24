@@ -31,4 +31,6 @@ const getProducts = async (sortKey, searchValue, page) => {
   return data;
 };
 
+const createProduct = async () => {};
+
 export { getProducts };
