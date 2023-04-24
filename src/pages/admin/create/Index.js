@@ -65,8 +65,8 @@ const Create = () => {
     initialValues: {
       name: "",
       description: "",
-      price: "",
-      quantity: "",
+      price: 0,
+      quantity: 0,
       category: "",
       sale_price: "",
       image: "",
@@ -131,6 +131,11 @@ const Create = () => {
     setLoading(false);
     // form.reset();
   };
+  const handleNewEntry = () => {
+    form.reset();
+    setChecked(false);
+    setPercent(0);
+  };
 
   return (
     <div className={classes.wrapper}>
@@ -140,7 +145,7 @@ const Create = () => {
       </Title>
 
       <Form onSubmit={form.onSubmit(handleAddProduct)}>
-        <Button variant="subtle" ml={350} onClick={() => form.reset()}>
+        <Button variant="subtle" ml={350} onClick={handleNewEntry}>
           New Entry
         </Button>
         <TextInput label="Category" {...form.getInputProps("category")} />
@@ -159,6 +164,7 @@ const Create = () => {
         />
 
         <NumberInput
+          value={price}
           precision={2}
           mb={20}
           label="Price"
@@ -224,7 +230,11 @@ const Create = () => {
           </Group>
         )}
 
-        <NumberInput label="Quantity" {...form.getInputProps("quantity")} />
+        <NumberInput
+          value={quantity}
+          label="Quantity"
+          {...form.getInputProps("quantity")}
+        />
 
         <Button type="submit">
           {loading ? <Loader color="white" size="sm" /> : "Submit"}

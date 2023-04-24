@@ -19,6 +19,7 @@ import SearchBar from "../search/Index";
 import { handleQuantityNotification } from "../notifications/warningNotification";
 import { getProducts } from "../../api/products";
 import { useInfiniteQuery } from "@tanstack/react-query";
+import { handleInfiniteScroll } from "../../utils/infiniteScroll";
 
 export default function AppShellLayout() {
   const theme = useMantineTheme();
@@ -29,7 +30,6 @@ export default function AppShellLayout() {
   const [searchWord, setSearchWord] = useState("");
   const [shoppingData, setShoppingData] = useState([]);
   const [value, setValue] = useState("");
-  const [fetching, SetFetching] = React.useState(false);
 
   const {
     data,
@@ -172,15 +172,6 @@ export default function AppShellLayout() {
     setValue("");
   };
 
-  const handleInfiniteScroll = async (e) => {
-    const { scrollHeight, scrollTop, clientHeight } = e.target.scrollingElement;
-    if (!fetching && scrollHeight - scrollTop <= clientHeight * 1.2) {
-      SetFetching(true);
-      if (hasNextPage) await fetchNextPage();
-      SetFetching(false);
-    }
-  };
-
   useEffect(() => {
     const savedData = [];
     for (let i = 0; i < localStorage.length; i++) {
@@ -191,11 +182,15 @@ export default function AppShellLayout() {
       }
     }
 
-    document.addEventListener("scroll", handleInfiniteScroll);
+    document.addEventListener("scroll", (e) =>
+      handleInfiniteScroll(e, hasNextPage, fetchNextPage)
+    );
     refetch();
     setShoppingData(savedData);
     return () => {
-      document.removeEventListener("scroll", handleInfiniteScroll);
+      document.removeEventListener("scroll", (e) =>
+        handleInfiniteScroll(e, hasNextPage, fetchNextPage)
+      );
     };
   }, [selectValue, searchWord, fetchNextPage, hasNextPage]);
 
