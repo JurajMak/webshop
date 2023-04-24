@@ -1,4 +1,3 @@
-import { async } from "q";
 import { supabase } from "../config/Supabase";
 
 const getProducts = async (sortKey, searchValue, page) => {
@@ -24,15 +23,12 @@ const getProducts = async (sortKey, searchValue, page) => {
     );
   }
 
-  const from = page === 1 ? 0 : 8 * (page - 1);
-  const to = page * 8 - 1;
+  const from = page === 1 ? 0 : 10 * (page - 1);
+  const to = page * 10 - 1;
 
   const { data } = await query.range(from, to);
-  // const { data } = await query;
 
   return data;
 };
-
-const deleteProduct = async (user, data) => {};
 
 export { getProducts };

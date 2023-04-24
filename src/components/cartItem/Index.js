@@ -10,6 +10,7 @@ import {
 } from "@mantine/core";
 import { CardWrapper, ButtonWrapper } from "../shoppingItem/Styles";
 import { IconSquarePlus, IconSquareMinus, IconX } from "@tabler/icons";
+import home from "../../assets/login.jpg";
 
 const useStyles = createStyles((theme) => ({
   card: {
@@ -38,7 +39,7 @@ export function CartItem({ cartData, onQuantity, onDelete, onRemove }) {
     // <CardWrapper>
     <Card withBorder radius="md" p={0} m={10} className={classes.card}>
       <Group noWrap spacing={0}>
-        <Image src={image} height={140} width={140} />
+        <Image src={image ? image : home} height={140} width={140} />
         <div className={classes.body}>
           {/* <Text transform="uppercase" color="dimmed" weight={700} size="xs">
             {category}

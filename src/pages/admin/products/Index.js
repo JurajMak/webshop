@@ -22,12 +22,18 @@ import {
   handleUserProductNotification,
 } from "../../../components/notifications/warningNotification";
 import { getProducts } from "../../../api/products";
-import { useInfiniteQuery } from "@tanstack/react-query";
+import {
+  QueryClient,
+  useInfiniteQuery,
+  useMutation,
+} from "@tanstack/react-query";
 
 export function ProductsTable({ titles, search }) {
   const theme = useMantineTheme();
   const navigate = useNavigate();
   const { user } = useContext(AuthContext);
+  const queryClient = new QueryClient();
+  console.log("search", search);
 
   const toEdit = async (item) => {
     navigate(`/admin/products/${item.id}`, { state: item });
@@ -42,7 +48,7 @@ export function ProductsTable({ titles, search }) {
     refetch,
   } = useInfiniteQuery(
     ["products"],
-    ({ pageParam = 1 }) => getProducts(null, null, pageParam),
+    ({ pageParam = 1 }) => getProducts(null, search, pageParam),
     {
       getNextPageParam: (lastPage, pages) => {
         const nextPage = pages.length + 1;

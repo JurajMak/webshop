@@ -19,9 +19,8 @@ import { supabase } from "../../../config/Supabase";
 export default function Dashboard() {
   const theme = useMantineTheme();
   const [opened, setOpened] = useState(false);
-  const { user, signOut, data, categories } = useContext(AuthContext);
+  const { user, signOut, categories } = useContext(AuthContext);
   const [value, setValue] = useState("");
-  const [isSearching, setIsSearching] = useState(false);
   const [searchWord, setSearchWord] = useState("");
   const [search, setSearch] = useState([]);
   const [swapProduct, setSwapProduct] = useState(true);
@@ -45,7 +44,13 @@ export default function Dashboard() {
   const mappedCategories = categories?.map((item) => item.name);
 
   const handleSearchText = (e) => {
-    setSearchWord(e.target.value);
+    setSearch(e.target.value);
+  };
+
+  const handleSearchEnter = (e) => {
+    if (e.key === "Enter") {
+      setSearchWord(search);
+    }
   };
 
   const handleSwapProduct = () => {
@@ -57,21 +62,20 @@ export default function Dashboard() {
     setSwapOrder(true);
   };
 
-  const handleSearchEnter = async (e) => {
-    if (e.key === "Enter") {
-      const { data, error } = await supabase
-        .from("products")
-        .select("*")
-        .ilike("name", `%${searchWord}%`);
+  // const handleSearchEnter = async (e) => {
+  //   if (e.key === "Enter") {
+  //     const { data, error } = await supabase
+  //       .from("products")
+  //       .select("*")
+  //       .ilike("name", `%${searchWord}%`);
 
-      if (error) {
-        console.error(error);
-      } else {
-        setSearch(data);
-        setIsSearching(true);
-      }
-    }
-  };
+  //     if (error) {
+  //       console.error(error);
+  //     } else {
+  //       setSearch(data);
+  //     }
+  //   }
+  // };
 
   const handleSearchButtonClick = async (e) => {
     const { data: categories } = await supabase
@@ -87,12 +91,10 @@ export default function Dashboard() {
       .in("category_id", categoryIds);
 
     setSearch(productData);
-    setIsSearching(true);
   };
 
   const handleShowAll = (e) => {
     e.preventDefault();
-    setIsSearching(false);
   };
   const handleCategoryEnter = async (e) => {
     if (e.key === "Enter") {
@@ -109,7 +111,6 @@ export default function Dashboard() {
         .in("category_id", categoryIds);
 
       setSearch(productData);
-      setIsSearching(true);
     }
   };
 
@@ -211,17 +212,9 @@ export default function Dashboard() {
         </Header>
       }>
       {swapProduct ? (
-        <ProductsTable
-          search={search}
-          titles={titles}
-          isSearching={isSearching}
-        />
+        <ProductsTable search={searchWord} titles={titles} />
       ) : (
-        <OrderTable
-          search={search}
-          isSearching={isSearching}
-          titles={orderTitles}
-        />
+        <OrderTable search={search} titles={orderTitles} />
       )}
     </AppShell>
   );
