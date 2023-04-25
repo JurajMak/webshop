@@ -1,10 +1,10 @@
 import { showNotification, cleanNotifications } from "@mantine/notifications";
 import { IconCheck } from "@tabler/icons";
 
-export const handlePaymentNotification = () => {
+export const handleSuccesCreation = (item) => {
   showNotification({
-    title: "Order Confirmed !",
-    message: "Thank you for your purchase! Enjoy your new products!",
+    title: "New product added !",
+    message: `${item} successfully added to product list`,
     color: "teal",
     icon: <IconCheck />,
     onClose: () => cleanNotifications(),

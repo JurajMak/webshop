@@ -1,6 +1,6 @@
 import { supabase } from "../config/Supabase";
 
-const createCategory = async (category, user) => {
+const createCategory = async (category, id) => {
   const { data } = await supabase
     .from("categories")
     .select("*")
@@ -10,14 +10,15 @@ const createCategory = async (category, user) => {
   if (!data) {
     const { data: categories, error } = await supabase
       .from("categories")
-      .insert({ name: category, user_id: user.id })
+      .insert({ name: category, user_id: id })
       .single();
     if (error) {
       console.log(error.message);
     }
+    console.log(id);
     return categories;
   }
-
+  console.log(data);
   return data;
 };
 

@@ -1,4 +1,3 @@
-import { Button } from "@mantine/core";
 import styled from "@emotion/styled";
 
 export const Form = styled.form`
@@ -18,8 +17,4 @@ export const Div = styled.div`
 export const ButtonWrapper = styled.div`
   display: flex;
   justify-content: space-between;
-`;
-
-export const TitleHeader = styled.h1`
-  text-align: center;
 `;

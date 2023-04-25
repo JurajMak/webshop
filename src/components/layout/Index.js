@@ -13,7 +13,6 @@ import {
 import ProductsCard from "../productCard/Index";
 import HeaderTabs from "../header/Index";
 import { Wrapper, ProductsWrapper } from "../../pages/home/Styles";
-import { AuthContext } from "../../contexts/Index";
 import React, { useState, useEffect } from "react";
 import SearchBar from "../search/Index";
 import { handleQuantityNotification } from "../notifications/warningNotification";
@@ -87,7 +86,7 @@ export default function AppShellLayout() {
   };
 
   const handleAddQuantity = (e, item) => {
-    const dataItem = data.find((dataItem) => dataItem.id === item.id);
+    const dataItem = data?.pages[0].find((dataItem) => dataItem.id === item.id);
 
     const cartItemIndex = shoppingData.findIndex(
       (cartItem) => cartItem.id === item.id

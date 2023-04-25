@@ -21,6 +21,7 @@ import React, { useContext, useState } from "react";
 import { AuthContext } from "../../../contexts/Index";
 import { createCategory } from "../../../api/categories";
 import { QueryClient, useMutation } from "@tanstack/react-query";
+import { handleSuccesCreation } from "../../../components/notifications/successNotification";
 const useStyles = createStyles((theme) => ({
   wrapper: {
     minHeight: 900,
@@ -92,28 +93,15 @@ const Create = () => {
     form.setFieldValue("image", url);
   };
 
-  // const createEventMutation = useMutation({
-  //   mutationFn: (event) => API_SERVICES.EVENT.createOrUpdateEvent(event),
-  //   onSuccess: () => {
-  //     queryClient.invalidateQueries(["events", user.id]);
-  //     setFile("");
-  //     form.reset();
-  //   },
-  // });
-
-  // const handleSubmit = async () => {
-  //   await createEventMutation.mutateAsync(form.values);
-  // };
-
   const createCategoryMutation = useMutation({
-    mutationFn: (item) => createCategory(item),
+    mutationFn: (item, id) => createCategory(item, id),
     onSuccess: () => {
-      queryClient.invalidateQueries(["categories", user.id]);
+      // queryClient.invalidateQueries(["categories", user.id]);
     },
   });
 
   const handleCreateCategory = async () => {
-    await createCategoryMutation.mutateAsync(category, user);
+    await createCategoryMutation.mutateAsync(category, user.id);
   };
 
   // const handleCreateCategory = async () => {
@@ -174,7 +162,11 @@ const Create = () => {
       </Title>
 
       <Form onSubmit={form.onSubmit(handleAddProduct)}>
-        <Button variant="subtle" ml={350} onClick={handleNewEntry}>
+        <Button
+          variant="subtle"
+          ml={350}
+          // onClick={handleNewEntry}
+          onClick={handleSuccesCreation(name)}>
           New Entry
         </Button>
         <TextInput label="Category" {...form.getInputProps("category")} />
@@ -264,13 +256,14 @@ const Create = () => {
           label="Quantity"
           {...form.getInputProps("quantity")}
         />
-
-        <Button type="submit">
-          {loading ? <Loader color="white" size="sm" /> : "Submit"}
-        </Button>
-        <Button mt={20} ml={30} onClick={returnDashboard}>
-          Return
-        </Button>
+        <Group mt={20}>
+          <Button type="submit" loading={loading} miw={120}>
+            Submit
+          </Button>
+          <Button ml={20} onClick={returnDashboard}>
+            Return
+          </Button>
+        </Group>
       </Form>
       {/* </Paper> */}
     </div>
