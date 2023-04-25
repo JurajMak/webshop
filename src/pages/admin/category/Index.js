@@ -61,7 +61,7 @@ const CreateCategory = () => {
   const form = useForm({
     initialValues: {
       name: "",
-      description: null,
+      description: "",
     },
   });
   const { name, description } = form.values;
@@ -84,11 +84,12 @@ const CreateCategory = () => {
   });
 
   const handleCreateCategory = async () => {
-    await createCategoryMutation.mutateAsync({
+    const create = {
       category: name,
-      desc: description,
+      desc: description === "" ? null : description,
       userId: user.id,
-    });
+    };
+    await createCategoryMutation.mutateAsync(create);
   };
 
   const handleReturn = () => {
