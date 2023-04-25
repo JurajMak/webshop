@@ -16,7 +16,6 @@ import React, { useContext, useState } from "react";
 import { AuthContext } from "../../contexts/Index";
 import { supabase } from "../../config/Supabase";
 import { IconShoppingCart } from "@tabler/icons";
-import ShoppingItem from "../shoppingItem/Index";
 import { CartItem } from "../cartItem/Index";
 import { handlePaymentNotification } from "../notifications/checkoutNotification";
 import {
@@ -159,13 +158,6 @@ export function HeaderTabs({
               <Shopping>
                 {orders?.map((item) => {
                   return (
-                    // <ShoppingItem
-                    //   key={item.id}
-                    //   cartData={item}
-                    //   onRemove={onRemove}
-                    //   onQuantity={onQuantity}
-                    //   onDelete={onDelete}
-                    // />
                     <CartItem
                       key={item.id}
                       cartData={item}

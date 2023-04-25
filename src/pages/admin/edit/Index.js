@@ -1,5 +1,4 @@
 import {
-  Paper,
   createStyles,
   TextInput,
   Title,
@@ -114,7 +113,7 @@ const Edit = () => {
       .eq("name", category)
       .single();
 
-    const { data, error } = await supabase
+    const { data } = await supabase
       .from("products")
       .update({
         category_id: categories.id,
@@ -150,7 +149,7 @@ const Edit = () => {
       .single();
 
     if (category !== "") {
-      const { data: a, error: b } = await supabase
+      const { data: a } = await supabase
         .from("products")
         .update({
           category_id: categories.id,

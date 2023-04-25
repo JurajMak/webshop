@@ -11,7 +11,6 @@ import { IconAt, IconEye, IconEyeOff } from "@tabler/icons";
 import { useForm } from "@mantine/form";
 import React, { useState } from "react";
 import { AuthContext } from "../../contexts/Index";
-import { supabase } from "../../config/Supabase";
 
 import { Form } from "../login/Styles";
 const useStyles = createStyles((theme) => ({

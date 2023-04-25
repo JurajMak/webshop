@@ -1,6 +1,5 @@
-import { Table, Group, Text, ScrollArea, LoadingOverlay } from "@mantine/core";
-import React, { useState } from "react";
-import { LoaderWrapper } from "./Styles";
+import { Table, Group, Text, ScrollArea } from "@mantine/core";
+import React from "react";
 import { useQuery } from "@tanstack/react-query";
 import { getOrders } from "../../../api/orders";
 
