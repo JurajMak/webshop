@@ -4,13 +4,14 @@ import {
   TextInput,
   Title,
   Checkbox,
-  Loader,
   Button,
   Text,
   Group,
   FileButton,
   NumberInput,
   Image,
+  Container,
+  Select,
 } from "@mantine/core";
 import { useNavigate } from "react-router-dom";
 import { useForm } from "@mantine/form";
@@ -19,9 +20,10 @@ import uploadFile from "../../../utils/uploadFile";
 import { Form } from "./Styles";
 import React, { useContext, useState } from "react";
 import { AuthContext } from "../../../contexts/Index";
-import { createCategory } from "../../../api/categories";
-import { QueryClient, useMutation } from "@tanstack/react-query";
+import { getCategory } from "../../../api/categories";
+import { QueryClient, useMutation, useQuery } from "@tanstack/react-query";
 import { handleSuccesCreation } from "../../../components/notifications/successNotification";
+
 const useStyles = createStyles((theme) => ({
   wrapper: {
     minHeight: 900,
@@ -63,6 +65,7 @@ const Create = () => {
   const [loading, setLoading] = useState(false);
   const [file, setFile] = useState("");
   const [percent, setPercent] = React.useState(0);
+  const [value, setValue] = React.useState("");
   const queryClient = new QueryClient();
 
   const form = useForm({
@@ -71,15 +74,25 @@ const Create = () => {
       description: "",
       price: 0,
       quantity: 0,
-      category: "",
       sale_price: "",
       image: "",
     },
   });
+  const { name, description, price, quantity, sale_price, image } = form.values;
+
   const [checked, setChecked] = useState(false);
   const navigate = useNavigate();
-  const { name, description, price, quantity, category, sale_price, image } =
-    form.values;
+
+  const {
+    data: category,
+    isLoading,
+    isSucces,
+    refetch,
+  } = useQuery({
+    queryKey: ["categories"],
+    queryFn: () => getCategory(value),
+  });
+  const mappedCategories = category?.map((item) => item.name);
 
   const returnDashboard = async () => {
     navigate("/admin");
@@ -93,86 +106,57 @@ const Create = () => {
     form.setFieldValue("image", url);
   };
 
-  const createCategoryMutation = useMutation({
-    mutationFn: (item, id) => createCategory(item, id),
-    onSuccess: () => {
-      // queryClient.invalidateQueries(["categories", user.id]);
-    },
-  });
-
-  const handleCreateCategory = async () => {
-    await createCategoryMutation.mutateAsync(category, user.id);
-  };
-
-  // const handleCreateCategory = async () => {
-  //   setLoading(true);
-  //   const { data: categories } = await supabase
-  //     .from("categories")
-  //     .select("*")
-  //     .eq("name", category)
-  //     .single();
-
-  //   if (!categories) {
-  //     const { data, error } = await supabase
-  //       .from("categories")
-  //       .insert({ name: category, user_id: user.id })
-  //       .single();
-  //     if (error) {
-  //       console.log(error.message);
-  //     }
-  //   }
-  //   setLoading(false);
-  // };
-
   const handleAddProduct = async () => {
     setLoading(true);
 
-    const { data: categories } = await supabase
-      .from("categories")
-      .select("*")
-      .eq("name", category)
-      .single();
-
     const { data, error } = await supabase.from("products").insert({
-      name,
-      description,
-      price,
-      quantity,
-      category_id: categories.id,
+      ...form.values,
+      category_id: category[0]?.id,
       is_sale: checked,
       sale_price: checked ? sale_price : null,
       user_id: user.id,
-      image,
     });
 
     setLoading(false);
+    handleSuccesCreation(name);
   };
   const handleNewEntry = () => {
     form.reset();
     setChecked(false);
     setPercent(0);
     setFile("");
+    setValue("");
   };
+
+  React.useEffect(() => {
+    refetch();
+  }, [value]);
 
   return (
     <div className={classes.wrapper}>
       {/* <Paper className={classes.form} radius={0} p={30}> */}
+
       <Title order={1} className={classes.title} align="center" pt={50} mb={50}>
         Add new product
       </Title>
 
       <Form onSubmit={form.onSubmit(handleAddProduct)}>
-        <Button
-          variant="subtle"
-          ml={350}
-          // onClick={handleNewEntry}
-          onClick={handleSuccesCreation(name)}>
+        <Button variant="subtle" ml={350} onClick={handleNewEntry}>
           New Entry
         </Button>
-        <TextInput label="Category" {...form.getInputProps("category")} />
-        <Button mt={10} mb={10} onClick={handleCreateCategory}>
-          Add or Set Category
-        </Button>
+        {!isLoading && (
+          <Select
+            mb={10}
+            label="Categories"
+            searchable
+            clearable
+            placeholder="Assign product to category"
+            value={value}
+            data={mappedCategories}
+            onChange={setValue}
+          />
+        )}
+
         <TextInput
           mb={10}
           label="Product name"

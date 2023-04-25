@@ -1,6 +1,6 @@
 import { supabase } from "../config/Supabase";
 
-const createCategory = async (category, id) => {
+const createCategory = async (category, desc, userId) => {
   const { data } = await supabase
     .from("categories")
     .select("*")
@@ -10,20 +10,25 @@ const createCategory = async (category, id) => {
   if (!data) {
     const { data: categories, error } = await supabase
       .from("categories")
-      .insert({ name: category, user_id: id })
+      .insert({ name: category, description: desc, user_id: userId })
       .single();
     if (error) {
       console.log(error.message);
     }
-    console.log(id);
+
     return categories;
   }
-  console.log(data);
+
   return data;
 };
 
-const getCategory = async () => {
-  const { data } = await supabase.from("categories").select("*");
+const getCategory = async (category) => {
+  let query = supabase.from("categories").select("*");
+
+  if (category) {
+    query = query.eq("name", category);
+  }
+  const { data } = await query;
 
   return data;
 };

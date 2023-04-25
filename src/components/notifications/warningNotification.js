@@ -9,6 +9,7 @@ export const handleQuantityNotification = () => {
     color: "red",
     icon: <IconX />,
     onClose: () => cleanNotifications(),
+    autoClose: 5000,
     // styles: (theme) => ({
     //   root: {
     //     backgroundColor: theme.colors.blue[6],
@@ -34,6 +35,7 @@ export const handleProductNotification = () => {
     color: "red",
     icon: <IconX />,
     onClose: () => cleanNotifications(),
+    autoClose: 5000,
   });
 };
 
@@ -44,5 +46,6 @@ export const handleUserProductNotification = () => {
     color: "red",
     icon: <IconX />,
     onClose: () => cleanNotifications(),
+    autoClose: 5000,
   });
 };

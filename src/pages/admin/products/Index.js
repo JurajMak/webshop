@@ -20,6 +20,7 @@ import {
   handleProductNotification,
   handleUserProductNotification,
 } from "../../../components/notifications/warningNotification";
+import { handleDeleteNotification } from "../../../components/notifications/deleteNotification";
 import { getProducts } from "../../../api/products";
 import { handleInfiniteScroll } from "../../../utils/infiniteScroll";
 import {
@@ -86,6 +87,7 @@ export function ProductsTable({ titles, search }) {
     } else {
       handleUserProductNotification();
     }
+    handleDeleteNotification(data.name);
   };
 
   React.useEffect(() => {
