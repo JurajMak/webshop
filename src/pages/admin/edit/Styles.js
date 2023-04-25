@@ -18,12 +18,3 @@ export const ButtonWrapper = styled.div`
   display: flex;
   justify-content: space-between;
 `;
-
-export const TitleHeader = styled.h1`
-  text-align: center;
-`;
-
-export const SaleWrapper = styled.div`
-  display: flex;
-  justify-content: space-between;
-`;

@@ -181,12 +181,11 @@ export function HeaderTabs({
                 </TextWrapper>
 
                 {user?.user_metadata.role === "user" ? (
-                  <CheckoutBtn onClick={handleCheckout}>
-                    {loading ? (
-                      <Loader color="white" size="sm" />
-                    ) : (
-                      "$ Checkout"
-                    )}
+                  <CheckoutBtn
+                    disabled={orders.length <= 0 ? true : false}
+                    onClick={handleCheckout}
+                    loading={loading}>
+                    $ Checkout
                   </CheckoutBtn>
                 ) : (
                   <CheckoutBtn onClick={navigateLogin}>

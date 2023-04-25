@@ -5,6 +5,8 @@ import {
   Title,
   ActionIcon,
   Button,
+  Group,
+  Container,
 } from "@mantine/core";
 import { useNavigate } from "react-router-dom";
 import { IconAt, IconEye, IconEyeOff } from "@tabler/icons";
@@ -82,7 +84,7 @@ const RegisterForm = () => {
   };
 
   return (
-    <div className={classes.wrapper}>
+    <Container sizes="xl" className={classes.wrapper}>
       {/* <Paper className={classes.form} radius={0} p={30}> */}
       <Title
         order={2}
@@ -127,18 +129,17 @@ const RegisterForm = () => {
 
         <Checkbox
           label="Are you admin?"
-          mt={10}
+          mt={20}
           {...form.getInputProps("is_admin")}
         />
-
-        <Button mt={10} mr={20} type="submit">
-          Submit
-        </Button>
-        <Button onClick={returnHome}>Return</Button>
+        <Group mt={20}>
+          <Button type="submit">Submit</Button>
+          <Button onClick={returnHome}>Return</Button>
+        </Group>
       </Form>
 
       {/* </Paper> */}
-    </div>
+    </Container>
   );
 };
 

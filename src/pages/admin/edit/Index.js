@@ -16,7 +16,7 @@ import { useForm } from "@mantine/form";
 import React, { useState, useContext } from "react";
 import { supabase } from "../../../config/Supabase";
 import uploadFile from "../../../utils/uploadFile";
-import { Form, SaleWrapper } from "./Styles";
+import { Form } from "./Styles";
 import { AuthContext } from "../../../contexts/Index";
 const useStyles = createStyles((theme) => ({
   wrapper: {
@@ -101,7 +101,7 @@ const Edit = () => {
       .select("*")
       .eq("id", state.category_id)
       .single();
-    console.log(data);
+
     setPrevCategory(data.name);
   };
 
@@ -297,19 +297,16 @@ const Edit = () => {
           {...form.getInputProps("category")}
         />
 
-        <SaleWrapper>
-          <Button mt={20} onClick={updateProductCategory}>
-            Edit Category
+        <Group
+          style={{ display: "flex", justifyContent: "space-between" }}
+          mt={20}>
+          <Button onClick={updateProductCategory}>Edit Category</Button>
+          <Button type="submit" loading={loading} miw={120}>
+            Submit
           </Button>
 
-          <Button mt={20} type="submit">
-            {loading ? <Loader color="white" size="sm" /> : "Submit"}
-          </Button>
-
-          <Button mt={20} onClick={returnDashboard}>
-            Return
-          </Button>
-        </SaleWrapper>
+          <Button onClick={returnDashboard}>Return</Button>
+        </Group>
       </Form>
       {/* </Paper> */}
     </div>
