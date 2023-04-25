@@ -5,17 +5,15 @@ import {
   ActionIcon,
   ScrollArea,
   useMantineTheme,
-  Image,
   Flex,
   Loader,
 } from "@mantine/core";
 
-import { IconPencil, IconTrash, IconX } from "@tabler/icons";
+import { IconPencil, IconTrash } from "@tabler/icons";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "../../../config/Supabase";
-import React, { useState, useContext } from "react";
+import React, { useContext } from "react";
 import { AuthContext } from "../../../contexts/Index";
-import { LoaderWrapper } from "../order/Styles";
 import { ImageWrap } from "./Styles";
 import altimg from "../../../assets/login.jpg";
 import {
@@ -100,7 +98,7 @@ export function ProductsTable({ titles, search }) {
         handleInfiniteScroll(e, hasNextPage, fetchNextPage)
       );
     };
-  }, [search, fetchNextPage, hasNextPage]);
+  }, [search, fetchNextPage, hasNextPage, refetch]);
 
   return (
     <ScrollArea>

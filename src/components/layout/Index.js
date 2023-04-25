@@ -13,7 +13,6 @@ import {
 import ProductsCard from "../productCard/Index";
 import HeaderTabs from "../header/Index";
 import { Wrapper, ProductsWrapper } from "../../pages/home/Styles";
-import { supabase } from "../../config/Supabase";
 import { AuthContext } from "../../contexts/Index";
 import React, { useState, useEffect } from "react";
 import SearchBar from "../search/Index";
@@ -25,7 +24,6 @@ import { handleInfiniteScroll } from "../../utils/infiniteScroll";
 export default function AppShellLayout() {
   const theme = useMantineTheme();
   const [opened, setOpened] = useState(false);
-  const { user } = React.useContext(AuthContext);
   const [search, setSearch] = useState("");
   const [selectValue, setSelectValue] = useState(null);
   const [searchWord, setSearchWord] = useState("");
@@ -34,9 +32,7 @@ export default function AppShellLayout() {
 
   const {
     data,
-    isSuccess,
     isLoading,
-    error,
     fetchNextPage,
     hasNextPage,
     isFetchingNextPage,

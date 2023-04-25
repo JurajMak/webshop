@@ -2,13 +2,11 @@ import {
   createStyles,
   Card,
   Image,
-  Avatar,
   Text,
   Group,
   ActionIcon,
   Badge,
 } from "@mantine/core";
-import { CardWrapper, ButtonWrapper } from "../shoppingItem/Styles";
 import { IconSquarePlus, IconSquareMinus, IconX } from "@tabler/icons";
 import home from "../../assets/login.jpg";
 
@@ -31,12 +29,11 @@ const useStyles = createStyles((theme) => ({
 
 export function CartItem({ cartData, onQuantity, onDelete, onRemove }) {
   const { classes } = useStyles();
-  const { name, price, description, quantity, id, sale_price, is_sale, image } =
+  const { name, price, description, quantity, sale_price, is_sale, image } =
     cartData;
   const total = price * quantity;
   const sale = sale_price * quantity;
   return (
-    // <CardWrapper>
     <Card withBorder radius="md" p={0} m={10} className={classes.card}>
       <Group noWrap spacing={0}>
         <Image src={image ? image : home} height={140} width={140} />
@@ -116,6 +113,5 @@ export function CartItem({ cartData, onQuantity, onDelete, onRemove }) {
         </Group>
       </Group>
     </Card>
-    // </CardWrapper>
   );
 }

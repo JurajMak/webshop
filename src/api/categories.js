@@ -22,7 +22,7 @@ const createCategory = async (category, user) => {
 };
 
 const getCategory = async () => {
-  const { data, error } = await supabase.from("categories").select("*");
+  const { data } = await supabase.from("categories").select("*");
 
   return data;
 };

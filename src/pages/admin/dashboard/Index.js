@@ -41,8 +41,6 @@ export default function Dashboard() {
     navigate("/admin/products/create");
   };
 
-  const mappedCategories = categories?.map((item) => item.name);
-
   const handleSearchText = (e) => {
     setSearch(e.target.value);
   };
@@ -61,21 +59,6 @@ export default function Dashboard() {
     setSwapProduct(false);
     setSwapOrder(true);
   };
-
-  // const handleSearchEnter = async (e) => {
-  //   if (e.key === "Enter") {
-  //     const { data, error } = await supabase
-  //       .from("products")
-  //       .select("*")
-  //       .ilike("name", `%${searchWord}%`);
-
-  //     if (error) {
-  //       console.error(error);
-  //     } else {
-  //       setSearch(data);
-  //     }
-  //   }
-  // };
 
   const handleSearchButtonClick = async (e) => {
     const { data: categories } = await supabase

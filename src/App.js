@@ -4,6 +4,7 @@ import { NotificationsProvider } from "@mantine/notifications";
 import RenderRoutes from "./routes/Index";
 import AuthProvider from "./contexts/Index";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 const queryClient = new QueryClient();
 
 const App = () => {
@@ -16,6 +17,7 @@ const App = () => {
           </AuthProvider>
         </NotificationsProvider>
       </MantineProvider>
+      <ReactQueryDevtools initialIsOpen={false} />
     </QueryClientProvider>
   );
 };
