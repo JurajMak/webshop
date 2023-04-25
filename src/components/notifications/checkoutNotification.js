@@ -8,6 +8,7 @@ export const handlePaymentNotification = () => {
     color: "teal",
     icon: <IconCheck />,
     onClose: () => cleanNotifications(),
+    autoClose: 5000,
     styles: (theme) => ({
       root: {
         backgroundColor: theme.colors.blue[6],

@@ -11,6 +11,8 @@ import {
   useMantineTheme,
   Button,
   Select,
+  Group,
+  Flex,
 } from "@mantine/core";
 import { AuthContext } from "../../../contexts/Index";
 import { useNavigate } from "react-router-dom";
@@ -37,8 +39,11 @@ export default function Dashboard() {
   ];
   const orderTitles = ["Order number", "Checkout Amount", "User name"];
 
-  const navigateToCreate = async () => {
+  const navigateToCreate = () => {
     navigate("/admin/products/create");
+  };
+  const navigateToCategory = () => {
+    navigate("/admin/products/create/category");
   };
 
   const handleSearchText = (e) => {
@@ -127,7 +132,6 @@ export default function Dashboard() {
             onClick={handleShowAll}>
             Show All
           </Button>
-
           {/* <Select
             searchable
             clearable
@@ -169,7 +173,7 @@ export default function Dashboard() {
             Orders
           </Button>
 
-          <Button mt={400} onClick={signOut}>
+          <Button mt="auto" mb={20} onClick={signOut}>
             Logout
           </Button>
         </Navbar>
@@ -181,17 +185,18 @@ export default function Dashboard() {
       }
       header={
         <Header height={{ base: 50, md: 70 }} p="md">
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-              height: "100%",
-            }}>
+          <Flex align="center" justify="space-between">
             <Text>Dashboard</Text>
-            <Text>Admin logged in : {user.user_metadata.full_name}</Text>
-            <Button onClick={navigateToCreate}>Create</Button>
-          </div>
+            <Text mr={100}>
+              Admin logged in : {user.user_metadata.full_name}
+            </Text>
+            <Group mr={50}>
+              <Button mr={100} onClick={navigateToCategory}>
+                Add Category
+              </Button>
+              <Button onClick={navigateToCreate}>Add product</Button>
+            </Group>
+          </Flex>
         </Header>
       }>
       {swapProduct ? (

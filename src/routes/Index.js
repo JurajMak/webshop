@@ -7,6 +7,7 @@ import { ErrorPage } from "../pages/error/Index";
 import Dashboard from "../pages/admin/dashboard/Index";
 import Create from "../pages/admin/create/Index";
 import Edit from "../pages/admin/edit/Index";
+import CreateCategory from "../pages/admin/category/Index";
 
 const RenderRoutes = () => {
   return (
@@ -18,6 +19,10 @@ const RenderRoutes = () => {
         <Route path="/" element={<ProtectedRoute />}>
           <Route path="/admin" element={<Dashboard />} />
           <Route path="/admin/products/create" element={<Create />} />
+          <Route
+            path="/admin/products/create/category"
+            element={<CreateCategory />}
+          />
           <Route path="/admin/products/:id/" element={<Edit />} />
         </Route>
 
