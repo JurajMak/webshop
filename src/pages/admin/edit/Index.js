@@ -14,7 +14,6 @@ import {
 import { useLocation, useNavigate } from "react-router-dom";
 import { useForm } from "@mantine/form";
 import React, { useState, useContext } from "react";
-import { supabase } from "../../../config/Supabase";
 import uploadFile from "../../../utils/uploadFile";
 import { Form } from "./Styles";
 import { AuthContext } from "../../../contexts/Index";
@@ -23,6 +22,7 @@ import {
   getProductCategory,
   updateProductCategory,
 } from "../../../api/categories";
+import { handleSuccessUpdate } from "../../../components/notifications/successNotification";
 import { updateProduct, updateSale } from "../../../api/products";
 import { QueryClient, useMutation, useQuery } from "@tanstack/react-query";
 const useStyles = createStyles((theme) => ({
@@ -101,14 +101,14 @@ const Edit = () => {
     setLoading(false);
   };
 
-  const { data, refetch } = useQuery({
+  const { data, isLoading, refetch } = useQuery({
     queryKey: ["categories"],
     queryFn: () => getCategory(value),
   });
 
   const mappedCategories = data?.map((item) => item.name);
 
-  const { data: category, isLoading } = useQuery({
+  const { data: category, isSuccess } = useQuery({
     queryKey: ["category"],
     queryFn: () => getProductCategory(state.category_id),
     onSuccess: () => {
@@ -118,7 +118,6 @@ const Edit = () => {
 
   const updateProductCategoryMutation = useMutation({
     mutationFn: (item) => updateProductCategory(item.value, item.id),
-    onSuccess: () => {},
   });
 
   const updateCategory = async () => {
@@ -149,6 +148,7 @@ const Edit = () => {
     onSuccess: () => {
       setLoading(false);
       updateCategory();
+      handleSuccessUpdate(name);
     },
   });
 
@@ -270,7 +270,7 @@ const Edit = () => {
         {!isLoading && (
           <Select
             mb={10}
-            label={`Product category: ${category?.name}`}
+            label={`Product category: ${isSuccess && category?.name}`}
             searchable
             clearable
             placeholder="Change product category"
