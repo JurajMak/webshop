@@ -31,6 +31,8 @@ const getProducts = async (sortKey, searchValue, page) => {
   return data;
 };
 
-const createProduct = async () => {};
+const createProduct = async (values) => {
+  const { data } = await supabase.from("products").insert(values);
+};
 
-export { getProducts };
+export { getProducts, createProduct };
