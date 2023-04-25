@@ -1,5 +1,4 @@
 import {
-  Paper,
   createStyles,
   TextInput,
   Title,
@@ -15,14 +14,14 @@ import {
 } from "@mantine/core";
 import { useNavigate } from "react-router-dom";
 import { useForm } from "@mantine/form";
-import { supabase } from "../../../config/Supabase";
 import uploadFile from "../../../utils/uploadFile";
 import { Form } from "./Styles";
 import React, { useContext, useState } from "react";
 import { AuthContext } from "../../../contexts/Index";
 import { getCategory } from "../../../api/categories";
 import { QueryClient, useMutation, useQuery } from "@tanstack/react-query";
-import { handleSuccesCreation } from "../../../components/notifications/successNotification";
+import { handleSuccessCreation } from "../../../components/notifications/successNotification";
+import { createProduct } from "../../../api/products";
 
 const useStyles = createStyles((theme) => ({
   wrapper: {
@@ -86,7 +85,6 @@ const Create = () => {
   const {
     data: category,
     isLoading,
-    isSucces,
     refetch,
   } = useQuery({
     queryKey: ["categories"],
@@ -106,20 +104,24 @@ const Create = () => {
     form.setFieldValue("image", url);
   };
 
-  const handleAddProduct = async () => {
-    setLoading(true);
+  const createProductMutation = useMutation({
+    mutationFn: (item) => createProduct(item),
+    onSuccess: () => {
+      handleSuccessCreation(name);
+    },
+  });
 
-    const { data, error } = await supabase.from("products").insert({
+  const handleAddProduct = async () => {
+    const createProduct = {
       ...form.values,
       category_id: category[0]?.id,
       is_sale: checked,
       sale_price: checked ? sale_price : null,
       user_id: user.id,
-    });
-
-    setLoading(false);
-    handleSuccesCreation(name);
+    };
+    await createProductMutation.mutateAsync(createProduct);
   };
+
   const handleNewEntry = () => {
     form.reset();
     setChecked(false);
@@ -133,17 +135,18 @@ const Create = () => {
   }, [value]);
 
   return (
-    <div className={classes.wrapper}>
-      {/* <Paper className={classes.form} radius={0} p={30}> */}
-
+    <Container sizes="xl" className={classes.wrapper}>
       <Title order={1} className={classes.title} align="center" pt={50} mb={50}>
         Add new product
       </Title>
 
       <Form onSubmit={form.onSubmit(handleAddProduct)}>
-        <Button variant="subtle" ml={350} onClick={handleNewEntry}>
-          New Entry
-        </Button>
+        <Group position="right">
+          <Button variant="subtle" onClick={handleNewEntry}>
+            New Entry
+          </Button>
+        </Group>
+
         {!isLoading && (
           <Select
             mb={10}
@@ -159,11 +162,13 @@ const Create = () => {
 
         <TextInput
           mb={10}
+          value={name}
           label="Product name"
           {...form.getInputProps("name")}
         />
         <TextInput
           mb={10}
+          value={description}
           label="Description of product"
           {...form.getInputProps("description")}
         />
@@ -203,7 +208,7 @@ const Create = () => {
           />
         )}
 
-        <Group>
+        <Group mb={10}>
           <FileButton
             onChange={(file) => {
               handleUploadImage(file);
@@ -249,8 +254,7 @@ const Create = () => {
           </Button>
         </Group>
       </Form>
-      {/* </Paper> */}
-    </div>
+    </Container>
   );
 };
 
