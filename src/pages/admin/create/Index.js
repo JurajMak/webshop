@@ -82,15 +82,11 @@ const Create = () => {
   const [checked, setChecked] = useState(false);
   const navigate = useNavigate();
 
-  const {
-    data: category,
-    isLoading,
-    refetch,
-  } = useQuery({
+  const { data, isLoading, refetch } = useQuery({
     queryKey: ["categories"],
     queryFn: () => getCategory(value),
   });
-  const mappedCategories = category?.map((item) => item.name);
+  const mappedCategories = data?.map((item) => item.name);
 
   const returnDashboard = async () => {
     navigate("/admin");
@@ -114,7 +110,7 @@ const Create = () => {
   const handleAddProduct = async () => {
     const createProduct = {
       ...form.values,
-      category_id: category[0]?.id,
+      category_id: data[0]?.id,
       is_sale: checked,
       sale_price: checked ? sale_price : null,
       user_id: user.id,
@@ -133,7 +129,7 @@ const Create = () => {
   React.useEffect(() => {
     refetch();
   }, [value]);
-
+  console.log("create", data);
   return (
     <Container sizes="xl" className={classes.wrapper}>
       <Title order={1} className={classes.title} align="center" pt={50} mb={50}>

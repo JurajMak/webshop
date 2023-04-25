@@ -26,13 +26,43 @@ const getProducts = async (sortKey, searchValue, page) => {
   const from = page === 1 ? 0 : 10 * (page - 1);
   const to = page * 10 - 1;
 
-  const { data } = await query.range(from, to);
+  const { data, error } = await query.range(from, to);
+
+  if (error) {
+    throw new Error(error.message);
+  }
 
   return data;
 };
 
 const createProduct = async (values) => {
-  const { data } = await supabase.from("products").insert(values);
+  const { data, error } = await supabase.from("products").insert(values);
+
+  if (error) {
+    throw new Error(error.message);
+  }
 };
 
-export { getProducts, createProduct };
+const updateProduct = async (values, productId) => {
+  const { data, error } = await supabase
+    .from("products")
+    .update(values)
+    .eq("id", productId);
+
+  if (error) {
+    throw new Error(error.message);
+  }
+};
+
+const updateSale = async (sale, productId) => {
+  const { data, error } = await supabase
+    .from("products")
+    .update({ is_sale: sale })
+    .eq("id", productId);
+
+  if (error) {
+    throw new Error(error.message);
+  }
+};
+
+export { getProducts, createProduct, updateProduct, updateSale };
