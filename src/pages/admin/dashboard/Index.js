@@ -11,6 +11,8 @@ import {
   useMantineTheme,
   Button,
   Select,
+  Group,
+  Flex,
 } from "@mantine/core";
 import { AuthContext } from "../../../contexts/Index";
 import { useNavigate } from "react-router-dom";
@@ -19,9 +21,8 @@ import { supabase } from "../../../config/Supabase";
 export default function Dashboard() {
   const theme = useMantineTheme();
   const [opened, setOpened] = useState(false);
-  const { user, signOut, data, categories } = useContext(AuthContext);
+  const { user, signOut, categories } = useContext(AuthContext);
   const [value, setValue] = useState("");
-  const [isSearching, setIsSearching] = useState(false);
   const [searchWord, setSearchWord] = useState("");
   const [search, setSearch] = useState([]);
   const [swapProduct, setSwapProduct] = useState(true);
@@ -38,14 +39,21 @@ export default function Dashboard() {
   ];
   const orderTitles = ["Order number", "Checkout Amount", "User name"];
 
-  const navigateToCreate = async () => {
+  const navigateToCreate = () => {
     navigate("/admin/products/create");
   };
-
-  const mappedCategories = categories?.map((item) => item.name);
+  const navigateToCategory = () => {
+    navigate("/admin/products/create/category");
+  };
 
   const handleSearchText = (e) => {
-    setSearchWord(e.target.value);
+    setSearch(e.target.value);
+  };
+
+  const handleSearchEnter = (e) => {
+    if (e.key === "Enter") {
+      setSearchWord(search);
+    }
   };
 
   const handleSwapProduct = () => {
@@ -55,22 +63,6 @@ export default function Dashboard() {
   const handleSwapOrder = () => {
     setSwapProduct(false);
     setSwapOrder(true);
-  };
-
-  const handleSearchEnter = async (e) => {
-    if (e.key === "Enter") {
-      const { data, error } = await supabase
-        .from("products")
-        .select("*")
-        .ilike("name", `%${searchWord}%`);
-
-      if (error) {
-        console.error(error);
-      } else {
-        setSearch(data);
-        setIsSearching(true);
-      }
-    }
   };
 
   const handleSearchButtonClick = async (e) => {
@@ -87,12 +79,10 @@ export default function Dashboard() {
       .in("category_id", categoryIds);
 
     setSearch(productData);
-    setIsSearching(true);
   };
 
   const handleShowAll = (e) => {
     e.preventDefault();
-    setIsSearching(false);
   };
   const handleCategoryEnter = async (e) => {
     if (e.key === "Enter") {
@@ -109,7 +99,6 @@ export default function Dashboard() {
         .in("category_id", categoryIds);
 
       setSearch(productData);
-      setIsSearching(true);
     }
   };
 
@@ -143,8 +132,7 @@ export default function Dashboard() {
             onClick={handleShowAll}>
             Show All
           </Button>
-
-          <Select
+          {/* <Select
             searchable
             clearable
             placeholder="Categories"
@@ -152,16 +140,16 @@ export default function Dashboard() {
             data={mappedCategories}
             onChange={setValue}
             onKeyDown={(e) => handleCategoryEnter(e)}
-          />
-          <Button
+          /> */}
+          {/* <Button
             variant="white"
             radius="xl"
             w={100}
-            // mt={20}
+            
             ml="auto"
             onClick={handleSearchButtonClick}>
             Search
-          </Button>
+          </Button> */}
           <Button
             mt={10}
             ml="auto"
@@ -185,7 +173,7 @@ export default function Dashboard() {
             Orders
           </Button>
 
-          <Button mt={400} onClick={signOut}>
+          <Button mt="auto" mb={20} onClick={signOut}>
             Logout
           </Button>
         </Navbar>
@@ -197,31 +185,24 @@ export default function Dashboard() {
       }
       header={
         <Header height={{ base: 50, md: 70 }} p="md">
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-              height: "100%",
-            }}>
+          <Flex align="center" justify="space-between">
             <Text>Dashboard</Text>
-            <Text>Admin logged in : {user.user_metadata.full_name}</Text>
-            <Button onClick={navigateToCreate}>Create</Button>
-          </div>
+            <Text mr={100}>
+              Admin logged in : {user.user_metadata.full_name}
+            </Text>
+            <Group mr={50}>
+              <Button mr={100} onClick={navigateToCategory}>
+                Add Category
+              </Button>
+              <Button onClick={navigateToCreate}>Add product</Button>
+            </Group>
+          </Flex>
         </Header>
       }>
       {swapProduct ? (
-        <ProductsTable
-          search={search}
-          titles={titles}
-          isSearching={isSearching}
-        />
+        <ProductsTable search={searchWord} titles={titles} />
       ) : (
-        <OrderTable
-          search={search}
-          isSearching={isSearching}
-          titles={orderTitles}
-        />
+        <OrderTable search={search} titles={orderTitles} />
       )}
     </AppShell>
   );

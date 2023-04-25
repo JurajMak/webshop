@@ -3,16 +3,22 @@ import { MantineProvider } from "@mantine/core";
 import { NotificationsProvider } from "@mantine/notifications";
 import RenderRoutes from "./routes/Index";
 import AuthProvider from "./contexts/Index";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+const queryClient = new QueryClient();
 
 const App = () => {
   return (
-    <MantineProvider withGlobalStyles withNormalizeCSS>
-      <NotificationsProvider position="top-center" zIndex={2077} limit={1}>
-        <AuthProvider>
-          <RenderRoutes />
-        </AuthProvider>
-      </NotificationsProvider>
-    </MantineProvider>
+    <QueryClientProvider client={queryClient}>
+      <MantineProvider withGlobalStyles withNormalizeCSS>
+        <NotificationsProvider position="top-center" zIndex={2077} limit={1}>
+          <AuthProvider>
+            <RenderRoutes />
+          </AuthProvider>
+        </NotificationsProvider>
+      </MantineProvider>
+      <ReactQueryDevtools initialIsOpen={false} />
+    </QueryClientProvider>
   );
 };
 

@@ -1,24 +1,28 @@
 import {
-  Paper,
   createStyles,
   TextInput,
   Title,
   Checkbox,
-  Loader,
   Button,
   Text,
   Group,
   FileButton,
   NumberInput,
   Image,
+  Container,
+  Select,
 } from "@mantine/core";
 import { useNavigate } from "react-router-dom";
 import { useForm } from "@mantine/form";
-import { supabase } from "../../../config/Supabase";
 import uploadFile from "../../../utils/uploadFile";
 import { Form } from "./Styles";
 import React, { useContext, useState } from "react";
 import { AuthContext } from "../../../contexts/Index";
+import { getCategory } from "../../../api/categories";
+import { QueryClient, useMutation, useQuery } from "@tanstack/react-query";
+import { handleSuccessCreation } from "../../../components/notifications/successNotification";
+import { createProduct } from "../../../api/products";
+
 const useStyles = createStyles((theme) => ({
   wrapper: {
     minHeight: 900,
@@ -60,22 +64,29 @@ const Create = () => {
   const [loading, setLoading] = useState(false);
   const [file, setFile] = useState("");
   const [percent, setPercent] = React.useState(0);
+  const [value, setValue] = React.useState("");
+  const queryClient = new QueryClient();
 
   const form = useForm({
     initialValues: {
       name: "",
       description: "",
-      price: "",
-      quantity: "",
-      category: "",
+      price: 0,
+      quantity: 0,
       sale_price: "",
       image: "",
     },
   });
+  const { name, description, price, quantity, sale_price, image } = form.values;
+
   const [checked, setChecked] = useState(false);
   const navigate = useNavigate();
-  const { name, description, price, quantity, category, sale_price, image } =
-    form.values;
+
+  const { data, isLoading, refetch } = useQuery({
+    queryKey: ["categories"],
+    queryFn: () => getCategory(value),
+  });
+  const mappedCategories = data?.map((item) => item.name);
 
   const returnDashboard = async () => {
     navigate("/admin");
@@ -89,76 +100,77 @@ const Create = () => {
     form.setFieldValue("image", url);
   };
 
-  const handleCreateCategory = async () => {
-    setLoading(true);
-    const { data: categories } = await supabase
-      .from("categories")
-      .select("*")
-      .eq("name", category)
-      .single();
+  const createProductMutation = useMutation({
+    mutationFn: (item) => createProduct(item),
+    onSuccess: () => {
+      handleSuccessCreation(name);
+    },
+  });
 
-    if (!categories) {
-      const { data, error } = await supabase
-        .from("categories")
-        .insert({ name: category, user_id: user.id });
-      if (error) {
-        console.log(error.message);
-      }
-    }
-    setLoading(false);
-  };
   const handleAddProduct = async () => {
-    setLoading(true);
-
-    const { data: categories } = await supabase
-      .from("categories")
-      .select("*")
-      .eq("name", category)
-      .single();
-
-    const { data, error } = await supabase.from("products").insert({
-      name,
-      description,
-      price,
-      quantity,
-      category_id: categories.id,
+    const createProduct = {
+      ...form.values,
+      category_id: data[0]?.id,
       is_sale: checked,
       sale_price: checked ? sale_price : null,
       user_id: user.id,
-      image,
-    });
-
-    setLoading(false);
-    // form.reset();
+    };
+    await createProductMutation.mutateAsync(createProduct);
   };
 
+  const handleNewEntry = () => {
+    form.reset();
+    setChecked(false);
+    setPercent(0);
+    setFile("");
+    setValue("");
+  };
+
+  React.useEffect(() => {
+    refetch();
+  }, [value]);
+  console.log("create", data);
   return (
-    <div className={classes.wrapper}>
-      {/* <Paper className={classes.form} radius={0} p={30}> */}
+    <Container sizes="xl" className={classes.wrapper}>
       <Title order={1} className={classes.title} align="center" pt={50} mb={50}>
         Add new product
       </Title>
 
       <Form onSubmit={form.onSubmit(handleAddProduct)}>
-        <Button variant="subtle" ml={350} onClick={() => form.reset()}>
-          New Entry
-        </Button>
-        <TextInput label="Category" {...form.getInputProps("category")} />
-        <Button mt={10} mb={10} onClick={handleCreateCategory}>
-          Add or Set Category
-        </Button>
+        <Group position="right">
+          <Button variant="subtle" onClick={handleNewEntry}>
+            New Entry
+          </Button>
+        </Group>
+
+        {!isLoading && (
+          <Select
+            mb={10}
+            label="Categories"
+            searchable
+            clearable
+            placeholder="Assign product to category"
+            value={value}
+            data={mappedCategories}
+            onChange={setValue}
+          />
+        )}
+
         <TextInput
           mb={10}
+          value={name}
           label="Product name"
           {...form.getInputProps("name")}
         />
         <TextInput
           mb={10}
+          value={description}
           label="Description of product"
           {...form.getInputProps("description")}
         />
 
         <NumberInput
+          value={price}
           precision={2}
           mb={20}
           label="Price"
@@ -192,7 +204,7 @@ const Create = () => {
           />
         )}
 
-        <Group>
+        <Group mb={10}>
           <FileButton
             onChange={(file) => {
               handleUploadImage(file);
@@ -224,17 +236,21 @@ const Create = () => {
           </Group>
         )}
 
-        <NumberInput label="Quantity" {...form.getInputProps("quantity")} />
-
-        <Button type="submit">
-          {loading ? <Loader color="white" size="sm" /> : "Submit"}
-        </Button>
-        <Button mt={20} ml={30} onClick={returnDashboard}>
-          Return
-        </Button>
+        <NumberInput
+          value={quantity}
+          label="Quantity"
+          {...form.getInputProps("quantity")}
+        />
+        <Group mt={20}>
+          <Button type="submit" loading={loading} miw={120}>
+            Submit
+          </Button>
+          <Button ml={20} onClick={returnDashboard}>
+            Return
+          </Button>
+        </Group>
       </Form>
-      {/* </Paper> */}
-    </div>
+    </Container>
   );
 };
 

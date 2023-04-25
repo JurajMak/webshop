@@ -5,44 +5,59 @@ import {
   ActionIcon,
   ScrollArea,
   useMantineTheme,
-  Pagination,
-  LoadingOverlay,
-  Image,
-  Notification,
+  Flex,
+  Loader,
 } from "@mantine/core";
 
-import { IconPencil, IconTrash, IconX } from "@tabler/icons";
+import { IconPencil, IconTrash } from "@tabler/icons";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "../../../config/Supabase";
-import React, { useState, useContext } from "react";
+import React, { useContext } from "react";
 import { AuthContext } from "../../../contexts/Index";
-import { LoaderWrapper } from "../order/Styles";
 import { ImageWrap } from "./Styles";
 import altimg from "../../../assets/login.jpg";
 import {
   handleProductNotification,
   handleUserProductNotification,
 } from "../../../components/notifications/warningNotification";
+import { handleDeleteNotification } from "../../../components/notifications/deleteNotification";
+import { getProducts } from "../../../api/products";
+import { handleInfiniteScroll } from "../../../utils/infiniteScroll";
+import {
+  QueryClient,
+  useInfiniteQuery,
+  useMutation,
+} from "@tanstack/react-query";
 
-export function ProductsTable({ titles, search, isSearching }) {
+export function ProductsTable({ titles, search }) {
   const theme = useMantineTheme();
   const navigate = useNavigate();
-  const { data, getData, getCategory, user } = useContext(AuthContext);
-  const [activePage, setPage] = useState(1);
-  const [itemsPerPage, setItemsPerPage] = useState(10);
-  const [loading, setLoading] = useState(true);
-  const [errorDelete, setErrorDelete] = useState(false);
-  const [notValidUser, setNotValidUser] = useState(false);
-
-  const lastPost = activePage * itemsPerPage;
-  const firstPost = lastPost - itemsPerPage;
-  const currentPost = data?.slice(firstPost, lastPost);
-  const searchPost = search?.slice(firstPost, lastPost);
+  const { user } = useContext(AuthContext);
+  const queryClient = new QueryClient();
+  console.log("search", search);
 
   const toEdit = async (item) => {
-    console.log("item Edit", item.id);
     navigate(`/admin/products/${item.id}`, { state: item });
   };
+  const {
+    data,
+    isSuccess,
+    isLoading,
+    error,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+    refetch,
+  } = useInfiniteQuery(
+    ["products"],
+    ({ pageParam = 1 }) => getProducts(null, search, pageParam),
+    {
+      getNextPageParam: (lastPage, pages) => {
+        const nextPage = pages.length + 1;
+        return lastPage.length !== 0 ? nextPage : null;
+      },
+    }
+  );
 
   const handleDeleteProduct = async (data) => {
     if (user.id === data.user_id) {
@@ -68,31 +83,27 @@ export function ProductsTable({ titles, search, isSearching }) {
       if (error) {
         console.log(error.message);
       }
-      getData();
+      refetch();
     } else {
       handleUserProductNotification();
     }
+    handleDeleteNotification(data.name);
   };
 
   React.useEffect(() => {
-    getData();
-    setLoading(false);
-  }, []);
-  console.log("prod", data);
+    document.addEventListener("scroll", (e) =>
+      handleInfiniteScroll(e, hasNextPage, fetchNextPage)
+    );
+    refetch();
+    return () => {
+      document.removeEventListener("scroll", (e) =>
+        handleInfiniteScroll(e, hasNextPage, fetchNextPage)
+      );
+    };
+  }, [search, fetchNextPage, hasNextPage, refetch]);
 
   return (
     <ScrollArea>
-      <Pagination
-        m="auto"
-        withEdges
-        value={activePage}
-        onChange={setPage}
-        total={
-          isSearching
-            ? Math.ceil(searchPost.length / 10)
-            : Math.ceil(data.length / 10)
-        }
-      />
       <Table sx={{ minWidth: 800 }} verticalSpacing="sm">
         <thead>
           <tr>
@@ -102,116 +113,80 @@ export function ProductsTable({ titles, search, isSearching }) {
           </tr>
         </thead>
         <tbody>
-          {loading ? (
-            <tr>
-              <LoaderWrapper>
-                <LoadingOverlay
-                  visible={loading}
-                  overlayBlur={6}
-                  loaderProps={{ size: "xl" }}
-                />
-              </LoaderWrapper>
-            </tr>
-          ) : isSearching ? (
-            searchPost?.map((item) => (
-              <tr key={item.id}>
-                <td>
-                  <ImageWrap
-                    src={item.image ? item.image : altimg}
-                    alt="No image"></ImageWrap>
-                </td>
-                <td>
-                  <Group spacing="sm">
-                    <Text fz="sm" fw={500}>
-                      {item.name}
-                    </Text>
-                  </Group>
-                </td>
+          {data?.pages?.map((group, i) => (
+            <React.Fragment key={i}>
+              {group?.map((item) => {
+                return (
+                  <tr key={item.id}>
+                    <td>
+                      <ImageWrap
+                        fit="cover"
+                        src={item.image ? item.image : altimg}
+                        alt="No image"></ImageWrap>
+                    </td>
+                    <td>
+                      <Group spacing="sm">
+                        <Text fz="sm" fw={500}>
+                          {item.name}
+                        </Text>
+                      </Group>
+                    </td>
 
-                <td>
-                  <Text fz="sm">{item.description}</Text>
-                </td>
-                <td>
-                  <Text fz="sm" c="blue">
-                    $ {item.price}
-                  </Text>
-                </td>
-                <td>
-                  <Text fz="sm">{item.quantity}</Text>
-                </td>
-                <td>
-                  <Text fz="sm" c="blue">
-                    $ {item.sale_price}
-                  </Text>
-                </td>
-                <td>
-                  <Group spacing={0}>
-                    <ActionIcon onClick={() => toEdit(item)}>
-                      <IconPencil size="1rem" stroke={1.5} />
-                    </ActionIcon>
-                    <ActionIcon
-                      color="red"
-                      onClick={() => handleDeleteProduct(item)}>
-                      <IconTrash size="1rem" stroke={1.5} />
-                    </ActionIcon>
-                  </Group>
-                </td>
-              </tr>
-            ))
-          ) : (
-            currentPost?.map((item) => (
-              <tr key={item.id}>
-                <td>
-                  <ImageWrap
-                    fit="cover"
-                    src={item.image ? item.image : altimg}
-                    alt="No image"></ImageWrap>
-                </td>
-                <td>
-                  <Group spacing="sm">
-                    <Text fz="sm" fw={500}>
-                      {item.name}
-                    </Text>
-                  </Group>
-                </td>
-
-                <td>
-                  <Text fz="sm" fw={500}>
-                    {item.description}
-                  </Text>
-                </td>
-                <td>
-                  <Text fz="sm" c="blue" fw={500}>
-                    $ {item.price}
-                  </Text>
-                </td>
-                <td>
-                  <Text fz="sm" fw={500}>
-                    {item.quantity}
-                  </Text>
-                </td>
-                <td>
-                  <Text fz="sm" c="blue" fw={500}>
-                    $ {item.sale_price}
-                  </Text>
-                </td>
-                <td>
-                  <Group>
-                    <ActionIcon onClick={() => toEdit(item)}>
-                      <IconPencil size="1rem" stroke={1.5} />
-                    </ActionIcon>
-                    <ActionIcon
-                      color="red"
-                      onClick={() => handleDeleteProduct(item)}>
-                      <IconTrash size="1rem" stroke={1.5} />
-                    </ActionIcon>
-                  </Group>
-                </td>
-              </tr>
-            ))
-          )}
+                    <td>
+                      <Text fz="sm" fw={500}>
+                        {item.description}
+                      </Text>
+                    </td>
+                    <td>
+                      <Text fz="sm" c="blue" fw={500}>
+                        $ {item.price}
+                      </Text>
+                    </td>
+                    <td>
+                      <Text fz="sm" fw={500}>
+                        {item.quantity}
+                      </Text>
+                    </td>
+                    <td>
+                      <Text fz="sm" c="blue" fw={500}>
+                        $ {item.sale_price}
+                      </Text>
+                    </td>
+                    <td>
+                      <Group>
+                        <ActionIcon onClick={() => toEdit(item)}>
+                          <IconPencil size="1rem" stroke={1.5} />
+                        </ActionIcon>
+                        <ActionIcon
+                          color="red"
+                          onClick={() => handleDeleteProduct(item)}>
+                          <IconTrash size="1rem" stroke={1.5} />
+                        </ActionIcon>
+                      </Group>
+                    </td>
+                  </tr>
+                );
+              })}
+            </React.Fragment>
+          ))}
         </tbody>
       </Table>
+
+      {isFetchingNextPage && hasNextPage && (
+        <Flex direction="column">
+          <Text mx="auto" fz="lg" fw="bold">
+            Loading more products
+          </Text>
+          <Loader mx="auto" size={50}></Loader>
+        </Flex>
+      )}
+      {!hasNextPage && (
+        <Flex direction="column" mx="auto">
+          <Text mx="auto" fz="lg" fw="bold">
+            No more products to load
+          </Text>
+        </Flex>
+      )}
     </ScrollArea>
   );
 }
