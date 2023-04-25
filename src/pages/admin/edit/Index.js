@@ -1,5 +1,4 @@
 import {
-  Paper,
   createStyles,
   TextInput,
   Title,
@@ -10,15 +9,22 @@ import {
   Text,
   Group,
   NumberInput,
-  Loader,
+  Select,
 } from "@mantine/core";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useForm } from "@mantine/form";
 import React, { useState, useContext } from "react";
 import { supabase } from "../../../config/Supabase";
 import uploadFile from "../../../utils/uploadFile";
-import { Form, SaleWrapper } from "./Styles";
+import { Form } from "./Styles";
 import { AuthContext } from "../../../contexts/Index";
+import {
+  getCategory,
+  getProductCategory,
+  updateProductCategory,
+} from "../../../api/categories";
+import { updateProduct, updateSale } from "../../../api/products";
+import { QueryClient, useMutation, useQuery } from "@tanstack/react-query";
 const useStyles = createStyles((theme) => ({
   wrapper: {
     minHeight: 900,
@@ -63,20 +69,19 @@ const Edit = () => {
       description: "",
       price: null,
       quantity: "",
-      category: "",
       sale_price: null,
       image: "",
     },
   });
   const { user } = useContext(AuthContext);
-  const [prevCategory, setPrevCategory] = useState("");
   const navigate = useNavigate();
   const { state } = useLocation();
-  const { name, description, price, quantity, category, sale_price, image } =
-    form.values;
+  const { name, description, price, quantity, sale_price, image } = form.values;
   const [isSale, setSale] = useState(state.is_sale);
   const [file, setFile] = useState("");
   const [loading, setLoading] = useState(false);
+  const [value, setValue] = useState("");
+  const [selectedValue, setSelectedValue] = useState("");
 
   const percentageCalc = Math.floor(
     ((state.price - state.sale_price) / state.price) * 100
@@ -96,192 +101,82 @@ const Edit = () => {
     setLoading(false);
   };
 
-  const updateProductName = async (e) => {
-    setLoading(true);
-    const { data, error } = await supabase
-      .from("products")
-      .update({ name })
-      .match({ id: state.id });
-    if (error) {
-      console.log("nevalja", error.message);
-    } else {
-      console.log("proso", name);
-    }
-    setLoading(false);
-  };
-  const updateProductDescription = async (e) => {
-    setLoading(true);
-    const { data, error } = await supabase
-      .from("products")
-      .update({ description })
-      .match({ id: state.id });
-    if (error) {
-      console.log("nevalja", error.message);
-    } else {
-      console.log("proso", description);
-    }
-    setLoading(false);
-  };
+  const { data, refetch } = useQuery({
+    queryKey: ["categories"],
+    queryFn: () => getCategory(value),
+  });
 
-  const updateProductPrice = async (e) => {
-    setLoading(true);
-    const { data, error } = await supabase
-      .from("products")
-      .update({ price })
-      .match({ id: state.id });
-    if (error) {
-      console.log("nevalja", error.message);
-    } else {
-      console.log("proso", price);
-    }
-    setLoading(false);
-  };
+  const mappedCategories = data?.map((item) => item.name);
 
-  const updateProductQuantity = async (e) => {
-    setLoading(true);
-    const { data: productData, error: productError } = await supabase
-      .from("products")
-      .select("quantity")
-      .eq("id", state.id)
-      .single();
+  const { data: category, isLoading } = useQuery({
+    queryKey: ["category"],
+    queryFn: () => getProductCategory(state.category_id),
+    onSuccess: () => {
+      setSelectedValue(category?.name);
+    },
+  });
 
-    if (productError) {
-      console.log("nevalja", productError.message);
-      return;
-    }
+  const updateProductCategoryMutation = useMutation({
+    mutationFn: (item) => updateProductCategory(item.value, item.id),
+    onSuccess: () => {},
+  });
 
-    const existingQuantity = productData.quantity;
-
-    const updatedQuantity = existingQuantity + Number(quantity);
-
-    const { data, error } = await supabase
-      .from("products")
-      .update({ quantity: updatedQuantity })
-      .match({ id: state.id });
-
-    if (error) {
-      console.log("nevalja", error.message);
-    } else {
-      console.log("proso", typeof existingQuantity);
-    }
-    setLoading(false);
-  };
-
-  // const handleSalePrice = async () => {
-  //   setLoading(true);
-  //   let calc = Math.round((state.price / 100) * salePercentage);
-  //   let total = state.price - calc;
-  //   console.log(typeof total);
-  //   const { data, error } = await supabase
-  //     .from("products")
-  //     .update({ sale_price: total })
-  //     .match({ id: state.id });
-  //   if (error) {
-  //     console.log("nevalja", error.message);
-  //   } else {
-  //     console.log("proso", total);
-  //   }
-  //   setLoading(false);
-  // };
-
-  const getProductCategory = async () => {
-    const { data } = await supabase
-      .from("categories")
-      .select("*")
-      .eq("id", state.category_id)
-      .single();
-    console.log(data);
-    setPrevCategory(data.name);
-  };
-
-  const updateProductCategory = async () => {
-    setLoading(true);
-    const { data: categories } = await supabase
-      .from("categories")
-      .select("*")
-      .eq("name", category)
-      .single();
-
-    const { data, error } = await supabase
-      .from("products")
-      .update({
-        category_id: categories.id,
-      })
-      .match({ id: state.id });
-    setLoading(false);
+  const updateCategory = async () => {
+    await updateProductCategoryMutation.mutateAsync({
+      value: value,
+      id: state.id,
+    });
   };
 
   const returnDashboard = async () => {
     navigate("/admin");
   };
 
-  const handleIsSale = async (e) => {
+  const updateSaleMutation = useMutation({
+    mutationFn: (item) => updateSale(item.sale, item.productId),
+  });
+
+  const handleUpdateSale = async () => {
     setSale(!isSale);
-    console.log(isSale);
-    const { data, error } = await supabase
-      .from("products")
-      .update({ is_sale: !isSale })
-      .match({ id: state.id });
-    if (error) {
-      console.log("nevalja", error.message);
-    } else {
-      console.log("proso", isSale);
-    }
+    await updateSaleMutation.mutateAsync({
+      sale: !isSale,
+      productId: state.id,
+    });
   };
 
-  const updateAll = async (e) => {
+  const updateProductMutation = useMutation({
+    mutationFn: (item) => updateProduct(item, item.id),
+    onSuccess: () => {
+      setLoading(false);
+      updateCategory();
+    },
+  });
+
+  const handleUpdateProduct = async () => {
     setLoading(true);
-    const { data: categories } = await supabase
-      .from("categories")
-      .select("*")
-      .eq("name", category)
-      .single();
+    const update = {
+      name: name === "" ? state.name : name,
+      description: description === "" ? state.description : description,
+      price: price === null ? state.price : price,
+      quantity: quantity === "" ? state.quantity : state.quantity + quantity,
+      sale_price: sale_price === null ? state.sale_price : sale_price,
+      image: image === "" ? state.image : image,
+    };
 
-    if (category !== "") {
-      const { data: a, error: b } = await supabase
-        .from("products")
-        .update({
-          category_id: categories.id,
-        })
-        .match({ id: state.id });
-      return;
-    }
-
-    const { data, error } = await supabase
-      .from("products")
-      .update({
-        name: name === "" ? state.name : name,
-        description: description === "" ? state.description : description,
-        price: price === null ? state.price : price,
-        quantity: quantity === "" ? state.quantity : state.quantity + quantity,
-        sale_price: sale_price === null ? state.sale_price : sale_price,
-        image: image === "" ? state.image : image,
-      })
-
-      .match({ id: state.id });
-    if (error) {
-      console.log("nevalja", error.message);
-    } else {
-      console.log("proslo", form.values);
-    }
-
-    setLoading(false);
+    await updateProductMutation.mutateAsync({ ...update, id: state.id });
   };
 
   React.useEffect(() => {
-    getProductCategory();
-  }, []);
-
-  console.log("file", file);
+    refetch();
+  }, [value]);
 
   return (
     <div className={classes.wrapper}>
-      {/* <Paper className={classes.form} radius={0} p={30}> */}
       <Title order={2} className={classes.title} align="center" mb={20}>
         Edit product
       </Title>
 
-      <Form onSubmit={form.onSubmit(updateAll)}>
+      <Form onSubmit={form.onSubmit(handleUpdateProduct)}>
         <Image mx="auto" maw={300} src={state.image} alt="No image"></Image>
         <Group>
           <FileButton
@@ -338,7 +233,7 @@ const Edit = () => {
           mt={20}
           mb={20}
           checked={isSale}
-          onChange={handleIsSale}
+          onChange={handleUpdateSale}
           label="Item on Sale"
         />
         {isSale && (
@@ -347,14 +242,6 @@ const Edit = () => {
             label={
               percent > 0 ? `Current sale ${percent} %` : `Current sale 0 %`
             }
-            // onChange={(number) => {
-            //   // let calc = Math.floor((state.price / 100) * number);
-            //   let calc = (state.price / 100) * number;
-            //   let total = state.price - calc;
-
-            //   form.setFieldValue("sale_price", total.toFixed(2));
-            //   setPercent(number);
-            // }}
             onChange={(number) => {
               let total;
 
@@ -380,27 +267,27 @@ const Edit = () => {
           {...form.getInputProps("quantity")}
         />
 
-        <TextInput
-          label={`Category: ${prevCategory}`}
-          placeholder={prevCategory}
-          {...form.getInputProps("category")}
-        />
+        {!isLoading && (
+          <Select
+            mb={10}
+            label={`Product category: ${category?.name}`}
+            searchable
+            clearable
+            placeholder="Change product category"
+            value={value}
+            data={mappedCategories}
+            onChange={setValue}
+          />
+        )}
 
-        <SaleWrapper>
-          <Button mt={20} onClick={updateProductCategory}>
-            Edit Category
+        <Group mt={20}>
+          <Button type="submit" loading={loading} miw={120}>
+            Submit
           </Button>
 
-          <Button mt={20} type="submit">
-            {loading ? <Loader color="white" size="sm" /> : "Submit"}
-          </Button>
-
-          <Button mt={20} onClick={returnDashboard}>
-            Return
-          </Button>
-        </SaleWrapper>
+          <Button onClick={returnDashboard}>Return</Button>
+        </Group>
       </Form>
-      {/* </Paper> */}
     </div>
   );
 };

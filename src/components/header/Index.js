@@ -16,7 +16,6 @@ import React, { useContext, useState } from "react";
 import { AuthContext } from "../../contexts/Index";
 import { supabase } from "../../config/Supabase";
 import { IconShoppingCart } from "@tabler/icons";
-import ShoppingItem from "../shoppingItem/Index";
 import { CartItem } from "../cartItem/Index";
 import { handlePaymentNotification } from "../notifications/checkoutNotification";
 import {
@@ -57,7 +56,7 @@ export function HeaderTabs({
   const { classes } = useStyles();
   const [opened, setOpened] = useState(false);
   const navigate = useNavigate();
-  const { user, signOut, getData } = useContext(AuthContext);
+  const { user, signOut } = useContext(AuthContext);
   const [loading, setLoading] = useState(false);
 
   const navigateLogin = async () => {
@@ -159,13 +158,6 @@ export function HeaderTabs({
               <Shopping>
                 {orders?.map((item) => {
                   return (
-                    // <ShoppingItem
-                    //   key={item.id}
-                    //   cartData={item}
-                    //   onRemove={onRemove}
-                    //   onQuantity={onQuantity}
-                    //   onDelete={onDelete}
-                    // />
                     <CartItem
                       key={item.id}
                       cartData={item}
@@ -189,12 +181,11 @@ export function HeaderTabs({
                 </TextWrapper>
 
                 {user?.user_metadata.role === "user" ? (
-                  <CheckoutBtn onClick={handleCheckout}>
-                    {loading ? (
-                      <Loader color="white" size="sm" />
-                    ) : (
-                      "$ Checkout"
-                    )}
+                  <CheckoutBtn
+                    disabled={orders.length <= 0 ? true : false}
+                    onClick={handleCheckout}
+                    loading={loading}>
+                    $ Checkout
                   </CheckoutBtn>
                 ) : (
                   <CheckoutBtn onClick={navigateLogin}>

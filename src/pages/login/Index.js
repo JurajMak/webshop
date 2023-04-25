@@ -1,22 +1,20 @@
 import {
-  Paper,
   createStyles,
   TextInput,
-  PasswordInput,
-  Checkbox,
-  Button,
   Title,
   Text,
   Anchor,
   ActionIcon,
+  Button,
+  Group,
+  Container,
 } from "@mantine/core";
 import { useNavigate } from "react-router-dom";
 import { IconAt, IconEye, IconEyeOff } from "@tabler/icons";
 import { useForm } from "@mantine/form";
 import React, { useState } from "react";
-import { Form, StyledButton, Div, TitleHeader } from "./Styles";
+import { Form } from "./Styles";
 import { AuthContext } from "../../contexts/Index";
-import Image from "../../assets/login.jpg";
 
 const useStyles = createStyles((theme) => ({
   wrapper: {
@@ -63,7 +61,7 @@ export function UserLogin() {
   });
 
   const navigate = useNavigate();
-  const { signIn, setUser, user } = React.useContext(AuthContext);
+  const { signIn, setUser } = React.useContext(AuthContext);
 
   const [type, settype] = useState("password");
   const { email, password } = form;
@@ -95,9 +93,7 @@ export function UserLogin() {
   };
 
   return (
-    <div className={classes.wrapper}>
-      {/* <Paper className={classes.form} radius={0} p={30}> */}
-
+    <Container sizes="xl" className={classes.wrapper}>
       <Title
         order={2}
         className={classes.title}
@@ -109,6 +105,7 @@ export function UserLogin() {
 
       <Form onSubmit={form.onSubmit(handleSubmit)}>
         <TextInput
+          mb={10}
           label="Email"
           placeholder="Enter your email"
           value={email}
@@ -131,9 +128,10 @@ export function UserLogin() {
           }
           {...form.getInputProps("password")}
         />
-
-        <StyledButton type="submit">Login</StyledButton>
-        <StyledButton onClick={returnHome}>Return</StyledButton>
+        <Group position="left" mt={20}>
+          <Button type="submit">Login</Button>
+          <Button onClick={returnHome}>Return</Button>
+        </Group>
       </Form>
 
       <Text align="center" mt="md">
@@ -142,9 +140,7 @@ export function UserLogin() {
           Register
         </Anchor>
       </Text>
-
-      {/* </Paper> */}
-    </div>
+    </Container>
   );
 }
 

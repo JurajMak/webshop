@@ -9,12 +9,3 @@ export const Form = styled.form`
   background: white;
   border: 1px solid black;
 `;
-
-export const Div = styled.div`
-  margin-top: 200px;
-`;
-
-export const ButtonWrapper = styled.div`
-  display: flex;
-  justify-content: space-between;
-`;

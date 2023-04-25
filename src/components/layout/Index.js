@@ -4,37 +4,48 @@ import {
   Footer,
   Text,
   useMantineTheme,
-  Pagination,
   Select,
   Button,
+  Loader,
+  Flex,
+  LoadingOverlay,
 } from "@mantine/core";
 import ProductsCard from "../productCard/Index";
 import HeaderTabs from "../header/Index";
 import { Wrapper, ProductsWrapper } from "../../pages/home/Styles";
-import { supabase } from "../../config/Supabase";
-import { AuthContext } from "../../contexts/Index";
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect } from "react";
 import SearchBar from "../search/Index";
 import { handleQuantityNotification } from "../notifications/warningNotification";
+import { getProducts } from "../../api/products";
+import { useInfiniteQuery } from "@tanstack/react-query";
+import { handleInfiniteScroll } from "../../utils/infiniteScroll";
 
 export default function AppShellLayout() {
   const theme = useMantineTheme();
   const [opened, setOpened] = useState(false);
-  const { data, getData, categories, user } = React.useContext(AuthContext);
-  const [search, setSearch] = useState([]);
+  const [search, setSearch] = useState("");
+  const [selectValue, setSelectValue] = useState(null);
   const [searchWord, setSearchWord] = useState("");
-  const [isSearching, setIsSearching] = useState(false);
   const [shoppingData, setShoppingData] = useState([]);
-  const [activePage, setPage] = useState(1);
-  const [itemsPerPage, setItemsPerPage] = useState(10);
   const [value, setValue] = useState("");
 
-  const lastPost = activePage * itemsPerPage;
-  const firstPost = lastPost - itemsPerPage;
-  const currentPost = data?.slice(firstPost, lastPost);
-  const searchPost = search?.slice(firstPost, lastPost);
-
-  const mappedCategories = categories?.map((item) => item.name);
+  const {
+    data,
+    isLoading,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+    refetch,
+  } = useInfiniteQuery(
+    ["products"],
+    ({ pageParam = 1 }) => getProducts(selectValue, searchWord, pageParam),
+    {
+      getNextPageParam: (lastPage, pages) => {
+        const nextPage = pages.length + 1;
+        return lastPage.length !== 0 ? nextPage : null;
+      },
+    }
+  );
 
   const handleAddCart = (e, item) => {
     const isExists = shoppingData?.some((cart) => {
@@ -75,7 +86,7 @@ export default function AppShellLayout() {
   };
 
   const handleAddQuantity = (e, item) => {
-    const dataItem = data.find((dataItem) => dataItem.id === item.id);
+    const dataItem = data?.pages[0].find((dataItem) => dataItem.id === item.id);
 
     const cartItemIndex = shoppingData.findIndex(
       (cartItem) => cartItem.id === item.id
@@ -83,7 +94,6 @@ export default function AppShellLayout() {
     const cartItem = shoppingData[cartItemIndex];
 
     if (cartItem && cartItem.quantity >= dataItem.quantity) {
-      // setNotify(true);
       handleQuantityNotification();
       return;
     }
@@ -138,7 +148,7 @@ export default function AppShellLayout() {
       }
     }
     setShoppingData([]);
-    getData();
+    refetch();
   };
 
   const handleDeleteItem = (e, id) => {
@@ -147,67 +157,16 @@ export default function AppShellLayout() {
   };
 
   const handleSearchText = (e) => {
-    setSearchWord(e.target.value);
+    setSearch(e.target.value);
   };
-  const handleCateogrySearch = (e) => {
-    setValue(e.target.value);
-  };
-
-  const handleSearchEnter = async (e) => {
+  const handleSearchEnter = (e) => {
     if (e.key === "Enter") {
-      const { data, error } = await supabase
-        .from("products")
-        .select("*")
-        .ilike("name", `%${searchWord}%`);
-
-      if (error) {
-        console.error(error);
-      } else {
-        setSearch(data);
-        setIsSearching(true);
-      }
+      setSearchWord(search);
     }
   };
-
-  const handleSearchButtonClick = async (e) => {
-    const { data: categories } = await supabase
-      .from("categories")
-      .select("id")
-      .ilike("name", `%${value}%`);
-
-    const categoryIds = categories.map((category) => category.id);
-
-    const { data: productData } = await supabase
-      .from("products")
-      .select("*")
-      .in("category_id", categoryIds);
-
-    setSearch(productData);
-    setIsSearching(true);
-  };
-
-  const handleCategoryEnter = async (e) => {
-    if (e.key === "Enter") {
-      const { data: categories } = await supabase
-        .from("categories")
-        .select("id")
-        .ilike("name", `%${value}%`);
-
-      const categoryIds = categories.map((category) => category.id);
-
-      const { data: productData } = await supabase
-        .from("products")
-        .select("*")
-        .in("category_id", categoryIds);
-
-      setSearch(productData);
-      setIsSearching(true);
-    }
-  };
-
-  const handleShowAll = (e) => {
-    e.preventDefault();
-    setIsSearching(false);
+  const handleShowAll = () => {
+    setSearchWord("");
+    setValue("");
   };
 
   useEffect(() => {
@@ -220,8 +179,17 @@ export default function AppShellLayout() {
       }
     }
 
+    document.addEventListener("scroll", (e) =>
+      handleInfiniteScroll(e, hasNextPage, fetchNextPage)
+    );
+    refetch();
     setShoppingData(savedData);
-  }, []);
+    return () => {
+      document.removeEventListener("scroll", (e) =>
+        handleInfiniteScroll(e, hasNextPage, fetchNextPage)
+      );
+    };
+  }, [selectValue, searchWord, fetchNextPage, hasNextPage]);
 
   return (
     <AppShell
@@ -241,6 +209,22 @@ export default function AppShellLayout() {
           hiddenBreakpoint="sm"
           hidden={!opened}
           width={{ sm: 200, lg: 300 }}>
+          <Select
+            mx="auto"
+            onChange={(value) => {
+              return setSelectValue(value);
+            }}
+            value={selectValue}
+            clearable
+            size="md"
+            placeholder="Sort by"
+            data={[
+              { label: "Sort from highest price", value: "highest" },
+              { label: "Sort from lowest price", value: "lowest" },
+              { label: "Sort on sale", value: "sale" },
+            ]}
+          />
+
           <Text m={20}>Search</Text>
           <SearchBar
             placeholder="Search products"
@@ -255,7 +239,7 @@ export default function AppShellLayout() {
             Show All
           </Button>
           <Text m={20}>Category</Text>
-          <Select
+          {/* <Select
             radius={50}
             searchable
             clearable
@@ -263,14 +247,14 @@ export default function AppShellLayout() {
             value={value}
             data={mappedCategories}
             onChange={setValue}
-            onKeyDown={(e) => handleCategoryEnter(e)}
-          />
+          /> */}
           <Button
             variant="white"
             radius="xl"
             w={100}
             ml="auto"
-            onClick={handleSearchButtonClick}>
+            // onClick={handleSearchButtonClick}
+          >
             Search
           </Button>
         </Navbar>
@@ -290,36 +274,44 @@ export default function AppShellLayout() {
         />
       }>
       <Wrapper>
-        {isSearching
-          ? searchPost?.map((item) => (
-              <ProductsWrapper key={item.id}>
-                <ProductsCard
-                  data={item}
-                  onClick={(e) => handleAddCart(e, item)}
-                />
-              </ProductsWrapper>
-            ))
-          : currentPost?.map((item) => (
-              <ProductsWrapper key={item.id}>
-                <ProductsCard
-                  data={item}
-                  onClick={(e) => handleAddCart(e, item)}
-                />
-              </ProductsWrapper>
-            ))}
+        {isLoading ? (
+          <LoadingOverlay
+            visible={isLoading}
+            overlayBlur={6}
+            loaderProps={{ size: "xl" }}
+          />
+        ) : (
+          data?.pages?.map((group, i) => (
+            <React.Fragment key={i}>
+              {group?.map((item) => {
+                return (
+                  <ProductsWrapper key={item.id}>
+                    <ProductsCard
+                      data={item}
+                      onClick={(e) => handleAddCart(e, item)}
+                    />
+                  </ProductsWrapper>
+                );
+              })}
+            </React.Fragment>
+          ))
+        )}
       </Wrapper>
-      <Pagination
-        position="center"
-        mr={200}
-        withEdges
-        value={activePage}
-        onChange={setPage}
-        total={
-          isSearching
-            ? Math.ceil(searchPost?.length / 10)
-            : Math.ceil(data?.length / 10)
-        }
-      />
+      {isFetchingNextPage && hasNextPage && (
+        <Flex direction="column">
+          <Text mx="auto" fz="lg" fw="bold">
+            Loading more products
+          </Text>
+          <Loader mx="auto" size={50}></Loader>
+        </Flex>
+      )}
+      {!hasNextPage && (
+        <Flex direction="column">
+          <Text mx="auto" fz="lg" fw="bold">
+            No more products to load
+          </Text>
+        </Flex>
+      )}
     </AppShell>
   );
 }
