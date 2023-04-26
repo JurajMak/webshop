@@ -66,12 +66,7 @@ const CreateCategory = () => {
   });
   const { name, description } = form.values;
 
-  const {
-    data: category,
-    isLoading,
-    isSucces,
-    refetch,
-  } = useQuery({
+  const { data: category, isLoading } = useQuery({
     queryKey: ["categories"],
     queryFn: () => getCategory(value),
   });

@@ -82,6 +82,7 @@ const Edit = () => {
   const [loading, setLoading] = useState(false);
   const [value, setValue] = useState("");
   const [selectedValue, setSelectedValue] = useState("");
+  const queryClient = new QueryClient();
 
   const percentageCalc = Math.floor(
     ((state.price - state.sale_price) / state.price) * 100
@@ -149,6 +150,7 @@ const Edit = () => {
       setLoading(false);
       updateCategory();
       handleSuccessUpdate(name);
+      queryClient.invalidateQueries("products", state.id);
     },
   });
 
@@ -169,7 +171,7 @@ const Edit = () => {
   React.useEffect(() => {
     refetch();
   }, [value]);
-
+  console.log("edit", state.id);
   return (
     <div className={classes.wrapper}>
       <Title order={2} className={classes.title} align="center" mb={20}>

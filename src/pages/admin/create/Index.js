@@ -104,6 +104,7 @@ const Create = () => {
     mutationFn: (item) => createProduct(item),
     onSuccess: () => {
       handleSuccessCreation(name);
+      queryClient.invalidateQueries("products");
     },
   });
 
@@ -129,7 +130,7 @@ const Create = () => {
   React.useEffect(() => {
     refetch();
   }, [value]);
-  console.log("create", data);
+
   return (
     <Container sizes="xl" className={classes.wrapper}>
       <Title order={1} className={classes.title} align="center" pt={50} mb={50}>
