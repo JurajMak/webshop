@@ -62,6 +62,12 @@ export function ErrorPage() {
     } else {
       navigate("/login/user");
     }
+    if (user?.user_metadata.role === "admin") {
+      navigate("/admin");
+    }
+    if (user?.user_metadata.role === "user") {
+      navigate("/");
+    }
   };
 
   return (
@@ -72,8 +78,7 @@ export function ErrorPage() {
         color="dimmed"
         size="lg"
         align="center"
-        className={classes.description}
-      >
+        className={classes.description}>
         Unfortunately, this is only a 404 page. You may have mistyped the
         address, or the page has been moved to another URL.
       </Text>
