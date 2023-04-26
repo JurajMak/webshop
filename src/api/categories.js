@@ -70,7 +70,7 @@ const updateProductCategory = async (value, id) => {
   if (error) {
     throw new Error(error.message);
   }
-
+  console.log("cata", value);
   return data;
 };
 
