@@ -65,22 +65,6 @@ export default function Dashboard() {
     setSwapOrder(true);
   };
 
-  const handleSearchButtonClick = async (e) => {
-    const { data: categories } = await supabase
-      .from("categories")
-      .select("id")
-      .ilike("name", `%${value}%`);
-
-    const categoryIds = categories.map((category) => category.id);
-
-    const { data: productData } = await supabase
-      .from("products")
-      .select("*")
-      .in("category_id", categoryIds);
-
-    setSearch(productData);
-  };
-
   const handleShowAll = (e) => {
     e.preventDefault();
   };
