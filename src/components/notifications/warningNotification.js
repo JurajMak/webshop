@@ -9,18 +9,32 @@ export const handleQuantityNotification = () => {
     color: "red",
     icon: <IconX />,
     onClose: () => cleanNotifications(),
-    autoClose: 5000,
+    autoClose: 3000,
+    styles: (theme) => ({
+      title: { fontSize: 16 },
+      description: {
+        color: theme.colors.dark,
+        fontWeight: 500,
+      },
+    }),
   });
 };
 
 export const handleProductNotification = () => {
   showNotification({
-    title: "Warning can't perform action",
+    title: "Warning can't perform action!",
     message: " This product is part of an order and cannot be deleted!",
     color: "red",
     icon: <IconX />,
     onClose: () => cleanNotifications(),
-    autoClose: 5000,
+    autoClose: 3000,
+    styles: (theme) => ({
+      title: { fontSize: 16 },
+      description: {
+        color: theme.colors.dark,
+        fontWeight: 500,
+      },
+    }),
   });
 };
 
@@ -31,6 +45,13 @@ export const handleUserProductNotification = () => {
     color: "red",
     icon: <IconX />,
     onClose: () => cleanNotifications(),
-    autoClose: 5000,
+    autoClose: 3000,
+    styles: (theme) => ({
+      title: { fontSize: 16 },
+      description: {
+        color: theme.colors.dark,
+        fontWeight: 500,
+      },
+    }),
   });
 };

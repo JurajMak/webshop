@@ -8,20 +8,12 @@ export const handleSuccessCreation = (item) => {
     color: "teal",
     icon: <IconCheck />,
     onClose: () => cleanNotifications(),
-    autoClose: 5000,
+    autoClose: 3000,
     styles: (theme) => ({
-      root: {
-        backgroundColor: theme.colors.blue[6],
-        borderColor: theme.colors.blue[6],
-
-        "&::before": { backgroundColor: theme.white },
-      },
-
-      title: { color: theme.white },
-      description: { color: theme.white },
-      closeButton: {
-        color: theme.white,
-        "&:hover": { backgroundColor: theme.colors.blue[7] },
+      title: { fontSize: 16 },
+      description: {
+        color: theme.colors.dark,
+        fontWeight: 500,
       },
     }),
   });
@@ -34,20 +26,12 @@ export const handleSuccessCategory = (item) => {
     color: "teal",
     icon: <IconCheck />,
     onClose: () => cleanNotifications(),
-    autoClose: 5000,
+    autoClose: 3000,
     styles: (theme) => ({
-      root: {
-        backgroundColor: theme.colors.blue[6],
-        borderColor: theme.colors.blue[6],
-
-        "&::before": { backgroundColor: theme.white },
-      },
-
-      title: { color: theme.white },
-      description: { color: theme.white },
-      closeButton: {
-        color: theme.white,
-        "&:hover": { backgroundColor: theme.colors.blue[7] },
+      title: { fontSize: 16 },
+      description: {
+        color: theme.colors.dark,
+        fontWeight: 500,
       },
     }),
   });
@@ -60,20 +44,12 @@ export const handleSuccessUpdate = (item) => {
     color: "teal",
     icon: <IconCheck />,
     onClose: () => cleanNotifications(),
-    autoClose: 5000,
+    autoClose: 3000,
     styles: (theme) => ({
-      root: {
-        backgroundColor: theme.colors.blue[6],
-        borderColor: theme.colors.blue[6],
-
-        "&::before": { backgroundColor: theme.white },
-      },
-
-      title: { color: theme.white },
-      description: { color: theme.white },
-      closeButton: {
-        color: theme.white,
-        "&:hover": { backgroundColor: theme.colors.blue[7] },
+      title: { fontSize: 16 },
+      description: {
+        color: theme.colors.dark,
+        fontWeight: 500,
       },
     }),
   });
