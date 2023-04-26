@@ -38,9 +38,9 @@ export function CartItem({ cartData, onQuantity, onDelete, onRemove }) {
       <Group noWrap spacing={0}>
         <Image src={image ? image : home} height={140} width={140} />
         <div className={classes.body}>
-          {/* <Text transform="uppercase" color="dimmed" weight={700} size="xs">
-            {category}
-          </Text> */}
+          <Text transform="uppercase" color="dimmed" weight={700} size="xs">
+            Quanity: {quantity}
+          </Text>
           <Group mx="auto">
             <Text className={classes.title} mt="xs" mb="md" size={20}>
               {name}
@@ -53,7 +53,7 @@ export function CartItem({ cartData, onQuantity, onDelete, onRemove }) {
           </Group>
           <Group noWrap spacing="xs">
             {/* <Group spacing="xs" noWrap>
-              <Text size="xs">{description}</Text>
+              <Text size="xs"> Quanity: {quantity}</Text>
             </Group> */}
             <Text size="xs" color="dark">
               • {description}
