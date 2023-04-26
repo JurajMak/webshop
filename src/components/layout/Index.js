@@ -48,11 +48,11 @@ export default function AppShellLayout() {
   );
 
   const handleAddCart = (e, item) => {
-    const isExists = shoppingData?.some((cart) => {
+    const ifExists = shoppingData?.some((cart) => {
       return cart.id === item.id;
     });
 
-    if (isExists) {
+    if (ifExists) {
       setShoppingData(
         shoppingData?.map((cart) => {
           if (cart.id === item.id) {
