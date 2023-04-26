@@ -8,17 +8,13 @@ import {
   Flex,
   Loader,
 } from "@mantine/core";
-
 import { IconPencil, IconTrash } from "@tabler/icons";
 import { useNavigate } from "react-router-dom";
 import React, { useContext } from "react";
 import { AuthContext } from "../../../contexts/Index";
 import { ImageWrap } from "./Styles";
 import altimg from "../../../assets/login.jpg";
-import {
-  handleProductNotification,
-  handleUserProductNotification,
-} from "../../../components/notifications/warningNotification";
+import { handleProductNotification } from "../../../components/notifications/warningNotification";
 import { handleDeleteNotification } from "../../../components/notifications/deleteNotification";
 import { getProducts, deleteProduct } from "../../../api/products";
 import { handleInfiniteScroll } from "../../../utils/infiniteScroll";

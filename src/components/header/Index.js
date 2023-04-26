@@ -7,7 +7,6 @@ import {
   Drawer,
   Text,
   Indicator,
-  Loader,
   Divider,
 } from "@mantine/core";
 
