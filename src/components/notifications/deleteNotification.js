@@ -1,13 +1,20 @@
 import { showNotification, cleanNotifications } from "@mantine/notifications";
 import { IconCheck } from "@tabler/icons";
 
-export const handleDeleteNotification = (item) => {
+export const handleDeleteNotification = () => {
   showNotification({
-    title: "Succesfully deleted product!",
-    message: `${item} successfully deleted from list`,
-    color: "red",
+    title: `Successfully deleted product!`,
+    message: `Product successfully deleted from list`,
+    color: "teal",
     icon: <IconCheck />,
     onClose: () => cleanNotifications(),
-    autoClose: 5000,
+    autoClose: 3000,
+    styles: (theme) => ({
+      title: { fontSize: 16 },
+      description: {
+        color: theme.colors.dark,
+        fontWeight: 500,
+      },
+    }),
   });
 };

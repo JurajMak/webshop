@@ -171,7 +171,7 @@ const Edit = () => {
   React.useEffect(() => {
     refetch();
   }, [value]);
-  console.log("edit", state.id);
+
   return (
     <div className={classes.wrapper}>
       <Title order={2} className={classes.title} align="center" mb={20}>

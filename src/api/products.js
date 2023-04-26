@@ -41,6 +41,7 @@ const createProduct = async (values) => {
   if (error) {
     throw new Error(error.message);
   }
+  return data;
 };
 
 const updateProduct = async (values, productId) => {
@@ -52,6 +53,7 @@ const updateProduct = async (values, productId) => {
   if (error) {
     throw new Error(error.message);
   }
+  return data;
 };
 
 const updateSale = async (sale, productId) => {
@@ -63,6 +65,19 @@ const updateSale = async (sale, productId) => {
   if (error) {
     throw new Error(error.message);
   }
+  return data;
 };
 
-export { getProducts, createProduct, updateProduct, updateSale };
+const deleteProduct = async (product) => {
+  const { data, error } = await supabase
+    .from("products")
+    .delete()
+    .eq("id", product.id);
+
+  if (error) {
+    throw new Error(error.message);
+  }
+  return data;
+};
+
+export { getProducts, createProduct, updateProduct, updateSale, deleteProduct };

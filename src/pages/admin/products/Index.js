@@ -11,7 +11,6 @@ import {
 
 import { IconPencil, IconTrash } from "@tabler/icons";
 import { useNavigate } from "react-router-dom";
-import { supabase } from "../../../config/Supabase";
 import React, { useContext } from "react";
 import { AuthContext } from "../../../contexts/Index";
 import { ImageWrap } from "./Styles";
@@ -21,7 +20,7 @@ import {
   handleUserProductNotification,
 } from "../../../components/notifications/warningNotification";
 import { handleDeleteNotification } from "../../../components/notifications/deleteNotification";
-import { getProducts } from "../../../api/products";
+import { getProducts, deleteProduct } from "../../../api/products";
 import { handleInfiniteScroll } from "../../../utils/infiniteScroll";
 import {
   QueryClient,
@@ -59,35 +58,21 @@ export function ProductsTable({ titles, search }) {
     }
   );
 
-  const handleDeleteProduct = async (data) => {
-    if (user.id === data.user_id) {
-      const { data: orders, error: err } = await supabase
-        .from("order_products")
-        .select("order_id")
-        .eq("product_id", data.id);
-
-      if (err) {
-        console.error(err.message);
-        return;
-      }
-
-      if (orders.length > 0) {
-        handleProductNotification();
-        return;
-      }
-
-      const { error } = await supabase
-        .from("products")
-        .delete()
-        .eq("id", data.id);
-      if (error) {
-        console.log(error.message);
-      }
+  const deleteProductMutation = useMutation({
+    mutationFn: (item) => deleteProduct(item),
+    onSuccess: () => {
+      handleDeleteNotification();
+      queryClient.invalidateQueries("products");
       refetch();
-    } else {
-      handleUserProductNotification();
-    }
-    handleDeleteNotification(data.name);
+    },
+
+    onError: () => {
+      handleProductNotification();
+    },
+  });
+
+  const handleDeleteProduct = async (item) => {
+    await deleteProductMutation.mutateAsync(item);
   };
 
   React.useEffect(() => {
