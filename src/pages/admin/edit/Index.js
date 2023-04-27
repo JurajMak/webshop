@@ -83,14 +83,13 @@ const Edit = () => {
   const [value, setValue] = useState("");
   const [selectedValue, setSelectedValue] = useState("");
   const queryClient = new QueryClient();
-
   const percentageCalc = Math.floor(
     ((state.price - state.sale_price) / state.price) * 100
   );
-
   const [percent, setPercent] = React.useState(
     state.is_sale ? percentageCalc : null
   );
+  const prevPercentageCalc = price - (percent / 100) * price;
 
   const handleUploadImage = async (file) => {
     setLoading(true);
@@ -161,7 +160,8 @@ const Edit = () => {
       description: description === "" ? state.description : description,
       price: price === null ? state.price : price,
       quantity: quantity === "" ? state.quantity : state.quantity + quantity,
-      sale_price: sale_price === null ? state.sale_price : sale_price,
+      sale_price:
+        sale_price === null ? prevPercentageCalc.toFixed(2) : sale_price,
       image: image === "" ? state.image : image,
     };
 
@@ -169,7 +169,9 @@ const Edit = () => {
   };
 
   React.useEffect(() => {
-    refetch();
+    if (value !== "") {
+      refetch();
+    }
   }, [value]);
 
   return (

@@ -39,7 +39,7 @@ export function CartItem({ cartData, onQuantity, onDelete, onRemove }) {
         <Image src={image ? image : home} height={140} width={140} />
         <div className={classes.body}>
           <Text transform="uppercase" color="dimmed" weight={700} size="xs">
-            Quanity: {quantity}
+            Quantity: {quantity}
           </Text>
           <Group mx="auto">
             <Text className={classes.title} mt="xs" mb="md" size={20}>
