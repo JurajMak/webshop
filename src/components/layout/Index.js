@@ -9,10 +9,12 @@ import {
   Loader,
   Flex,
   LoadingOverlay,
+  Group,
+  Title,
 } from "@mantine/core";
 import ProductsCard from "../productCard/Index";
 import HeaderTabs from "../header/Index";
-import { Wrapper, ProductsWrapper } from "../../pages/home/Styles";
+import { ProductsWrapper } from "../../pages/home/Styles";
 import React, { useState, useEffect } from "react";
 import SearchBar from "../search/Index";
 import { handleQuantityNotification } from "../notifications/warningNotification";
@@ -182,8 +184,9 @@ export default function AppShellLayout() {
     document.addEventListener("scroll", (e) =>
       handleInfiniteScroll(e, hasNextPage, fetchNextPage)
     );
-    refetch();
+
     setShoppingData(savedData);
+    refetch();
     return () => {
       document.removeEventListener("scroll", (e) =>
         handleInfiniteScroll(e, hasNextPage, fetchNextPage)
@@ -209,7 +212,7 @@ export default function AppShellLayout() {
           hiddenBreakpoint="sm"
           hidden={!opened}
           width={{ sm: 200, lg: 300 }}>
-          <Select
+          {/* <Select
             mx="auto"
             onChange={(value) => {
               return setSelectValue(value);
@@ -223,13 +226,13 @@ export default function AppShellLayout() {
               { label: "Sort from lowest price", value: "lowest" },
               { label: "Sort on sale", value: "sale" },
             ]}
-          />
+          /> */}
 
           <Text m={20}>Search</Text>
-          <SearchBar
+          {/* <SearchBar
             placeholder="Search products"
             onChange={(e) => handleSearchText(e)}
-            onKeyDown={(e) => handleSearchEnter(e)}></SearchBar>
+            onKeyDown={(e) => handleSearchEnter(e)}></SearchBar> */}
           <Button
             variant="white"
             radius="xl"
@@ -273,7 +276,36 @@ export default function AppShellLayout() {
           onClear={handleDeleteAllCart}
         />
       }>
-      <Wrapper>
+      <Group>
+        <Group mx="auto" style={{ flexDirection: "column" }}>
+          <Text>Filter products</Text>
+          <SearchBar
+            mr="auto"
+            placeholder="Search products"
+            onChange={(e) => handleSearchText(e)}
+            onKeyDown={(e) => handleSearchEnter(e)}></SearchBar>
+        </Group>
+        <Group mx="auto" style={{ flexDirection: "column" }}>
+          <Text>Sort by</Text>
+          <Select
+            ml="auto"
+            onChange={(value) => {
+              return setSelectValue(value);
+            }}
+            value={selectValue}
+            clearable
+            size="md"
+            placeholder="Sort by"
+            data={[
+              { label: "Sort from highest price", value: "highest" },
+              { label: "Sort from lowest price", value: "lowest" },
+              { label: "Sort on sale", value: "sale" },
+            ]}
+          />
+        </Group>
+      </Group>
+
+      <Group position="center">
         {isLoading ? (
           <LoadingOverlay
             visible={isLoading}
@@ -296,7 +328,8 @@ export default function AppShellLayout() {
             </React.Fragment>
           ))
         )}
-      </Wrapper>
+      </Group>
+
       {isFetchingNextPage && hasNextPage && (
         <Flex direction="column">
           <Text mx="auto" fz="lg" fw="bold">

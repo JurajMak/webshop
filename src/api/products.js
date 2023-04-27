@@ -14,7 +14,7 @@ const getProducts = async (sortKey, searchValue, page) => {
       .order("price", { ascending: false });
   }
   if (sortKey === "sale") {
-    query = query.not("sale_price", "is", null).eq("is_sale", true);
+    query = query.eq("is_sale", true);
   }
 
   if (searchValue) {
@@ -80,4 +80,24 @@ const deleteProduct = async (product) => {
   return data;
 };
 
-export { getProducts, createProduct, updateProduct, updateSale, deleteProduct };
+const getProductById = async (id) => {
+  const { data, error } = await supabase
+    .from("products")
+    .select("*")
+    .eq("id", id)
+    .single();
+
+  if (error) {
+    throw error;
+  }
+  return data;
+};
+
+export {
+  getProducts,
+  createProduct,
+  updateProduct,
+  updateSale,
+  deleteProduct,
+  getProductById,
+};
