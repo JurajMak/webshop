@@ -7,7 +7,7 @@ export function SearchBar(props) {
   return (
     <TextInput
       icon={<IconSearch size={18} stroke={1.5} />}
-      radius="xl"
+      radius="sm"
       size="md"
       maxLength={30}
       placeholder={props.placeholder}
