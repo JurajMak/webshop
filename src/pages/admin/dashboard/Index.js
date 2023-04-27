@@ -13,10 +13,12 @@ import {
   Select,
   Group,
   Flex,
+  Title,
 } from "@mantine/core";
 import { AuthContext } from "../../../contexts/Index";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "../../../config/Supabase";
+import UserMenu from "../../../components/userMenu/Index";
 
 export default function Dashboard() {
   const theme = useMantineTheme();
@@ -170,15 +172,13 @@ export default function Dashboard() {
       header={
         <Header height={{ base: 50, md: 70 }} p="md">
           <Flex align="center" justify="space-between">
-            <Text>Dashboard</Text>
-            <Text mr={100}>
-              Admin logged in : {user.user_metadata.full_name}
-            </Text>
-            <Group mr={50}>
-              <Button mr={100} onClick={navigateToCategory}>
-                Add Category
-              </Button>
+            <Title>Dashboard</Title>
+            <Group>
+              <Button onClick={navigateToCategory}>Add Category</Button>
               <Button onClick={navigateToCreate}>Add product</Button>
+            </Group>
+            <Group mr={70}>
+              <UserMenu />
             </Group>
           </Flex>
         </Header>

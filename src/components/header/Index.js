@@ -8,8 +8,11 @@ import {
   Text,
   Indicator,
   Divider,
+  ScrollArea,
+  Flex,
+  Title,
 } from "@mantine/core";
-
+import { useViewportSize } from "@mantine/hooks";
 import { useNavigate } from "react-router-dom";
 import React, { useContext, useState } from "react";
 import { AuthContext } from "../../contexts/Index";
@@ -17,13 +20,7 @@ import { supabase } from "../../config/Supabase";
 import { IconShoppingCart } from "@tabler/icons";
 import { CartItem } from "../cartItem/Index";
 import { handlePaymentNotification } from "../notifications/checkoutNotification";
-import {
-  DrawerWrapper,
-  CheckoutBtn,
-  Shopping,
-  CheckoutWrapper,
-  TextWrapper,
-} from "./Styles";
+import UserMenu from "../userMenu/Index";
 
 const useStyles = createStyles((theme) => ({
   link: {
@@ -43,6 +40,17 @@ const useStyles = createStyles((theme) => ({
       width: "100%",
     },
   },
+  hiddenMobile: {
+    [theme.fn.smallerThan("sm")]: {
+      display: "none",
+      // paddingBottom: 30,
+    },
+  },
+  mobile: {
+    [theme.fn.smallerThan("sm")]: {
+      position: "right",
+    },
+  },
 }));
 
 export function HeaderTabs({
@@ -57,6 +65,7 @@ export function HeaderTabs({
   const navigate = useNavigate();
   const { user, signOut } = useContext(AuthContext);
   const [loading, setLoading] = useState(false);
+  const { height, width } = useViewportSize();
 
   const navigateLogin = async () => {
     navigate("/login");
@@ -139,22 +148,25 @@ export function HeaderTabs({
     onClear();
   };
 
+  console.log(height);
+
   return (
     <Box>
       <Header height={60} px="md">
         <Group position="apart" sx={{ height: "100%" }}>
-          Application Name
           <Group
             sx={{ height: "100%" }}
             spacing={0}
-            className={classes.hiddenMobile}></Group>
+            className={classes.hiddenMobile}>
+            <Title>Web-shop</Title>
+          </Group>
           <Drawer
             opened={opened}
             onClose={() => setOpened(false)}
             padding="xs"
             size="xl">
-            <DrawerWrapper>
-              <Shopping>
+            <Flex direction="column">
+              <ScrollArea type="never" style={{ height: height * 0.7 }}>
                 {orders?.map((item) => {
                   return (
                     <CartItem
@@ -166,37 +178,42 @@ export function HeaderTabs({
                     />
                   );
                 })}
-              </Shopping>
+              </ScrollArea>
 
-              <CheckoutWrapper>
-                <Divider size="md" mt={5} />
-                <TextWrapper>
-                  <Text mb={30} ml={100} mt={20} fz="lg" fw={500}>
+              {/* <Grid.Col> */}
+              <Divider size="md" mb={30} />
+              {/* </Grid.Col> */}
+
+              <Flex mx="auto" direction="column" gap={20} align="center">
+                <Group>
+                  <Text fz="lg" fw={500}>
                     Total :
                   </Text>
-                  <Text mr={150} mt={20} fz="lg" fw={500}>
+                  <Text fz="lg" fw={500}>
                     $ {sumPrice(orders)}
                   </Text>
-                </TextWrapper>
+                </Group>
 
                 {user?.user_metadata.role === "user" ? (
-                  <CheckoutBtn
+                  <Button
+                    miw={250}
                     disabled={orders.length <= 0 ? true : false}
                     onClick={handleCheckout}
                     loading={loading}>
                     $ Checkout
-                  </CheckoutBtn>
+                  </Button>
                 ) : (
-                  <CheckoutBtn onClick={navigateLogin}>
+                  <Button miw={250} onClick={navigateLogin}>
                     Log in to shop
-                  </CheckoutBtn>
+                  </Button>
                 )}
-              </CheckoutWrapper>
-            </DrawerWrapper>
+              </Flex>
+            </Flex>
+            {/* </Grid> */}
           </Drawer>
           {user?.user_metadata.role === "user" ? (
-            <Group className={classes.hiddenMobile}>
-              Welcome {user.user_metadata.full_name} !
+            <Group>
+              <UserMenu />
               {orders.length < 1 ? (
                 ""
               ) : (
@@ -211,15 +228,17 @@ export function HeaderTabs({
                       color: "black",
                     },
                   }}>
-                  <Button onClick={() => setOpened(true)}>
+                  <Button
+                    onClick={() => setOpened(true)}
+                    className={classes.mobile}
+                    mr={30}>
                     <IconShoppingCart size={25} />
                   </Button>
                 </Indicator>
               )}
-              <Button onClick={signOut}>Logout</Button>
             </Group>
           ) : (
-            <Group className={classes.hiddenMobile}>
+            <Group>
               {orders.length < 1 ? (
                 ""
               ) : (

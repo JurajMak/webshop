@@ -10,7 +10,6 @@ import {
   Flex,
   LoadingOverlay,
   Group,
-  Title,
 } from "@mantine/core";
 import ProductsCard from "../productCard/Index";
 import HeaderTabs from "../header/Index";
@@ -21,6 +20,7 @@ import { handleQuantityNotification } from "../notifications/warningNotification
 import { getProducts } from "../../api/products";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { handleInfiniteScroll } from "../../utils/infiniteScroll";
+import { useScrollLock } from "@mantine/hooks";
 
 export default function AppShellLayout() {
   const theme = useMantineTheme();
@@ -202,6 +202,7 @@ export default function AppShellLayout() {
             theme.colorScheme === "dark"
               ? theme.colors.dark[8]
               : theme.colors.gray[0],
+          overflow: "hidden",
         },
       }}
       navbarOffsetBreakpoint="sm"
@@ -212,54 +213,34 @@ export default function AppShellLayout() {
           hiddenBreakpoint="sm"
           hidden={!opened}
           width={{ sm: 200, lg: 300 }}>
-          {/* <Select
-            mx="auto"
-            onChange={(value) => {
-              return setSelectValue(value);
-            }}
-            value={selectValue}
-            clearable
-            size="md"
-            placeholder="Sort by"
-            data={[
-              { label: "Sort from highest price", value: "highest" },
-              { label: "Sort from lowest price", value: "lowest" },
-              { label: "Sort on sale", value: "sale" },
-            ]}
-          /> */}
-
-          <Text m={20}>Search</Text>
-          {/* <SearchBar
-            placeholder="Search products"
-            onChange={(e) => handleSearchText(e)}
-            onKeyDown={(e) => handleSearchEnter(e)}></SearchBar> */}
-          <Button
-            variant="white"
-            radius="xl"
-            w={100}
-            ml="auto"
-            onClick={handleShowAll}>
-            Show All
-          </Button>
-          <Text m={20}>Category</Text>
-          {/* <Select
-            radius={50}
-            searchable
-            clearable
-            placeholder="Categories"
-            value={value}
-            data={mappedCategories}
-            onChange={setValue}
-          /> */}
-          <Button
-            variant="white"
-            radius="xl"
-            w={100}
-            ml="auto"
-            // onClick={handleSearchButtonClick}
-          >
-            Search
-          </Button>
+          <Group>
+            <Group mx="auto">
+              <Text>Filter products</Text>
+              <SearchBar
+                mr="auto"
+                placeholder="Search products"
+                onChange={(e) => handleSearchText(e)}
+                onKeyDown={(e) => handleSearchEnter(e)}></SearchBar>
+            </Group>
+            <Group mx="auto">
+              <Text>Sort by</Text>
+              <Select
+                mr="auto"
+                onChange={(value) => {
+                  return setSelectValue(value);
+                }}
+                value={selectValue}
+                clearable
+                size="md"
+                placeholder="Sort by"
+                data={[
+                  { label: "Sort from highest price", value: "highest" },
+                  { label: "Sort from lowest price", value: "lowest" },
+                  { label: "Sort on sale", value: "sale" },
+                ]}
+              />
+            </Group>
+          </Group>
         </Navbar>
       }
       footer={
@@ -276,7 +257,7 @@ export default function AppShellLayout() {
           onClear={handleDeleteAllCart}
         />
       }>
-      <Group>
+      {/* <Group>
         <Group mx="auto" style={{ flexDirection: "column" }}>
           <Text>Filter products</Text>
           <SearchBar
@@ -303,7 +284,7 @@ export default function AppShellLayout() {
             ]}
           />
         </Group>
-      </Group>
+      </Group> */}
 
       <Group position="center">
         {isLoading ? (
