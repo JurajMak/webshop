@@ -14,7 +14,7 @@ import {
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { useNavigate } from "react-router-dom";
-import { handleSuccessCategory } from "../../../components/notifications/successNotification";
+import { handleSuccessCategoryNotification } from "../../../components/notifications/successNotification";
 
 const useStyles = createStyles((theme) => ({
   wrapper: {
@@ -74,7 +74,7 @@ const CreateCategory = () => {
   const createCategoryMutation = useMutation({
     mutationFn: (item) => createCategory(item.category, item.desc, item.userId),
     onSuccess: () => {
-      handleSuccessCategory(name);
+      handleSuccessCategoryNotification(name);
     },
   });
 

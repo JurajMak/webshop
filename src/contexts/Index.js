@@ -1,6 +1,11 @@
 import React, { createContext, useState } from "react";
 import { supabase } from "../config/Supabase";
 import { LoadingOverlay } from "@mantine/core";
+import {
+  warningUserLoginNotification,
+  warningUserSignUpNotification,
+} from "../components/notifications/warningNotification";
+import { handleSuccessLogoutNotification } from "../components/notifications/successNotification";
 
 export const AuthContext = createContext(null);
 
@@ -15,7 +20,8 @@ const AuthProvider = ({ children }) => {
     });
 
     if (error) {
-      alert(error.message);
+      // alert(error.message);
+      warningUserLoginNotification(error.message);
       return;
     }
 
@@ -29,7 +35,7 @@ const AuthProvider = ({ children }) => {
       options,
     });
     if (error) {
-      alert(error.message);
+      warningUserSignUpNotification(error.message);
       return;
     }
 
@@ -42,7 +48,7 @@ const AuthProvider = ({ children }) => {
       alert(error);
     } else {
       setUser(null);
-      alert(`${user.email} logged out`);
+      handleSuccessLogoutNotification(user.user_metadata.full_name);
     }
   };
 

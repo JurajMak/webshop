@@ -20,7 +20,7 @@ import React, { useContext, useState } from "react";
 import { AuthContext } from "../../../contexts/Index";
 import { getCategory } from "../../../api/categories";
 import { QueryClient, useMutation, useQuery } from "@tanstack/react-query";
-import { handleSuccessCreation } from "../../../components/notifications/successNotification";
+import { handleSuccessCreationNotification } from "../../../components/notifications/successNotification";
 import { createProduct } from "../../../api/products";
 
 const useStyles = createStyles((theme) => ({
@@ -103,7 +103,7 @@ const Create = () => {
   const createProductMutation = useMutation({
     mutationFn: (item) => createProduct(item),
     onSuccess: () => {
-      handleSuccessCreation(name);
+      handleSuccessCreationNotification(name);
       queryClient.invalidateQueries("products");
     },
   });

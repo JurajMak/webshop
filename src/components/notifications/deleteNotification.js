@@ -1,7 +1,7 @@
 import { showNotification, cleanNotifications } from "@mantine/notifications";
 import { IconCheck } from "@tabler/icons";
 
-export const handleDeleteNotification = () => {
+export const handleDeleteProductNotification = () => {
   showNotification({
     title: `Successfully deleted product!`,
     message: `Product successfully deleted from list`,

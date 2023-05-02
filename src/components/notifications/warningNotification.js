@@ -1,7 +1,7 @@
 import { showNotification, cleanNotifications } from "@mantine/notifications";
 import { IconX } from "@tabler/icons";
 
-export const handleQuantityNotification = () => {
+export const warningQuantityNotification = () => {
   showNotification({
     title: "Quantity exceeded",
     message:
@@ -20,7 +20,7 @@ export const handleQuantityNotification = () => {
   });
 };
 
-export const handleProductNotification = () => {
+export const warningProductNotification = () => {
   showNotification({
     title: "Warning can't perform action!",
     message: " This product is part of an order and cannot be deleted!",
@@ -38,10 +38,45 @@ export const handleProductNotification = () => {
   });
 };
 
-export const handleUserProductNotification = () => {
+export const warningUserProductNotification = () => {
   showNotification({
     title: "Warning can't perform action",
     message: "  Cannot delete product of other users!",
+    color: "red",
+    icon: <IconX />,
+    onClose: () => cleanNotifications(),
+    autoClose: 3000,
+    styles: (theme) => ({
+      title: { fontSize: 16 },
+      description: {
+        color: theme.colors.dark,
+        fontWeight: 500,
+      },
+    }),
+  });
+};
+
+export const warningUserLoginNotification = (item) => {
+  showNotification({
+    title: `${item}`,
+    message: "Incorrect email or password. Please try again.",
+    color: "red",
+    icon: <IconX />,
+    onClose: () => cleanNotifications(),
+    autoClose: 3000,
+    styles: (theme) => ({
+      title: { fontSize: 16 },
+      description: {
+        color: theme.colors.dark,
+        fontWeight: 500,
+      },
+    }),
+  });
+};
+export const warningUserSignUpNotification = (item) => {
+  showNotification({
+    title: `${item}`,
+    message: "Please fill out all required fields before submitting the form.",
     color: "red",
     icon: <IconX />,
     onClose: () => cleanNotifications(),
