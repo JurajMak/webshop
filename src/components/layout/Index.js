@@ -11,7 +11,7 @@ import {
   LoadingOverlay,
   Group,
 } from "@mantine/core";
-import ProductsCard from "../productCard/Index";
+import ProductsCard from "../cards/productCard/Index";
 import HeaderTabs from "../header/Index";
 import { ProductsWrapper } from "../../pages/home/Styles";
 import React, { useState, useEffect } from "react";
@@ -20,7 +20,6 @@ import { handleQuantityNotification } from "../notifications/warningNotification
 import { getProducts } from "../../api/products";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { handleInfiniteScroll } from "../../utils/infiniteScroll";
-import { useScrollLock } from "@mantine/hooks";
 
 export default function AppShellLayout() {
   const theme = useMantineTheme();

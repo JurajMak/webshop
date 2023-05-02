@@ -67,26 +67,23 @@ export default function Dashboard() {
     setSwapOrder(true);
   };
 
-  const handleShowAll = (e) => {
-    e.preventDefault();
-  };
-  const handleCategoryEnter = async (e) => {
-    if (e.key === "Enter") {
-      const { data: categories } = await supabase
-        .from("categories")
-        .select("id")
-        .ilike("name", `%${value}%`);
+  // const handleCategoryEnter = async (e) => {
+  //   if (e.key === "Enter") {
+  //     const { data: categories } = await supabase
+  //       .from("categories")
+  //       .select("id")
+  //       .ilike("name", `%${value}%`);
 
-      const categoryIds = categories.map((category) => category.id);
+  //     const categoryIds = categories.map((category) => category.id);
 
-      const { data: productData } = await supabase
-        .from("products")
-        .select("*")
-        .in("category_id", categoryIds);
+  //     const { data: productData } = await supabase
+  //       .from("products")
+  //       .select("*")
+  //       .in("category_id", categoryIds);
 
-      setSearch(productData);
-    }
-  };
+  //     setSearch(productData);
+  //   }
+  // };
 
   return (
     <AppShell
@@ -110,14 +107,7 @@ export default function Dashboard() {
             onChange={(e) => handleSearchText(e)}
             onKeyDown={(e) => handleSearchEnter(e)}
           />
-          <Button
-            variant="white"
-            radius="xl"
-            w={100}
-            ml="auto"
-            onClick={handleShowAll}>
-            Show All
-          </Button>
+
           {/* <Select
             searchable
             clearable

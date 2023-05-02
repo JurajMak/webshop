@@ -73,7 +73,7 @@ const Create = () => {
       description: "",
       price: 0,
       quantity: 0,
-      sale_price: "",
+      sale_price: 0,
       image: "",
     },
   });
@@ -130,7 +130,8 @@ const Create = () => {
   React.useEffect(() => {
     refetch();
   }, [value]);
-
+  console.log("sale", typeof sale_price, sale_price);
+  console.log("price", typeof price);
   return (
     <Container sizes="xl" className={classes.wrapper}>
       <Title order={1} className={classes.title} align="center" pt={50} mb={50}>
@@ -184,9 +185,9 @@ const Create = () => {
           checked={checked}
           onChange={(e) => {
             setChecked(e.target.checked);
-            if (!e.target.checked) {
-              form.setFieldValue("salePercentage", "");
-            }
+            // if (!e.target.checked) {
+            //   form.setFieldValue("salePercentage", "");
+            // }
           }}
           label="Set item on Sale"
         />
@@ -197,7 +198,7 @@ const Create = () => {
             onChange={(number) => {
               let calc = (price / 100) * number;
               let total = price - calc;
-
+              console.log("calc", total);
               form.setFieldValue("sale_price", total.toFixed(2));
               setPercent(number);
             }}

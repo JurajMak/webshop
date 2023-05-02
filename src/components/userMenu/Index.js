@@ -1,18 +1,10 @@
 import {
-  IconBriefcase,
   IconChevronDown,
   IconLogout,
   IconSettings,
   IconTrash,
 } from "@tabler/icons";
-import {
-  Group,
-  Avatar,
-  Text,
-  Menu,
-  UnstyledButton,
-  createStyles,
-} from "@mantine/core";
+import { Group, Avatar, Text, Menu, UnstyledButton } from "@mantine/core";
 import React, { useContext, useState } from "react";
 import { AuthContext } from "../../contexts/Index";
 

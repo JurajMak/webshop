@@ -30,7 +30,7 @@ export function OrderTable({ titles }) {
               <td>
                 <Group spacing="xs">
                   <Text fz="sm" fw={500}>
-                    {item.id}
+                    {item.order_number}
                   </Text>
                 </Group>
               </td>

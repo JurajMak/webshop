@@ -11,6 +11,7 @@ import {
   ScrollArea,
   Flex,
   Title,
+  Image,
 } from "@mantine/core";
 import { useViewportSize } from "@mantine/hooks";
 import { useNavigate } from "react-router-dom";
@@ -18,7 +19,7 @@ import React, { useContext, useState } from "react";
 import { AuthContext } from "../../contexts/Index";
 import { supabase } from "../../config/Supabase";
 import { IconShoppingCart } from "@tabler/icons";
-import { CartItem } from "../cartItem/Index";
+import { CartCard } from "../cards/cartCard/Index";
 import { handlePaymentNotification } from "../notifications/checkoutNotification";
 import UserMenu from "../userMenu/Index";
 
@@ -158,7 +159,7 @@ export function HeaderTabs({
             sx={{ height: "100%" }}
             spacing={0}
             className={classes.hiddenMobile}>
-            <Title>Web-shop</Title>
+            <Text>App logo/name</Text>
           </Group>
           <Drawer
             opened={opened}
@@ -169,7 +170,7 @@ export function HeaderTabs({
               <ScrollArea type="never" style={{ height: height * 0.7 }}>
                 {orders?.map((item) => {
                   return (
-                    <CartItem
+                    <CartCard
                       key={item.id}
                       cartData={item}
                       onRemove={onRemove}
