@@ -4,11 +4,16 @@ const getProducts = async (sortKey, searchValue, page) => {
   let query = supabase.from("products").select("*");
 
   if (sortKey === "lowest") {
+    // TODO fix rpc function to sort prices asc order
+    // query = query.rpc("get_prices_asc");
     query = query
       .order("sale_price", { ascending: true })
       .order("price", { ascending: true });
   }
+
   if (sortKey === "highest") {
+    // TODO fix rpc function to sort prices asc order
+    // query = query.rpc("get_prices_desc");
     query = query
       .order("sale_price", { ascending: false })
       .order("price", { ascending: false });
@@ -23,8 +28,8 @@ const getProducts = async (sortKey, searchValue, page) => {
     );
   }
 
-  const from = page === 1 ? 0 : 10 * (page - 1);
-  const to = page * 10 - 1;
+  const from = page === 1 ? 0 : 20 * (page - 1);
+  const to = page * 20 - 1;
 
   const { data, error } = await query.range(from, to);
 
@@ -93,6 +98,22 @@ const getProductById = async (id) => {
   return data;
 };
 
+const getProductByCategory = async (searchValue) => {
+  const { data: categories } = await supabase
+    .from("categories")
+    .select("id")
+    .ilike("name", `%${searchValue}%`);
+
+  const categoryIds = categories.map((category) => category.id);
+
+  const { data } = await supabase
+    .from("products")
+    .select("*")
+    .in("category_id", categoryIds);
+
+  return data;
+};
+
 export {
   getProducts,
   createProduct,
@@ -101,3 +122,21 @@ export {
   deleteProduct,
   getProductById,
 };
+
+// const handleCategoryEnter = async (e) => {
+//   if (e.key === "Enter") {
+//     const { data: categories } = await supabase
+//       .from("categories")
+//       .select("id")
+//       .ilike("name", `%${value}%`);
+
+//     const categoryIds = categories.map((category) => category.id);
+
+//     const { data: productData } = await supabase
+//       .from("products")
+//       .select("*")
+//       .in("category_id", categoryIds);
+
+//     setSearch(productData);
+//   }
+// };

@@ -32,6 +32,7 @@ const getCategory = async (category) => {
   if (category) {
     query = query.eq("name", category);
   }
+
   const { data, error } = await query;
 
   if (error) {
