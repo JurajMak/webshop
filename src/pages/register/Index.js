@@ -75,8 +75,9 @@ const RegisterForm = () => {
         },
       },
     });
-
-    navigate("/login");
+    if (data) {
+      navigate("/login");
+    }
   };
 
   const returnHome = async () => {

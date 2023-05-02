@@ -16,7 +16,7 @@ import HeaderTabs from "../header/Index";
 import { ProductsWrapper } from "../../pages/home/Styles";
 import React, { useState, useEffect } from "react";
 import SearchBar from "../search/Index";
-import { handleQuantityNotification } from "../notifications/warningNotification";
+import { warningQuantityNotification } from "../notifications/warningNotification";
 import { getProducts } from "../../api/products";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { handleInfiniteScroll } from "../../utils/infiniteScroll";
@@ -59,7 +59,7 @@ export default function AppShellLayout() {
           if (cart.id === item.id) {
             const updatedQuantity = cart.quantity + 1;
             if (updatedQuantity > item.quantity) {
-              handleQuantityNotification();
+              warningQuantityNotification();
 
               return cart;
             }
@@ -77,7 +77,7 @@ export default function AppShellLayout() {
     } else {
       const newItem = { ...item, quantity: 1 };
       if (newItem.quantity > item.quantity) {
-        handleQuantityNotification();
+        warningQuantityNotification();
 
         return;
       }
@@ -95,7 +95,7 @@ export default function AppShellLayout() {
     const cartItem = shoppingData[cartItemIndex];
 
     if (cartItem && cartItem.quantity >= dataItem.quantity) {
-      handleQuantityNotification();
+      warningQuantityNotification();
       return;
     }
 

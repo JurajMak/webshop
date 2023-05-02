@@ -22,7 +22,7 @@ import {
   getProductCategory,
   updateProductCategory,
 } from "../../../api/categories";
-import { handleSuccessUpdate } from "../../../components/notifications/successNotification";
+import { handleSuccessUpdateNotification } from "../../../components/notifications/successNotification";
 import { updateProduct, updateSale } from "../../../api/products";
 import { QueryClient, useMutation, useQuery } from "@tanstack/react-query";
 const useStyles = createStyles((theme) => ({
@@ -148,7 +148,7 @@ const Edit = () => {
     onSuccess: () => {
       setLoading(false);
       updateCategory();
-      handleSuccessUpdate(name);
+      handleSuccessUpdateNotification(name);
       queryClient.invalidateQueries("products", state.id);
     },
   });
