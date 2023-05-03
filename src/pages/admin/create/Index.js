@@ -131,7 +131,8 @@ const Create = () => {
     refetch();
   }, [value]);
   console.log("sale", typeof sale_price, sale_price);
-  console.log("price", typeof price);
+  console.log("price", typeof price, price);
+  console.log("percent", typeof percent, percent);
   return (
     <Container sizes="xl" className={classes.wrapper}>
       <Title order={1} className={classes.title} align="center" pt={50} mb={50}>
@@ -196,10 +197,10 @@ const Create = () => {
             mb={10}
             label={`Set sale %`}
             onChange={(number) => {
-              let calc = (price / 100) * number;
-              let total = price - calc;
+              let calc = ((price / 100) * number).toFixed(2);
+              let total = (price - calc).toFixed(2);
               console.log("calc", total);
-              form.setFieldValue("sale_price", total.toFixed(2));
+              form.setFieldValue("sale_price", total);
               setPercent(number);
             }}
             value={percent}

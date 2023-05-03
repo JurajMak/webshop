@@ -20,7 +20,6 @@ const AuthProvider = ({ children }) => {
     });
 
     if (error) {
-      // alert(error.message);
       warningUserLoginNotification(error.message);
       return;
     }

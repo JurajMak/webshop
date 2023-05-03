@@ -8,7 +8,7 @@ export const handleSuccessCreationNotification = (item) => {
     color: "teal",
     icon: <IconCheck />,
     onClose: () => cleanNotifications(),
-    autoClose: 3000,
+    autoClose: 2000,
     styles: (theme) => ({
       title: { fontSize: 16 },
       description: {
@@ -26,7 +26,7 @@ export const handleSuccessCategoryNotification = (item) => {
     color: "teal",
     icon: <IconCheck />,
     onClose: () => cleanNotifications(),
-    autoClose: 3000,
+    autoClose: 2000,
     styles: (theme) => ({
       title: { fontSize: 16 },
       description: {
@@ -44,7 +44,7 @@ export const handleSuccessUpdateNotification = (item) => {
     color: "teal",
     icon: <IconCheck />,
     onClose: () => cleanNotifications(),
-    autoClose: 3000,
+    autoClose: 2000,
     styles: (theme) => ({
       title: { fontSize: 16 },
       description: {
@@ -62,7 +62,7 @@ export const handleSuccessLogoutNotification = (item) => {
     color: "teal",
     icon: <IconCheck />,
     onClose: () => cleanNotifications(),
-    autoClose: 3000,
+    autoClose: 2000,
     styles: (theme) => ({
       title: { fontSize: 16 },
       description: {

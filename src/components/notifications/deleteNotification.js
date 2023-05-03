@@ -8,7 +8,7 @@ export const handleDeleteProductNotification = () => {
     color: "teal",
     icon: <IconCheck />,
     onClose: () => cleanNotifications(),
-    autoClose: 3000,
+    autoClose: 2000,
     styles: (theme) => ({
       title: { fontSize: 16 },
       description: {
