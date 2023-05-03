@@ -55,7 +55,7 @@ export function CartCard({ cartData, onQuantity, onDelete, onRemove }) {
             {/* <Group spacing="xs" noWrap>
               <Text size="xs"> Quanity: {quantity}</Text>
             </Group> */}
-            <Text size="xs" color="dark">
+            <Text size="xs" color="dark" lineClamp={5}>
               • {description}
             </Text>
 

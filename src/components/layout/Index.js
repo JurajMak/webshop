@@ -6,30 +6,48 @@ import {
   useMantineTheme,
   Select,
   Button,
+  Affix,
+  Transition,
   Loader,
   Flex,
   LoadingOverlay,
   Group,
+  ActionIcon,
+  Accordion,
 } from "@mantine/core";
+import { TestCard } from "../cards/testCard/Index";
 import ProductsCard from "../cards/productCard/Index";
 import HeaderTabs from "../header/Index";
+import { CategoryCard } from "../cards/categoryCard/Index";
 import { ProductsWrapper } from "../../pages/home/Styles";
 import React, { useState, useEffect } from "react";
 import SearchBar from "../search/Index";
 import { warningQuantityNotification } from "../notifications/warningNotification";
 import { getProducts } from "../../api/products";
-import { useInfiniteQuery } from "@tanstack/react-query";
+import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
 import { handleInfiniteScroll } from "../../utils/infiniteScroll";
+import { useWindowScroll, useViewportSize } from "@mantine/hooks";
+import { getCategory } from "../../api/categories";
+import { supabase } from "../../config/Supabase";
+import {
+  IconArrowUp,
+  IconAdjustmentsHorizontal,
+  IconChevronDown,
+} from "@tabler/icons";
 
 export default function AppShellLayout() {
   const theme = useMantineTheme();
   const [opened, setOpened] = useState(false);
   const [search, setSearch] = useState("");
-  const [selectValue, setSelectValue] = useState(null);
+  const [selectValue, setSelectValue] = useState("popular");
   const [searchWord, setSearchWord] = useState("");
   const [shoppingData, setShoppingData] = useState([]);
   const [value, setValue] = useState("");
-
+  const [scroll, scrollTo] = useWindowScroll();
+  const { height, width } = useViewportSize();
+  const [swap, setSwap] = useState(false);
+  const [categoryId, setCategoryId] = useState("");
+  // console.log("swap", swap);
   const {
     data,
     isLoading,
@@ -39,7 +57,8 @@ export default function AppShellLayout() {
     refetch,
   } = useInfiniteQuery(
     ["products"],
-    ({ pageParam = 1 }) => getProducts(selectValue, searchWord, pageParam),
+    ({ pageParam = 1 }) =>
+      getProducts(selectValue, searchWord, pageParam, categoryId),
     {
       getNextPageParam: (lastPage, pages) => {
         const nextPage = pages.length + 1;
@@ -47,6 +66,10 @@ export default function AppShellLayout() {
       },
     }
   );
+  const { data: category, isSuccess } = useQuery({
+    queryKey: ["categories"],
+    queryFn: () => getCategory(value),
+  });
 
   const handleAddCart = (e, item) => {
     const ifExists = shoppingData?.some((cart) => {
@@ -165,10 +188,30 @@ export default function AppShellLayout() {
       setSearchWord(search);
     }
   };
+
+  const handleSearchBtn = () => {
+    setSearchWord(search);
+  };
   const handleShowAll = () => {
     setSearchWord("");
     setValue("");
   };
+
+  const handleSwapProduct = () => {
+    setSwap(false);
+    setCategoryId("");
+  };
+  const handleSwapCategory = () => {
+    setSwap(true);
+  };
+
+  const handleCategoryEnter = async (id) => {
+    setCategoryId(id);
+    setSwap(false);
+    // setCategoryId("");
+  };
+
+  console.log("category", categoryId);
 
   useEffect(() => {
     const savedData = [];
@@ -191,7 +234,7 @@ export default function AppShellLayout() {
         handleInfiniteScroll(e, hasNextPage, fetchNextPage)
       );
     };
-  }, [selectValue, searchWord, fetchNextPage, hasNextPage]);
+  }, [selectValue, searchWord, categoryId, fetchNextPage, hasNextPage]);
 
   return (
     <AppShell
@@ -206,42 +249,40 @@ export default function AppShellLayout() {
       }}
       navbarOffsetBreakpoint="sm"
       asideOffsetBreakpoint="sm"
-      navbar={
-        <Navbar
-          p="md"
-          hiddenBreakpoint="sm"
-          hidden={!opened}
-          width={{ sm: 200, lg: 300 }}>
-          <Group>
-            <Group mx="auto">
-              <Text>Filter products</Text>
-              <SearchBar
-                mr="auto"
-                placeholder="Search products"
-                onChange={(e) => handleSearchText(e)}
-                onKeyDown={(e) => handleSearchEnter(e)}></SearchBar>
-            </Group>
-            <Group mx="auto">
-              <Text>Sort by</Text>
-              <Select
-                mr="auto"
-                onChange={(value) => {
-                  return setSelectValue(value);
-                }}
-                value={selectValue}
-                clearable
-                size="md"
-                placeholder="Sort by"
-                data={[
-                  { label: "Sort from highest price", value: "highest" },
-                  { label: "Sort from lowest price", value: "lowest" },
-                  { label: "Sort on sale", value: "sale" },
-                ]}
-              />
-            </Group>
-          </Group>
-        </Navbar>
-      }
+      // navbar={
+      //   <Navbar
+      //     p="md"
+      //     hiddenBreakpoint="sm"
+      //     hidden={!opened}
+      //     width={{ sm: 200, lg: 300 }}>
+      //     <Group>
+      //       <Accordion>
+      //         <Accordion.Item value="customization">
+      //           <Accordion.Control>Customization</Accordion.Control>
+      //           <Accordion.Panel>
+      //             Colors, fonts, shadows and many other parts are customizable
+      //             to fit your design needs
+      //           </Accordion.Panel>
+      //         </Accordion.Item>
+      //         <Accordion.Item value="flexibility">
+      //           <Accordion.Control>Flexibility</Accordion.Control>
+      //           <Accordion.Panel>
+      //             Configure components appearance and behavior with vast amount
+      //             of settings or overwrite any part of component styles
+      //           </Accordion.Panel>
+      //         </Accordion.Item>
+
+      //         <Accordion.Item value="focus-ring">
+      //           <Accordion.Control>No annoying focus ring</Accordion.Control>
+      //           <Accordion.Panel>
+      //             With new :focus-visible pseudo-class focus ring appears only
+      //             when user navigates with keyboard
+      //           </Accordion.Panel>
+      //         </Accordion.Item>
+      //       </Accordion>
+      //     </Group>
+      //   </Navbar>
+      // }
       footer={
         <Footer height={60} p="md">
           Application footer
@@ -254,63 +295,90 @@ export default function AppShellLayout() {
           onQuantity={handleAddQuantity}
           onRemove={handleRemoveQuantity}
           onClear={handleDeleteAllCart}
+          onText={handleSearchText}
+          onEnter={handleSearchEnter}
+          onBtn={handleSearchBtn}
+          onProduct={handleSwapProduct}
+          onCategory={handleSwapCategory}
         />
       }>
-      {/* <Group>
-        <Group mx="auto" style={{ flexDirection: "column" }}>
-          <Text>Filter products</Text>
-          <SearchBar
-            mr="auto"
-            placeholder="Search products"
-            onChange={(e) => handleSearchText(e)}
-            onKeyDown={(e) => handleSearchEnter(e)}></SearchBar>
-        </Group>
-        <Group mx="auto" style={{ flexDirection: "column" }}>
-          <Text>Sort by</Text>
-          <Select
-            ml="auto"
-            onChange={(value) => {
-              return setSelectValue(value);
-            }}
-            value={selectValue}
-            clearable
-            size="md"
-            placeholder="Sort by"
-            data={[
-              { label: "Sort from highest price", value: "highest" },
-              { label: "Sort from lowest price", value: "lowest" },
-              { label: "Sort on sale", value: "sale" },
-            ]}
-          />
-        </Group>
-      </Group> */}
+      <Group position="center" m={10} mt={30}>
+        <ActionIcon color={theme.colors.blue[6]} variant="transparent">
+          <IconAdjustmentsHorizontal size={25} />
+        </ActionIcon>
+        <Text color={theme.colors.blue[6]} fw={500} fz="xl">
+          Filter
+        </Text>
 
-      <Group position="center">
-        {isLoading ? (
-          <LoadingOverlay
-            visible={isLoading}
-            overlayBlur={6}
-            loaderProps={{ size: "xl" }}
-          />
-        ) : (
-          data?.pages?.map((group, i) => (
-            <React.Fragment key={i}>
-              {group?.map((item) => {
-                return (
-                  <ProductsWrapper key={item.id}>
-                    <ProductsCard
-                      data={item}
-                      onClick={(e) => handleAddCart(e, item)}
-                    />
-                  </ProductsWrapper>
-                );
-              })}
-            </React.Fragment>
-          ))
-        )}
+        <Select
+          styles={{
+            rightSection: { pointerEvents: "none" },
+          }}
+          onChange={(value) => {
+            return setSelectValue(value);
+          }}
+          value={selectValue}
+          clearable
+          size="xs"
+          data={[
+            { label: "Sort from highest price", value: "highest" },
+            { label: "Sort from lowest price", value: "lowest" },
+            { label: "Sort on sale", value: "sale" },
+            { label: "Popular", value: "popular" },
+          ]}
+          rightSection={<IconChevronDown size="1rem" />}
+          rightSectionWidth={30}
+        />
       </Group>
+      {!swap ? (
+        <Group position="center">
+          {isLoading ? (
+            <LoadingOverlay
+              visible={isLoading}
+              overlayBlur={6}
+              loaderProps={{ size: "xl" }}
+            />
+          ) : (
+            data?.pages?.map((group, i) => (
+              <React.Fragment key={i}>
+                {group?.map((item) => {
+                  return (
+                    <Group key={item.id} m={10}>
+                      <TestCard
+                        data={item}
+                        onClick={(e) => handleAddCart(e, item)}
+                      />
+                    </Group>
+                  );
+                })}
+              </React.Fragment>
+            ))
+          )}
+        </Group>
+      ) : (
+        <Group position="center">
+          {!isSuccess ? (
+            <LoadingOverlay
+              visible={!isSuccess}
+              overlayBlur={6}
+              loaderProps={{ size: "xl" }}
+            />
+          ) : (
+            category?.map((item) => {
+              return (
+                <Group key={item.id} m={10}>
+                  <CategoryCard
+                    data={item}
+                    onClick={(e) => handleCategoryEnter(item.id)}
+                  />
+                </Group>
+              );
+            })
+          )}
+        </Group>
+      )}
 
-      {isFetchingNextPage && hasNextPage && (
+      {!swap && isFetchingNextPage && hasNextPage && (
         <Flex direction="column">
           <Text mx="auto" fz="lg" fw="bold">
             Loading more products
@@ -318,13 +386,26 @@ export default function AppShellLayout() {
           <Loader mx="auto" size={50}></Loader>
         </Flex>
       )}
-      {!hasNextPage && (
+      {/* {!swap && !hasNextPage && (
         <Flex direction="column">
           <Text mx="auto" fz="lg" fw="bold">
             No more products to load
           </Text>
         </Flex>
-      )}
+      )} */}
+      <Affix position={{ bottom: height * 0.05, right: width * 0.01 }}>
+        <Transition transition="slide-up" mounted={scroll.y > 0}>
+          {(transitionStyles) => (
+            <Button
+              color="dark"
+              style={transitionStyles}
+              onClick={() => scrollTo({ y: 0 })}>
+              <IconArrowUp size={20} style={{ marginRight: 5 }} />
+              {width > 500 ? "To top" : ""}
+            </Button>
+          )}
+        </Transition>
+      </Affix>
     </AppShell>
   );
 }

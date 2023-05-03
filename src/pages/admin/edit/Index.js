@@ -250,15 +250,15 @@ const Edit = () => {
               let total;
 
               if (price === null) {
-                let calc = (state.price / 100) * number;
-                total = state.price - calc;
+                let calc = ((state.price / 100) * number).toFixed(2);
+                total = (state.price - calc).toFixed(2);
               }
               if (price !== null) {
-                let calc = (price / 100) * number;
-                total = price - calc;
+                let calc = ((price / 100) * number).toFixed(2);
+                total = (price - calc).toFixed(2);
               }
 
-              form.setFieldValue("sale_price", total.toFixed(2));
+              form.setFieldValue("sale_price", total);
               setPercent(number);
             }}
             value={percent}

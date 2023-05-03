@@ -9,7 +9,7 @@ export const warningQuantityNotification = () => {
     color: "red",
     icon: <IconX />,
     onClose: () => cleanNotifications(),
-    autoClose: 3000,
+    autoClose: 2000,
     styles: (theme) => ({
       title: { fontSize: 16 },
       description: {
@@ -27,7 +27,7 @@ export const warningProductNotification = () => {
     color: "red",
     icon: <IconX />,
     onClose: () => cleanNotifications(),
-    autoClose: 3000,
+    autoClose: 2000,
     styles: (theme) => ({
       title: { fontSize: 16 },
       description: {
@@ -45,7 +45,7 @@ export const warningUserProductNotification = () => {
     color: "red",
     icon: <IconX />,
     onClose: () => cleanNotifications(),
-    autoClose: 3000,
+    autoClose: 2000,
     styles: (theme) => ({
       title: { fontSize: 16 },
       description: {
@@ -63,7 +63,7 @@ export const warningUserLoginNotification = (item) => {
     color: "red",
     icon: <IconX />,
     onClose: () => cleanNotifications(),
-    autoClose: 3000,
+    autoClose: 2000,
     styles: (theme) => ({
       title: { fontSize: 16 },
       description: {
@@ -80,7 +80,7 @@ export const warningUserSignUpNotification = (item) => {
     color: "red",
     icon: <IconX />,
     onClose: () => cleanNotifications(),
-    autoClose: 3000,
+    autoClose: 2000,
     styles: (theme) => ({
       title: { fontSize: 16 },
       description: {

@@ -14,6 +14,7 @@ import {
   Group,
   Flex,
   Title,
+  Tabs,
 } from "@mantine/core";
 import { AuthContext } from "../../../contexts/Index";
 import { useNavigate } from "react-router-dom";
@@ -102,56 +103,24 @@ export default function Dashboard() {
           hiddenBreakpoint="sm"
           hidden={!opened}
           width={{ sm: 200, lg: 300 }}>
-          <SearchBar
-            placeholder="Search"
-            onChange={(e) => handleSearchText(e)}
-            onKeyDown={(e) => handleSearchEnter(e)}
-          />
-
-          {/* <Select
-            searchable
-            clearable
-            placeholder="Categories"
-            value={value}
-            data={mappedCategories}
-            onChange={setValue}
-            onKeyDown={(e) => handleCategoryEnter(e)}
-          /> */}
-          {/* <Button
-            variant="white"
-            radius="xl"
-            w={100}
-            
-            ml="auto"
-            onClick={handleSearchButtonClick}>
-            Search
-          </Button> */}
-          <Button
-            mt={10}
-            ml="auto"
-            mr="auto"
-            w={150}
-            variant="white"
-            radius="md"
-            size="xl"
-            onClick={handleSwapProduct}>
-            Products
-          </Button>
-          <Button
-            mb={10}
-            variant="white"
-            ml="auto"
-            mr="auto"
-            w={150}
-            radius="md"
-            size="xl"
-            onClick={handleSwapOrder}>
-            Orders
-          </Button>
-
-          <Button mt="auto" mb={20} onClick={signOut}>
-            Logout
-          </Button>
+          <Group position="left">
+            <Tabs defaultValue="products" orientation="vertical">
+              <Tabs.List>
+                <Tabs.Tab value="products" onClick={handleSwapProduct}>
+                  Products
+                </Tabs.Tab>
+                <Tabs.Tab value="orders" onClick={handleSwapOrder}>
+                  Orders
+                </Tabs.Tab>
+              </Tabs.List>
+              <Tabs.Panel value="products" pl="xs">
+                Products table
+              </Tabs.Panel>
+              <Tabs.Panel value="orders" pl="xs">
+                Orders table
+              </Tabs.Panel>
+            </Tabs>
+          </Group>
         </Navbar>
       }
       footer={
@@ -160,17 +129,28 @@ export default function Dashboard() {
         </Footer>
       }
       header={
-        <Header height={{ base: 50, md: 70 }} p="md">
-          <Flex align="center" justify="space-between">
-            <Title>Dashboard</Title>
+        <Header height={95} p="md">
+          <Group position="apart">
+            <Title>Admin panel</Title>
             <Group>
-              <Button onClick={navigateToCategory}>Add Category</Button>
-              <Button onClick={navigateToCreate}>Add product</Button>
+              <SearchBar
+                // miw={width * 0.3}
+                mx="auto"
+                size="xs"
+                radius="xl"
+                pt={10}
+                placeholder="Search"
+                onChange={(e) => handleSearchText(e)}
+                onKeyDown={(e) => handleSearchEnter(e)}
+              />
             </Group>
             <Group mr={70}>
-              <UserMenu />
+              <UserMenu
+                onCategory={navigateToCategory}
+                onProduct={navigateToCreate}
+              />
             </Group>
-          </Flex>
+          </Group>
         </Header>
       }>
       {swapProduct ? (

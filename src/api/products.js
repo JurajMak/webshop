@@ -1,22 +1,18 @@
 import { supabase } from "../config/Supabase";
 
-const getProducts = async (sortKey, searchValue, page) => {
+const getProducts = async (sortKey, searchValue, page, categoryId) => {
   let query = supabase.from("products").select("*");
 
   if (sortKey === "lowest") {
     // TODO fix rpc function to sort prices asc order
     // query = query.rpc("get_prices_asc");
-    query = query
-      .order("sale_price", { ascending: true })
-      .order("price", { ascending: true });
+    query = query.order("price", { ascending: true });
   }
 
   if (sortKey === "highest") {
     // TODO fix rpc function to sort prices asc order
     // query = query.rpc("get_prices_desc");
-    query = query
-      .order("sale_price", { ascending: false })
-      .order("price", { ascending: false });
+    query = query.order("price", { ascending: false });
   }
   if (sortKey === "sale") {
     query = query.eq("is_sale", true);
@@ -26,6 +22,9 @@ const getProducts = async (sortKey, searchValue, page) => {
     query = query.or(
       `name.ilike.%${searchValue}%,description.ilike.%${searchValue}%`
     );
+  }
+  if (categoryId) {
+    query = query.eq("category_id", categoryId);
   }
 
   const from = page === 1 ? 0 : 20 * (page - 1);

@@ -12,6 +12,9 @@ import {
   Flex,
   Title,
   Image,
+  useMantineTheme,
+  ActionIcon,
+  Tabs,
 } from "@mantine/core";
 import { useViewportSize } from "@mantine/hooks";
 import { useNavigate } from "react-router-dom";
@@ -22,6 +25,7 @@ import { IconShoppingCart } from "@tabler/icons";
 import { CartCard } from "../cards/cartCard/Index";
 import { handlePaymentNotification } from "../notifications/checkoutNotification";
 import UserMenu from "../userMenu/Index";
+import SearchBar from "../search/Index";
 
 const useStyles = createStyles((theme) => ({
   link: {
@@ -44,7 +48,6 @@ const useStyles = createStyles((theme) => ({
   hiddenMobile: {
     [theme.fn.smallerThan("sm")]: {
       display: "none",
-      // paddingBottom: 30,
     },
   },
   mobile: {
@@ -60,8 +63,14 @@ export function HeaderTabs({
   onDelete,
   onQuantity,
   onClear,
+  onText,
+  onEnter,
+  onBtn,
+  onProduct,
+  onCategory,
 }) {
   const { classes } = useStyles();
+  const theme = useMantineTheme();
   const [opened, setOpened] = useState(false);
   const navigate = useNavigate();
   const { user, signOut } = useContext(AuthContext);
@@ -149,18 +158,30 @@ export function HeaderTabs({
     onClear();
   };
 
-  console.log(height);
-
   return (
     <Box>
-      <Header height={60} px="md">
-        <Group position="apart" sx={{ height: "100%" }}>
+      <Header height={width < 500 ? 100 : 100} px="md">
+        <Group position="apart" sx={{ height: "100%", gap: 0 }}>
           <Group
             sx={{ height: "100%" }}
             spacing={0}
-            className={classes.hiddenMobile}>
-            <Text>App logo/name</Text>
+            className={classes.hiddenMobile}
+            position="apart">
+            <Text mr={width * 0.25} fw={500}>
+              App logo/name
+            </Text>
+            <SearchBar
+              placeholder="Search products..."
+              miw={width * 0.3}
+              size="xs"
+              radius="md"
+              p={10}
+              onChange={onText}
+              onKeyPress={onEnter}
+              onClick={onBtn}
+            />
           </Group>
+
           <Drawer
             opened={opened}
             onClose={() => setOpened(false)}
@@ -181,9 +202,7 @@ export function HeaderTabs({
                 })}
               </ScrollArea>
 
-              {/* <Grid.Col> */}
               <Divider size="md" mb={30} />
-              {/* </Grid.Col> */}
 
               <Flex mx="auto" direction="column" gap={20} align="center">
                 <Group>
@@ -213,59 +232,81 @@ export function HeaderTabs({
             {/* </Grid> */}
           </Drawer>
           {user?.user_metadata.role === "user" ? (
-            <Group>
-              <UserMenu />
-              {orders.length < 1 ? (
-                ""
-              ) : (
+            <Group
+              position="apart"
+              spacing="xl"
+              miw={width < 500 && width * 0.9}>
+              <UserMenu orders={orders} onDrawer={() => setOpened(true)} />
+
+              {width < 500 && <Text fw={500}>App logo/name </Text>}
+
+              {orders.length > 0 && (
                 <Indicator
-                  color="gold"
+                  mx={10}
+                  color={theme.colors.blue[6]}
                   position="bottom-start"
                   inline
                   label={orders.length}
-                  size={30}
-                  styles={{
-                    common: {
-                      color: "black",
-                    },
-                  }}>
-                  <Button
-                    onClick={() => setOpened(true)}
-                    className={classes.mobile}
-                    mr={30}>
-                    <IconShoppingCart size={25} />
-                  </Button>
+                  size={20}>
+                  <ActionIcon
+                    variant="transparent"
+                    color="dark"
+                    onClick={() => setOpened(true)}>
+                    <IconShoppingCart size={25} stroke={1} />
+                  </ActionIcon>
                 </Indicator>
               )}
             </Group>
           ) : (
-            <Group>
-              {orders.length < 1 ? (
-                ""
-              ) : (
+            <Group position="apart">
+              {orders.length > 0 && (
                 <Indicator
-                  color="gold"
+                  color={theme.colors.blue[6]}
                   position="bottom-start"
                   inline
                   label={orders.length}
-                  size={30}
-                  styles={{
-                    common: {
-                      color: "black",
-                    },
-                  }}>
-                  <Button onClick={() => setOpened(true)}>
-                    <IconShoppingCart size={25} />
-                  </Button>
+                  size={20}>
+                  <ActionIcon
+                    variant="transparent"
+                    color="dark"
+                    onClick={() => setOpened(true)}>
+                    <IconShoppingCart size={25} stroke={1} />
+                  </ActionIcon>
                 </Indicator>
               )}
-
-              <Button variant="default" onClick={navigateLogin}>
+              <Button variant="white" onClick={navigateLogin}>
                 Log in
               </Button>
-              <Button onClick={navigateRegister}>Sign up</Button>
             </Group>
           )}
+
+          {width < 500 && (
+            <SearchBar
+              miw={width * 0.9}
+              placeholder="Search products..."
+              mx="auto"
+              size="xs"
+              radius="xl"
+              // mb={10}
+              onChange={onText}
+              onKeyPress={onEnter}
+              onClick={onBtn}
+            />
+          )}
+        </Group>
+        <Group position="center" bg="white">
+          <Tabs defaultValue="products" inverted>
+            <Tabs.List>
+              <Tabs.Tab value="products" onClick={onProduct}>
+                Products
+              </Tabs.Tab>
+              <Tabs.Tab value="category" onClick={onCategory}>
+                Categories
+              </Tabs.Tab>
+              <Tabs.Tab value="account">Account</Tabs.Tab>
+              <Tabs.Tab value="something">Something</Tabs.Tab>
+            </Tabs.List>
+          </Tabs>
         </Group>
       </Header>
     </Box>
