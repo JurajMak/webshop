@@ -12,12 +12,9 @@ import {
   Flex,
   LoadingOverlay,
   Group,
-  ActionIcon,
-  Accordion,
   UnstyledButton,
 } from "@mantine/core";
-import { TestCard } from "../cards/testCard/Index";
-import ProductsCard from "../cards/productCard/Index";
+import { ProductCard } from "../cards/productCard/Index";
 import HeaderTabs from "../header/Index";
 import { CategoryCard } from "../cards/categoryCard/Index";
 import React, { useState, useEffect } from "react";
@@ -192,10 +189,10 @@ export default function AppShellLayout() {
   const handleSearchBtn = () => {
     setSearchWord(search);
   };
-  const handleShowAll = () => {
-    setSearchWord("");
-    setValue("");
-  };
+  // const handleShowAll = () => {
+  //   setSearchWord("");
+  //   setValue("");
+  // };
 
   const handleSwapProduct = () => {
     setSwap(false);
@@ -246,43 +243,6 @@ export default function AppShellLayout() {
       }}
       navbarOffsetBreakpoint="sm"
       asideOffsetBreakpoint="sm"
-      // navbar={
-      //   <Navbar
-      //     p="md"
-      //     hiddenBreakpoint="sm"
-      //     hidden={!opened}
-      //     width={{ sm: 200, lg: 300 }}>
-      //     <Group>
-      //       <Accordion>
-      //         <Accordion.Item value="customization">
-      //           <Accordion.Control>Customization</Accordion.Control>
-      //           <Accordion.Panel>
-      //             Colors, fonts, shadows and many other parts are customizable
-      //             to fit your design needs
-      //           </Accordion.Panel>
-      //         </Accordion.Item>
-      //         <Accordion.Item value="flexibility">
-      //           <Accordion.Control>Flexibility</Accordion.Control>
-      //           <Accordion.Panel>
-      //             Configure components appearance and behavior with vast amount
-      //             of settings or overwrite any part of component styles
-      //           </Accordion.Panel>
-      //         </Accordion.Item>
-
-      //         <Accordion.Item value="focus-ring">
-      //           <Accordion.Control>No annoying focus ring</Accordion.Control>
-      //           <Accordion.Panel>
-      //             With new :focus-visible pseudo-class focus ring appears only
-      //             when user navigates with keyboard
-      //           </Accordion.Panel>
-      //         </Accordion.Item>
-      //       </Accordion>
-      //     </Group>
-      //   </Navbar>
-      // }
-      // navbar={
-      //   <FilterDrawer opened={opened} onClose={() => setOpened(!opened)} />
-      // }
       footer={
         <Footer height={60} p="md">
           Application footer
@@ -348,7 +308,7 @@ export default function AppShellLayout() {
                 {group?.map((item) => {
                   return (
                     <Group key={item.id} m={10}>
-                      <TestCard
+                      <ProductCard
                         data={item}
                         onClick={(e) => handleAddCart(e, item)}
                       />
