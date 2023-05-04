@@ -9,7 +9,7 @@ import {
   Text,
 } from "@mantine/core";
 import { CartCard } from "../cards/cartCard/Index";
-import { sumPrice } from "../../utils/sumCalc";
+import { sumTotal } from "../../utils/sumTotal";
 import { useNavigate } from "react-router-dom";
 import { useContext } from "react";
 import { AuthContext } from "../../contexts/Index";
@@ -39,8 +39,7 @@ export default function CartDrawer({
       onClose={() => setOpened(false)}
       padding="xs"
       size="xl"
-      transition="rotate-left"
-      transitionDuration={250}
+      transitionDuration={550}
       transitionTimingFunction="ease"
       overlayColor={
         theme.colorScheme === "dark"
@@ -84,7 +83,7 @@ export default function CartDrawer({
               Total :
             </Text>
             <Text fz="lg" fw={500}>
-              $ {sumPrice(orders)}
+              $ {sumTotal(orders)}
             </Text>
           </Group>
 

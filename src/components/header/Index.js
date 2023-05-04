@@ -26,38 +26,9 @@ import { CartCard } from "../cards/cartCard/Index";
 import { handlePaymentNotification } from "../notifications/checkoutNotification";
 import UserMenu from "../userMenu/Index";
 import SearchBar from "../search/Index";
-import { sumPrice } from "../../utils/sumCalc";
+import { sumTotal } from "../../utils/sumTotal";
 import CartDrawer from "../cartDrawer/Index";
-
-const useStyles = createStyles((theme) => ({
-  link: {
-    display: "flex",
-    alignItems: "center",
-    height: "100%",
-    paddingLeft: theme.spacing.md,
-    paddingRight: theme.spacing.md,
-    textDecoration: "none",
-    color: theme.colorScheme === "dark" ? theme.white : theme.black,
-    fontWeight: 500,
-    fontSize: theme.fontSizes.sm,
-    [theme.fn.smallerThan("sm")]: {
-      height: 42,
-      display: "flex",
-      alignItems: "center",
-      width: "100%",
-    },
-  },
-  hiddenMobile: {
-    [theme.fn.smallerThan("sm")]: {
-      display: "none",
-    },
-  },
-  mobile: {
-    [theme.fn.smallerThan("sm")]: {
-      position: "right",
-    },
-  },
-}));
+import { useStyles } from "./Styles";
 
 export function HeaderTabs({
   orders,
@@ -82,20 +53,8 @@ export function HeaderTabs({
   const navigateLogin = async () => {
     navigate("/login");
   };
-  const navigateRegister = async () => {
-    navigate("/register");
-  };
 
-  // const sumPrice = (item) => {
-  //   return item
-  //     .reduce((acc, cart) => {
-  //       const total = cart.is_sale ? cart.sale_price : cart.price;
-  //       return cart.quantity * total + acc;
-  //     }, 0)
-  //     .toFixed(2);
-  // };
-
-  const totalString = sumPrice(orders);
+  const totalString = sumTotal(orders);
   const total = Number(totalString).toFixed();
 
   const handleCheckout = async () => {
