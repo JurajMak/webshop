@@ -1,4 +1,4 @@
-import { IconEye, IconMessageCircle } from "@tabler/icons";
+import { IconMessageCircle, IconFileDescription } from "@tabler/icons";
 import {
   Card,
   Text,
@@ -20,15 +20,15 @@ const useStyles = createStyles((theme) => ({
         ? theme.colors.dark[6]
         : theme.colors.gray[0],
 
-    // [`&:hover`]: {
-    //   transform: "scale(1.03)",
-    // },
+    [`&:hover`]: {
+      transform: "scale(1.03)",
+      transition: "transform 500ms ease",
+    },
   },
 
   image: {
     ...theme.fn.cover(),
     backgroundSize: "cover",
-    transition: "transform 500ms ease",
   },
 
   overlay: {
@@ -177,7 +177,7 @@ export function TestCard({ data, onClick }) {
                 <Text size="sm" className={classes.bodyText} lineClamp={1}>
                   {description}
                 </Text>
-                <IconMessageCircle
+                <IconFileDescription
                   size="1rem"
                   stroke={1.5}
                   color={theme.colors.dark[2]}

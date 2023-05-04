@@ -223,7 +223,7 @@ export function HeaderTabs({
                     $ Checkout
                   </Button>
                 ) : (
-                  <Button miw={250} onClick={navigateLogin}>
+                  <Button color="dark" miw={250} onClick={navigateLogin}>
                     Log in to shop
                   </Button>
                 )}
@@ -274,7 +274,7 @@ export function HeaderTabs({
                   </ActionIcon>
                 </Indicator>
               )}
-              <Button variant="white" onClick={navigateLogin}>
+              <Button variant="white" color="dark" onClick={navigateLogin}>
                 Log in
               </Button>
             </Group>

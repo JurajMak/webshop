@@ -21,6 +21,7 @@ const useStyles = createStyles((theme) => ({
 
     [`&:hover`]: {
       transform: "scale(1.03)",
+      transition: "transform 500ms ease",
     },
   },
 

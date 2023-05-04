@@ -32,8 +32,7 @@ export function ProductsTable({ titles, search }) {
   const navigate = useNavigate();
   const { user } = useContext(AuthContext);
   const queryClient = new QueryClient();
-  // console.log("search", search);
-  console.log(user);
+
   const toEdit = async (item) => {
     navigate(`/admin/products/${item.id}`, { state: item });
   };
@@ -122,7 +121,7 @@ export function ProductsTable({ titles, search }) {
                       </Text>
                     </td>
                     <td>
-                      <Text fz="sm" c="blue" fw={500}>
+                      <Text fz="sm" c="dimmed" fw={500}>
                         $ {item.price}
                       </Text>
                     </td>
@@ -132,7 +131,7 @@ export function ProductsTable({ titles, search }) {
                       </Text>
                     </td>
                     <td>
-                      <Text fz="sm" c="blue" fw={500}>
+                      <Text fz="sm" c="red" fw={500}>
                         $ {item.sale_price}
                       </Text>
                     </td>
