@@ -13,7 +13,9 @@ import home from "../../../assets/login.jpg";
 const useStyles = createStyles((theme) => ({
   card: {
     backgroundColor:
-      theme.colorScheme === "dark" ? theme.colors.dark[7] : theme.white,
+      theme.colorScheme === "dark"
+        ? theme.colors.dark[7]
+        : theme.colors.gray[0],
   },
 
   title: {
@@ -46,7 +48,7 @@ export function CartCard({ cartData, onQuantity, onDelete, onRemove }) {
               {name}
             </Text>
             {is_sale && (
-              <Badge variant="outline" size="lg" mx="auto">
+              <Badge color="red" variant="filled" size="lg" mx="auto">
                 {Math.floor(((price - sale_price) / price) * 100)}% off
               </Badge>
             )}
@@ -55,9 +57,9 @@ export function CartCard({ cartData, onQuantity, onDelete, onRemove }) {
             {/* <Group spacing="xs" noWrap>
               <Text size="xs"> Quanity: {quantity}</Text>
             </Group> */}
-            <Text size="xs" color="dark" lineClamp={5}>
+            {/* <Text size="xs" color="dark" lineClamp={5}>
               • {description}
-            </Text>
+            </Text> */}
 
             <Group ml="auto">
               <div>

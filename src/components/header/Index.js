@@ -26,6 +26,8 @@ import { CartCard } from "../cards/cartCard/Index";
 import { handlePaymentNotification } from "../notifications/checkoutNotification";
 import UserMenu from "../userMenu/Index";
 import SearchBar from "../search/Index";
+import { sumPrice } from "../../utils/sumCalc";
+import CartDrawer from "../cartDrawer/Index";
 
 const useStyles = createStyles((theme) => ({
   link: {
@@ -84,14 +86,14 @@ export function HeaderTabs({
     navigate("/register");
   };
 
-  const sumPrice = (item) => {
-    return item
-      .reduce((acc, cart) => {
-        const total = cart.is_sale ? cart.sale_price : cart.price;
-        return cart.quantity * total + acc;
-      }, 0)
-      .toFixed(2);
-  };
+  // const sumPrice = (item) => {
+  //   return item
+  //     .reduce((acc, cart) => {
+  //       const total = cart.is_sale ? cart.sale_price : cart.price;
+  //       return cart.quantity * total + acc;
+  //     }, 0)
+  //     .toFixed(2);
+  // };
 
   const totalString = sumPrice(orders);
   const total = Number(totalString).toFixed();
@@ -182,7 +184,7 @@ export function HeaderTabs({
             />
           </Group>
 
-          <Drawer
+          {/* <Drawer
             opened={opened}
             onClose={() => setOpened(false)}
             padding="xs"
@@ -198,6 +200,7 @@ export function HeaderTabs({
             overlayOpacity={0.55}
             overlayBlur={3}
             sx={{
+              // [".mantine-Drawer-drawer"]: { background: theme.colors.dark[0] },
               [".mantine-Drawer-closeButton"]: {
                 width: "30px",
                 height: "30px",
@@ -237,6 +240,7 @@ export function HeaderTabs({
 
                 {user?.user_metadata.role === "user" ? (
                   <Button
+                    color="dark"
                     miw={250}
                     disabled={orders.length <= 0 ? true : false}
                     onClick={handleCheckout}
@@ -250,7 +254,18 @@ export function HeaderTabs({
                 )}
               </Flex>
             </Flex>
-          </Drawer>
+          </Drawer> */}
+
+          <CartDrawer
+            handleCheckout={handleCheckout}
+            loading={loading}
+            opened={opened}
+            setOpened={setOpened}
+            orders={orders}
+            onRemove={onRemove}
+            onQuantity={onQuantity}
+            onDelete={onDelete}
+          />
           {user?.user_metadata.role === "user" ? (
             <Group
               position="apart"
