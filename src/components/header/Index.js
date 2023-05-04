@@ -186,7 +186,28 @@ export function HeaderTabs({
             opened={opened}
             onClose={() => setOpened(false)}
             padding="xs"
-            size="xl">
+            size="xl"
+            transition="rotate-left"
+            transitionDuration={250}
+            transitionTimingFunction="ease"
+            overlayColor={
+              theme.colorScheme === "dark"
+                ? theme.colors.dark[9]
+                : theme.colors.gray[7]
+            }
+            overlayOpacity={0.55}
+            overlayBlur={3}
+            sx={{
+              [".mantine-Drawer-closeButton"]: {
+                width: "30px",
+                height: "30px",
+              },
+              ["& .mantine-Drawer-closeButton svg"]: {
+                color: "black",
+                width: "30px",
+                height: "30px",
+              },
+            }}>
             <Flex direction="column">
               <ScrollArea type="never" style={{ height: height * 0.7 }}>
                 {orders?.map((item) => {
@@ -229,7 +250,6 @@ export function HeaderTabs({
                 )}
               </Flex>
             </Flex>
-            {/* </Grid> */}
           </Drawer>
           {user?.user_metadata.role === "user" ? (
             <Group
@@ -294,8 +314,8 @@ export function HeaderTabs({
             />
           )}
         </Group>
-        <Group position="center" bg="white">
-          <Tabs defaultValue="products" inverted>
+        <Group position="center">
+          <Tabs defaultValue="products">
             <Tabs.List>
               <Tabs.Tab value="products" onClick={onProduct}>
                 Products
@@ -303,8 +323,6 @@ export function HeaderTabs({
               <Tabs.Tab value="category" onClick={onCategory}>
                 Categories
               </Tabs.Tab>
-              <Tabs.Tab value="account">Account</Tabs.Tab>
-              <Tabs.Tab value="something">Something</Tabs.Tab>
             </Tabs.List>
           </Tabs>
         </Group>
