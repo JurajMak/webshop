@@ -160,7 +160,7 @@ export function ProductsTable({ titles, search }) {
           <Text mx="auto" fz="lg" fw="bold">
             Loading more products
           </Text>
-          <Loader mx="auto" size={50}></Loader>
+          <Loader mx="auto" color="dark" size={50}></Loader>
         </Flex>
       )}
       {!hasNextPage && (

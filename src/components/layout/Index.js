@@ -14,26 +14,26 @@ import {
   Group,
   ActionIcon,
   Accordion,
+  UnstyledButton,
 } from "@mantine/core";
 import { TestCard } from "../cards/testCard/Index";
 import ProductsCard from "../cards/productCard/Index";
 import HeaderTabs from "../header/Index";
 import { CategoryCard } from "../cards/categoryCard/Index";
-import { ProductsWrapper } from "../../pages/home/Styles";
 import React, { useState, useEffect } from "react";
-import SearchBar from "../search/Index";
 import { warningQuantityNotification } from "../notifications/warningNotification";
 import { getProducts } from "../../api/products";
 import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
 import { handleInfiniteScroll } from "../../utils/infiniteScroll";
 import { useWindowScroll, useViewportSize } from "@mantine/hooks";
 import { getCategory } from "../../api/categories";
-import { supabase } from "../../config/Supabase";
+
 import {
   IconArrowUp,
   IconAdjustmentsHorizontal,
   IconChevronDown,
 } from "@tabler/icons";
+import { FilterDrawer } from "../filterDrawer/Index";
 
 export default function AppShellLayout() {
   const theme = useMantineTheme();
@@ -47,7 +47,7 @@ export default function AppShellLayout() {
   const { height, width } = useViewportSize();
   const [swap, setSwap] = useState(false);
   const [categoryId, setCategoryId] = useState("");
-  // console.log("swap", swap);
+
   const {
     data,
     isLoading,
@@ -66,7 +66,7 @@ export default function AppShellLayout() {
       },
     }
   );
-  const { data: category, isSuccess } = useQuery({
+  const { data: category, isFetching } = useQuery({
     queryKey: ["categories"],
     queryFn: () => getCategory(value),
   });
@@ -205,13 +205,10 @@ export default function AppShellLayout() {
     setSwap(true);
   };
 
-  const handleCategoryEnter = async (id) => {
-    setCategoryId(id);
+  const handleCategoryClick = async (id) => {
     setSwap(false);
-    // setCategoryId("");
+    setCategoryId(id);
   };
-
-  console.log("category", categoryId);
 
   useEffect(() => {
     const savedData = [];
@@ -283,6 +280,9 @@ export default function AppShellLayout() {
       //     </Group>
       //   </Navbar>
       // }
+      // navbar={
+      //   <FilterDrawer opened={opened} onClose={() => setOpened(!opened)} />
+      // }
       footer={
         <Footer height={60} p="md">
           Application footer
@@ -303,12 +303,14 @@ export default function AppShellLayout() {
         />
       }>
       <Group position="center" m={10} mt={30}>
-        <ActionIcon color={theme.colors.blue[6]} variant="transparent">
-          <IconAdjustmentsHorizontal size={25} />
-        </ActionIcon>
-        <Text color={theme.colors.blue[6]} fw={500} fz="xl">
-          Filter
-        </Text>
+        <UnstyledButton onClick={() => setOpened(!opened)}>
+          <Group>
+            <IconAdjustmentsHorizontal size={25} color={theme.colors.blue[6]} />
+            <Text color={theme.colors.blue[6]} fw={500} fz="xl">
+              {!opened ? "Show Filter" : "Hide Filter"}
+            </Text>
+          </Group>
+        </UnstyledButton>
 
         <Select
           styles={{
@@ -319,6 +321,7 @@ export default function AppShellLayout() {
           }}
           value={selectValue}
           clearable
+          // mx="auto"
           size="xs"
           data={[
             { label: "Sort from highest price", value: "highest" },
@@ -336,7 +339,8 @@ export default function AppShellLayout() {
             <LoadingOverlay
               visible={isLoading}
               overlayBlur={6}
-              loaderProps={{ size: "xl" }}
+              loaderProps={{ size: "xl", color: "dark" }}
+              overlayOpacity={0.3}
             />
           ) : (
             data?.pages?.map((group, i) => (
@@ -357,11 +361,11 @@ export default function AppShellLayout() {
         </Group>
       ) : (
         <Group position="center">
-          {!isSuccess ? (
+          {isFetching ? (
             <LoadingOverlay
-              visible={!isSuccess}
+              visible={isFetching}
               overlayBlur={6}
-              loaderProps={{ size: "xl" }}
+              loaderProps={{ size: "xl", color: "dark" }}
             />
           ) : (
             category?.map((item) => {
@@ -369,7 +373,7 @@ export default function AppShellLayout() {
                 <Group key={item.id} m={10}>
                   <CategoryCard
                     data={item}
-                    onClick={(e) => handleCategoryEnter(item.id)}
+                    onClick={(e) => handleCategoryClick(item.id)}
                   />
                 </Group>
               );
@@ -383,16 +387,18 @@ export default function AppShellLayout() {
           <Text mx="auto" fz="lg" fw="bold">
             Loading more products
           </Text>
-          <Loader mx="auto" size={50}></Loader>
+          <Loader mx="auto" color="dark" size={50}></Loader>
         </Flex>
       )}
-      {/* {!swap && !hasNextPage && (
+      {!swap && !hasNextPage && (
         <Flex direction="column">
           <Text mx="auto" fz="lg" fw="bold">
             No more products to load
           </Text>
         </Flex>
-      )} */}
+      )}
+      <FilterDrawer opened={opened} onClose={() => setOpened(!opened)} />
+
       <Affix position={{ bottom: height * 0.05, right: width * 0.01 }}>
         <Transition transition="slide-up" mounted={scroll.y > 0}>
           {(transitionStyles) => (

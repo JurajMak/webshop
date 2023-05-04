@@ -72,7 +72,11 @@ export default function UserMenu({ orders, onDrawer, onCategory, onProduct }) {
               </Group>
             </UnstyledButton>
           ) : (
-            <Burger opened={burgerOpen} onClick={() => setBurgerOpen(true)} />
+            <Burger
+              transitionDuration={500}
+              opened={burgerOpen}
+              onClick={() => setBurgerOpen(true)}
+            />
           )}
         </Menu.Target>
         <Menu.Dropdown>
