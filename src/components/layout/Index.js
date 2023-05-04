@@ -1,6 +1,5 @@
 import {
   AppShell,
-  Navbar,
   Footer,
   Text,
   useMantineTheme,

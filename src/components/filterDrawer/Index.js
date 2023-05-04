@@ -1,10 +1,4 @@
-import {
-  Drawer,
-  useMantineTheme,
-  Accordion,
-  Navbar,
-  Group,
-} from "@mantine/core";
+import { Drawer, useMantineTheme, Accordion } from "@mantine/core";
 
 export function FilterDrawer({ opened, onClose }) {
   const theme = useMantineTheme();
