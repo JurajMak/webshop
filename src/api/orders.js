@@ -21,6 +21,7 @@ const getOrders = async () => {
 
   return data.flatMap((order) => ({
     id: order.id,
+    order_number: order.order_number,
     profile_name: order?.order_products[0]?.profiles?.full_name,
     total: order.total,
   }));

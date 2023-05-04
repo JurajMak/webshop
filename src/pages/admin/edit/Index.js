@@ -22,7 +22,7 @@ import {
   getProductCategory,
   updateProductCategory,
 } from "../../../api/categories";
-import { handleSuccessUpdate } from "../../../components/notifications/successNotification";
+import { handleSuccessUpdateNotification } from "../../../components/notifications/successNotification";
 import { updateProduct, updateSale } from "../../../api/products";
 import { QueryClient, useMutation, useQuery } from "@tanstack/react-query";
 const useStyles = createStyles((theme) => ({
@@ -83,14 +83,13 @@ const Edit = () => {
   const [value, setValue] = useState("");
   const [selectedValue, setSelectedValue] = useState("");
   const queryClient = new QueryClient();
-
   const percentageCalc = Math.floor(
     ((state.price - state.sale_price) / state.price) * 100
   );
-
   const [percent, setPercent] = React.useState(
     state.is_sale ? percentageCalc : null
   );
+  const prevPercentageCalc = price - (percent / 100) * price;
 
   const handleUploadImage = async (file) => {
     setLoading(true);
@@ -149,7 +148,7 @@ const Edit = () => {
     onSuccess: () => {
       setLoading(false);
       updateCategory();
-      handleSuccessUpdate(name);
+      handleSuccessUpdateNotification(name);
       queryClient.invalidateQueries("products", state.id);
     },
   });
@@ -161,7 +160,8 @@ const Edit = () => {
       description: description === "" ? state.description : description,
       price: price === null ? state.price : price,
       quantity: quantity === "" ? state.quantity : state.quantity + quantity,
-      sale_price: sale_price === null ? state.sale_price : sale_price,
+      sale_price:
+        sale_price === null ? prevPercentageCalc.toFixed(2) : sale_price,
       image: image === "" ? state.image : image,
     };
 
@@ -169,7 +169,9 @@ const Edit = () => {
   };
 
   React.useEffect(() => {
-    refetch();
+    if (value !== "") {
+      refetch();
+    }
   }, [value]);
 
   return (
@@ -234,6 +236,7 @@ const Edit = () => {
           m="auto"
           mt={20}
           mb={20}
+          color="dark"
           checked={isSale}
           onChange={handleUpdateSale}
           label="Item on Sale"
@@ -248,15 +251,15 @@ const Edit = () => {
               let total;
 
               if (price === null) {
-                let calc = (state.price / 100) * number;
-                total = state.price - calc;
+                let calc = ((state.price / 100) * number).toFixed(2);
+                total = (state.price - calc).toFixed(2);
               }
               if (price !== null) {
-                let calc = (price / 100) * number;
-                total = price - calc;
+                let calc = ((price / 100) * number).toFixed(2);
+                total = (price - calc).toFixed(2);
               }
 
-              form.setFieldValue("sale_price", total.toFixed(2));
+              form.setFieldValue("sale_price", total);
               setPercent(number);
             }}
             value={percent}

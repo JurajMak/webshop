@@ -6,28 +6,44 @@ import {
   useMantineTheme,
   Select,
   Button,
+  Affix,
+  Transition,
   Loader,
   Flex,
   LoadingOverlay,
+  Group,
+  UnstyledButton,
 } from "@mantine/core";
-import ProductsCard from "../productCard/Index";
+import { ProductCard } from "../cards/productCard/Index";
 import HeaderTabs from "../header/Index";
-import { Wrapper, ProductsWrapper } from "../../pages/home/Styles";
+import { CategoryCard } from "../cards/categoryCard/Index";
 import React, { useState, useEffect } from "react";
-import SearchBar from "../search/Index";
-import { handleQuantityNotification } from "../notifications/warningNotification";
+import { warningQuantityNotification } from "../notifications/warningNotification";
 import { getProducts } from "../../api/products";
-import { useInfiniteQuery } from "@tanstack/react-query";
+import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
 import { handleInfiniteScroll } from "../../utils/infiniteScroll";
+import { useWindowScroll, useViewportSize } from "@mantine/hooks";
+import { getCategory } from "../../api/categories";
+
+import {
+  IconArrowUp,
+  IconAdjustmentsHorizontal,
+  IconChevronDown,
+} from "@tabler/icons";
+import { FilterDrawer } from "../filterDrawer/Index";
 
 export default function AppShellLayout() {
   const theme = useMantineTheme();
   const [opened, setOpened] = useState(false);
   const [search, setSearch] = useState("");
-  const [selectValue, setSelectValue] = useState(null);
+  const [selectValue, setSelectValue] = useState("popular");
   const [searchWord, setSearchWord] = useState("");
   const [shoppingData, setShoppingData] = useState([]);
   const [value, setValue] = useState("");
+  const [scroll, scrollTo] = useWindowScroll();
+  const { height, width } = useViewportSize();
+  const [swap, setSwap] = useState(false);
+  const [categoryId, setCategoryId] = useState("");
 
   const {
     data,
@@ -38,7 +54,8 @@ export default function AppShellLayout() {
     refetch,
   } = useInfiniteQuery(
     ["products"],
-    ({ pageParam = 1 }) => getProducts(selectValue, searchWord, pageParam),
+    ({ pageParam = 1 }) =>
+      getProducts(selectValue, searchWord, pageParam, categoryId),
     {
       getNextPageParam: (lastPage, pages) => {
         const nextPage = pages.length + 1;
@@ -46,19 +63,23 @@ export default function AppShellLayout() {
       },
     }
   );
+  const { data: category, isFetching } = useQuery({
+    queryKey: ["categories"],
+    queryFn: () => getCategory(value),
+  });
 
   const handleAddCart = (e, item) => {
-    const isExists = shoppingData?.some((cart) => {
+    const ifExists = shoppingData?.some((cart) => {
       return cart.id === item.id;
     });
 
-    if (isExists) {
+    if (ifExists) {
       setShoppingData(
         shoppingData?.map((cart) => {
           if (cart.id === item.id) {
             const updatedQuantity = cart.quantity + 1;
             if (updatedQuantity > item.quantity) {
-              handleQuantityNotification();
+              warningQuantityNotification();
 
               return cart;
             }
@@ -76,7 +97,7 @@ export default function AppShellLayout() {
     } else {
       const newItem = { ...item, quantity: 1 };
       if (newItem.quantity > item.quantity) {
-        handleQuantityNotification();
+        warningQuantityNotification();
 
         return;
       }
@@ -94,7 +115,7 @@ export default function AppShellLayout() {
     const cartItem = shoppingData[cartItemIndex];
 
     if (cartItem && cartItem.quantity >= dataItem.quantity) {
-      handleQuantityNotification();
+      warningQuantityNotification();
       return;
     }
 
@@ -164,9 +185,26 @@ export default function AppShellLayout() {
       setSearchWord(search);
     }
   };
-  const handleShowAll = () => {
-    setSearchWord("");
-    setValue("");
+
+  const handleSearchBtn = () => {
+    setSearchWord(search);
+  };
+  // const handleShowAll = () => {
+  //   setSearchWord("");
+  //   setValue("");
+  // };
+
+  const handleSwapProduct = () => {
+    setSwap(false);
+    setCategoryId("");
+  };
+  const handleSwapCategory = () => {
+    setSwap(true);
+  };
+
+  const handleCategoryClick = async (id) => {
+    setSwap(false);
+    setCategoryId(id);
   };
 
   useEffect(() => {
@@ -182,14 +220,15 @@ export default function AppShellLayout() {
     document.addEventListener("scroll", (e) =>
       handleInfiniteScroll(e, hasNextPage, fetchNextPage)
     );
-    refetch();
+
     setShoppingData(savedData);
+    refetch();
     return () => {
       document.removeEventListener("scroll", (e) =>
         handleInfiniteScroll(e, hasNextPage, fetchNextPage)
       );
     };
-  }, [selectValue, searchWord, fetchNextPage, hasNextPage]);
+  }, [selectValue, searchWord, categoryId, fetchNextPage, hasNextPage]);
 
   return (
     <AppShell
@@ -199,66 +238,11 @@ export default function AppShellLayout() {
             theme.colorScheme === "dark"
               ? theme.colors.dark[8]
               : theme.colors.gray[0],
+          overflow: "hidden",
         },
       }}
       navbarOffsetBreakpoint="sm"
       asideOffsetBreakpoint="sm"
-      navbar={
-        <Navbar
-          p="md"
-          hiddenBreakpoint="sm"
-          hidden={!opened}
-          width={{ sm: 200, lg: 300 }}>
-          <Select
-            mx="auto"
-            onChange={(value) => {
-              return setSelectValue(value);
-            }}
-            value={selectValue}
-            clearable
-            size="md"
-            placeholder="Sort by"
-            data={[
-              { label: "Sort from highest price", value: "highest" },
-              { label: "Sort from lowest price", value: "lowest" },
-              { label: "Sort on sale", value: "sale" },
-            ]}
-          />
-
-          <Text m={20}>Search</Text>
-          <SearchBar
-            placeholder="Search products"
-            onChange={(e) => handleSearchText(e)}
-            onKeyDown={(e) => handleSearchEnter(e)}></SearchBar>
-          <Button
-            variant="white"
-            radius="xl"
-            w={100}
-            ml="auto"
-            onClick={handleShowAll}>
-            Show All
-          </Button>
-          <Text m={20}>Category</Text>
-          {/* <Select
-            radius={50}
-            searchable
-            clearable
-            placeholder="Categories"
-            value={value}
-            data={mappedCategories}
-            onChange={setValue}
-          /> */}
-          <Button
-            variant="white"
-            radius="xl"
-            w={100}
-            ml="auto"
-            // onClick={handleSearchButtonClick}
-          >
-            Search
-          </Button>
-        </Navbar>
-      }
       footer={
         <Footer height={60} p="md">
           Application footer
@@ -271,47 +255,123 @@ export default function AppShellLayout() {
           onQuantity={handleAddQuantity}
           onRemove={handleRemoveQuantity}
           onClear={handleDeleteAllCart}
+          onText={handleSearchText}
+          onEnter={handleSearchEnter}
+          onBtn={handleSearchBtn}
+          onProduct={handleSwapProduct}
+          onCategory={handleSwapCategory}
         />
       }>
-      <Wrapper>
-        {isLoading ? (
-          <LoadingOverlay
-            visible={isLoading}
-            overlayBlur={6}
-            loaderProps={{ size: "xl" }}
-          />
-        ) : (
-          data?.pages?.map((group, i) => (
-            <React.Fragment key={i}>
-              {group?.map((item) => {
-                return (
-                  <ProductsWrapper key={item.id}>
-                    <ProductsCard
-                      data={item}
-                      onClick={(e) => handleAddCart(e, item)}
-                    />
-                  </ProductsWrapper>
-                );
-              })}
-            </React.Fragment>
-          ))
-        )}
-      </Wrapper>
-      {isFetchingNextPage && hasNextPage && (
+      <Group position="center" m={10} mt={30}>
+        <UnstyledButton onClick={() => setOpened(!opened)}>
+          <Group>
+            <IconAdjustmentsHorizontal size={25} color={theme.colors.blue[6]} />
+            <Text color={theme.colors.blue[6]} fw={500} fz="xl">
+              {!opened ? "Show Filter" : "Hide Filter"}
+            </Text>
+          </Group>
+        </UnstyledButton>
+
+        <Select
+          styles={{
+            rightSection: { pointerEvents: "none" },
+          }}
+          onChange={(value) => {
+            return setSelectValue(value);
+          }}
+          value={selectValue}
+          clearable
+          // mx="auto"
+          size="xs"
+          data={[
+            { label: "Sort from highest price", value: "highest" },
+            { label: "Sort from lowest price", value: "lowest" },
+            { label: "Sort on sale", value: "sale" },
+            { label: "Popular", value: "popular" },
+          ]}
+          rightSection={<IconChevronDown size="1rem" />}
+          rightSectionWidth={30}
+        />
+      </Group>
+      {!swap ? (
+        <Group position="center">
+          {isLoading ? (
+            <LoadingOverlay
+              visible={isLoading}
+              overlayBlur={6}
+              loaderProps={{ size: "xl", color: "dark" }}
+              overlayOpacity={0.3}
+            />
+          ) : (
+            data?.pages?.map((group, i) => (
+              <React.Fragment key={i}>
+                {group?.map((item) => {
+                  return (
+                    <Group key={item.id} m={10}>
+                      <ProductCard
+                        data={item}
+                        onClick={(e) => handleAddCart(e, item)}
+                      />
+                    </Group>
+                  );
+                })}
+              </React.Fragment>
+            ))
+          )}
+        </Group>
+      ) : (
+        <Group position="center">
+          {isFetching ? (
+            <LoadingOverlay
+              visible={isFetching}
+              overlayBlur={6}
+              loaderProps={{ size: "xl", color: "dark" }}
+            />
+          ) : (
+            category?.map((item) => {
+              return (
+                <Group key={item.id} m={10}>
+                  <CategoryCard
+                    data={item}
+                    onClick={(e) => handleCategoryClick(item.id)}
+                  />
+                </Group>
+              );
+            })
+          )}
+        </Group>
+      )}
+
+      {!swap && isFetchingNextPage && hasNextPage && (
         <Flex direction="column">
           <Text mx="auto" fz="lg" fw="bold">
             Loading more products
           </Text>
-          <Loader mx="auto" size={50}></Loader>
+          <Loader mx="auto" color="dark" size={50}></Loader>
         </Flex>
       )}
-      {!hasNextPage && (
+      {!swap && !hasNextPage && (
         <Flex direction="column">
           <Text mx="auto" fz="lg" fw="bold">
             No more products to load
           </Text>
         </Flex>
       )}
+      <FilterDrawer opened={opened} onClose={() => setOpened(!opened)} />
+
+      <Affix position={{ bottom: height * 0.05, right: width * 0.01 }}>
+        <Transition transition="slide-up" mounted={scroll.y > 0}>
+          {(transitionStyles) => (
+            <Button
+              color="dark"
+              style={transitionStyles}
+              onClick={() => scrollTo({ y: 0 })}>
+              <IconArrowUp size={20} style={{ marginRight: 5 }} />
+              {width > 500 ? "To top" : ""}
+            </Button>
+          )}
+        </Transition>
+      </Affix>
     </AppShell>
   );
 }

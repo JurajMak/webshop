@@ -14,8 +14,11 @@ import React, { useContext } from "react";
 import { AuthContext } from "../../../contexts/Index";
 import { ImageWrap } from "./Styles";
 import altimg from "../../../assets/login.jpg";
-import { handleProductNotification } from "../../../components/notifications/warningNotification";
-import { handleDeleteNotification } from "../../../components/notifications/deleteNotification";
+import { warningProductNotification } from "../../../components/notifications/warningNotification";
+import {
+  handleDeleteNotification,
+  handleDeleteProductNotification,
+} from "../../../components/notifications/deleteNotification";
 import { getProducts, deleteProduct } from "../../../api/products";
 import { handleInfiniteScroll } from "../../../utils/infiniteScroll";
 import {
@@ -29,7 +32,6 @@ export function ProductsTable({ titles, search }) {
   const navigate = useNavigate();
   const { user } = useContext(AuthContext);
   const queryClient = new QueryClient();
-  console.log("search", search);
 
   const toEdit = async (item) => {
     navigate(`/admin/products/${item.id}`, { state: item });
@@ -57,13 +59,13 @@ export function ProductsTable({ titles, search }) {
   const deleteProductMutation = useMutation({
     mutationFn: (item) => deleteProduct(item),
     onSuccess: () => {
-      handleDeleteNotification();
+      handleDeleteProductNotification();
       queryClient.invalidateQueries("products");
       refetch();
     },
 
     onError: () => {
-      handleProductNotification();
+      warningProductNotification();
     },
   });
 
@@ -81,7 +83,7 @@ export function ProductsTable({ titles, search }) {
         handleInfiniteScroll(e, hasNextPage, fetchNextPage)
       );
     };
-  }, [search, fetchNextPage, hasNextPage, refetch]);
+  }, [search, fetchNextPage, hasNextPage]);
 
   return (
     <ScrollArea>
@@ -119,7 +121,7 @@ export function ProductsTable({ titles, search }) {
                       </Text>
                     </td>
                     <td>
-                      <Text fz="sm" c="blue" fw={500}>
+                      <Text fz="sm" c="dimmed" fw={500}>
                         $ {item.price}
                       </Text>
                     </td>
@@ -129,7 +131,7 @@ export function ProductsTable({ titles, search }) {
                       </Text>
                     </td>
                     <td>
-                      <Text fz="sm" c="blue" fw={500}>
+                      <Text fz="sm" c="red" fw={500}>
                         $ {item.sale_price}
                       </Text>
                     </td>
@@ -158,7 +160,7 @@ export function ProductsTable({ titles, search }) {
           <Text mx="auto" fz="lg" fw="bold">
             Loading more products
           </Text>
-          <Loader mx="auto" size={50}></Loader>
+          <Loader mx="auto" color="dark" size={50}></Loader>
         </Flex>
       )}
       {!hasNextPage && (

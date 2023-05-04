@@ -9,12 +9,13 @@ import {
 } from "@mantine/core";
 
 import React from "react";
-import home from "../../assets/login.jpg";
+import home from "../../../assets/login.jpg";
 
 const useStyles = createStyles((theme) => ({
   card: {
     backgroundColor:
       theme.colorScheme === "dark" ? theme.colors.dark[7] : theme.white,
+    minWidth: 250,
   },
 
   imageSection: {
@@ -52,7 +53,7 @@ const useStyles = createStyles((theme) => ({
   },
 }));
 
-export function ProductsCard({ data, onClick, notify }) {
+export function ProductsCard({ data, onClick }) {
   const { classes } = useStyles();
   const { name, price, description, quantity, sale_price, is_sale, image } =
     data;
@@ -77,7 +78,8 @@ export function ProductsCard({ data, onClick, notify }) {
         </div>
         {is_sale && (
           <Badge variant="outline" size="lg">
-            {Math.floor(((price - sale_price) / price) * 100)}% off
+            {Math.round(((price - sale_price) / price) * 100)}% off
+            {/* {((price - sale_price) / price) * 100}% off */}
           </Badge>
         )}
       </Group>

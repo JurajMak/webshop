@@ -20,7 +20,7 @@ import React, { useContext, useState } from "react";
 import { AuthContext } from "../../../contexts/Index";
 import { getCategory } from "../../../api/categories";
 import { QueryClient, useMutation, useQuery } from "@tanstack/react-query";
-import { handleSuccessCreation } from "../../../components/notifications/successNotification";
+import { handleSuccessCreationNotification } from "../../../components/notifications/successNotification";
 import { createProduct } from "../../../api/products";
 
 const useStyles = createStyles((theme) => ({
@@ -73,7 +73,7 @@ const Create = () => {
       description: "",
       price: 0,
       quantity: 0,
-      sale_price: "",
+      sale_price: 0,
       image: "",
     },
   });
@@ -103,7 +103,7 @@ const Create = () => {
   const createProductMutation = useMutation({
     mutationFn: (item) => createProduct(item),
     onSuccess: () => {
-      handleSuccessCreation(name);
+      handleSuccessCreationNotification(name);
       queryClient.invalidateQueries("products");
     },
   });
@@ -130,7 +130,9 @@ const Create = () => {
   React.useEffect(() => {
     refetch();
   }, [value]);
-
+  console.log("sale", typeof sale_price, sale_price);
+  console.log("price", typeof price, price);
+  console.log("percent", typeof percent, percent);
   return (
     <Container sizes="xl" className={classes.wrapper}>
       <Title order={1} className={classes.title} align="center" pt={50} mb={50}>
@@ -139,7 +141,7 @@ const Create = () => {
 
       <Form onSubmit={form.onSubmit(handleAddProduct)}>
         <Group position="right">
-          <Button variant="subtle" onClick={handleNewEntry}>
+          <Button variant="subtle" color="dark" onClick={handleNewEntry}>
             New Entry
           </Button>
         </Group>
@@ -180,13 +182,14 @@ const Create = () => {
 
         <Checkbox
           m="auto"
+          color="dark"
           mb={10}
           checked={checked}
           onChange={(e) => {
             setChecked(e.target.checked);
-            if (!e.target.checked) {
-              form.setFieldValue("salePercentage", "");
-            }
+            // if (!e.target.checked) {
+            //   form.setFieldValue("salePercentage", "");
+            // }
           }}
           label="Set item on Sale"
         />
@@ -195,10 +198,10 @@ const Create = () => {
             mb={10}
             label={`Set sale %`}
             onChange={(number) => {
-              let calc = (price / 100) * number;
-              let total = price - calc;
-
-              form.setFieldValue("sale_price", total.toFixed(2));
+              let calc = ((price / 100) * number).toFixed(2);
+              let total = (price - calc).toFixed(2);
+              console.log("calc", total);
+              form.setFieldValue("sale_price", total);
               setPercent(number);
             }}
             value={percent}
@@ -207,6 +210,7 @@ const Create = () => {
 
         <Group mb={10}>
           <FileButton
+            color="dark"
             onChange={(file) => {
               handleUploadImage(file);
               return setFile(file);
@@ -243,10 +247,10 @@ const Create = () => {
           {...form.getInputProps("quantity")}
         />
         <Group mt={20}>
-          <Button type="submit" loading={loading} miw={120}>
+          <Button color="dark" type="submit" loading={loading} miw={120}>
             Submit
           </Button>
-          <Button ml={20} onClick={returnDashboard}>
+          <Button color="dark" ml={20} onClick={returnDashboard}>
             Return
           </Button>
         </Group>
