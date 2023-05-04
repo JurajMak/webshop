@@ -129,14 +129,18 @@ export function UserLogin() {
           {...form.getInputProps("password")}
         />
         <Group position="left" mt={20}>
-          <Button type="submit">Login</Button>
-          <Button onClick={returnHome}>Return</Button>
+          <Button color="dark" type="submit">
+            Login
+          </Button>
+          <Button color="dark" onClick={returnHome}>
+            Return
+          </Button>
         </Group>
       </Form>
 
       <Text align="center" mt="md">
         Don&apos;t have an account?{" "}
-        <Anchor href="#" weight={700} onClick={returnRegister}>
+        <Anchor color="cyan" href="#" weight={700} onClick={returnRegister}>
           Register
         </Anchor>
       </Text>

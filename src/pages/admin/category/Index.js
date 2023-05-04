@@ -103,7 +103,11 @@ const CreateCategory = () => {
 
       <Form onSubmit={form.onSubmit(handleCreateCategory)}>
         <Group position="right">
-          <Button variant="subtle" ml={350} onClick={handleNewEntry}>
+          <Button
+            variant="subtle"
+            color="dark"
+            ml={350}
+            onClick={handleNewEntry}>
             New Entry
           </Button>
         </Group>
@@ -130,10 +134,12 @@ const CreateCategory = () => {
         />
 
         <Group>
-          <Button type="submit" loading={loading}>
+          <Button type="submit" color="dark" loading={loading}>
             Submit
           </Button>
-          <Button onClick={handleReturn}>Return</Button>
+          <Button color="dark" onClick={handleReturn}>
+            Return
+          </Button>
         </Group>
       </Form>
     </Container>

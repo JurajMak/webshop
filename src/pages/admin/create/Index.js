@@ -141,7 +141,7 @@ const Create = () => {
 
       <Form onSubmit={form.onSubmit(handleAddProduct)}>
         <Group position="right">
-          <Button variant="subtle" onClick={handleNewEntry}>
+          <Button variant="subtle" color="dark" onClick={handleNewEntry}>
             New Entry
           </Button>
         </Group>
@@ -182,6 +182,7 @@ const Create = () => {
 
         <Checkbox
           m="auto"
+          color="dark"
           mb={10}
           checked={checked}
           onChange={(e) => {
@@ -209,6 +210,7 @@ const Create = () => {
 
         <Group mb={10}>
           <FileButton
+            color="dark"
             onChange={(file) => {
               handleUploadImage(file);
               return setFile(file);
@@ -245,10 +247,10 @@ const Create = () => {
           {...form.getInputProps("quantity")}
         />
         <Group mt={20}>
-          <Button type="submit" loading={loading} miw={120}>
+          <Button color="dark" type="submit" loading={loading} miw={120}>
             Submit
           </Button>
-          <Button ml={20} onClick={returnDashboard}>
+          <Button color="dark" ml={20} onClick={returnDashboard}>
             Return
           </Button>
         </Group>

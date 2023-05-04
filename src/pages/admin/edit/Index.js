@@ -236,6 +236,7 @@ const Edit = () => {
           m="auto"
           mt={20}
           mb={20}
+          color="dark"
           checked={isSale}
           onChange={handleUpdateSale}
           label="Item on Sale"

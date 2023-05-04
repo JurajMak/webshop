@@ -43,11 +43,11 @@ export function OrderTable({ titles }) {
               <td>
                 <Text fz="sm"> {item.profile_name}</Text>
               </td>
-              <td>
-                <Text fz="sm" c="blue">
+              {/* <td>
+                <Text fz="sm" c="dark">
                   {item.sale_price}
                 </Text>
-              </td>
+              </td> */}
             </tr>
           ))}
         </tbody>
