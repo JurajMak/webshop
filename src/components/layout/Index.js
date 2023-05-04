@@ -19,7 +19,12 @@ import { CategoryCard } from "../cards/categoryCard/Index";
 import React, { useState, useEffect } from "react";
 import { warningQuantityNotification } from "../notifications/warningNotification";
 import { getProducts } from "../../api/products";
-import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
+import {
+  useInfiniteQuery,
+  useQuery,
+  useQueryClient,
+  useMutation,
+} from "@tanstack/react-query";
 import { handleInfiniteScroll } from "../../utils/infiniteScroll";
 import { useWindowScroll, useViewportSize } from "@mantine/hooks";
 import { getCategory } from "../../api/categories";
@@ -43,7 +48,7 @@ export default function AppShellLayout() {
   const { height, width } = useViewportSize();
   const [swap, setSwap] = useState(false);
   const [categoryId, setCategoryId] = useState("");
-
+  const queryClient = useQueryClient();
   const {
     data,
     isLoading,
@@ -51,6 +56,7 @@ export default function AppShellLayout() {
     hasNextPage,
     isFetchingNextPage,
     refetch,
+    isRefetching,
   } = useInfiniteQuery(
     ["products"],
     ({ pageParam = 1 }) =>
@@ -62,12 +68,12 @@ export default function AppShellLayout() {
       },
     }
   );
-  const { data: category, isFetching } = useQuery({
+  const { data: category } = useQuery({
     queryKey: ["categories"],
     queryFn: () => getCategory(value),
   });
 
-  const handleAddCart = (e, item) => {
+  const handleAddCart = (item) => {
     const ifExists = shoppingData?.some((cart) => {
       return cart.id === item.id;
     });
@@ -97,7 +103,6 @@ export default function AppShellLayout() {
       const newItem = { ...item, quantity: 1 };
       if (newItem.quantity > item.quantity) {
         warningQuantityNotification();
-
         return;
       }
       localStorage.setItem(`shoppingData_${item.id}`, JSON.stringify(newItem));
@@ -105,7 +110,7 @@ export default function AppShellLayout() {
     }
   };
 
-  const handleAddQuantity = (e, item) => {
+  const handleAddQuantity = (item) => {
     const dataItem = data?.pages[0].find((dataItem) => dataItem.id === item.id);
 
     const cartItemIndex = shoppingData.findIndex(
@@ -137,7 +142,7 @@ export default function AppShellLayout() {
     setShoppingData(updatedShoppingData);
   };
 
-  const handleRemoveQuantity = (e, item) => {
+  const handleRemoveQuantity = (item) => {
     const isExists = shoppingData?.some((cart) => {
       return cart.id === item.id;
     });
@@ -171,7 +176,7 @@ export default function AppShellLayout() {
     refetch();
   };
 
-  const handleDeleteItem = (e, id) => {
+  const handleDeleteItem = (id) => {
     setShoppingData(shoppingData?.filter((item) => item.id !== id));
     localStorage.removeItem(`shoppingData_${id}`);
   };
@@ -188,10 +193,10 @@ export default function AppShellLayout() {
   const handleSearchBtn = () => {
     setSearchWord(search);
   };
-  // const handleShowAll = () => {
-  //   setSearchWord("");
-  //   setValue("");
-  // };
+  const handleShowAll = () => {
+    setSearchWord("");
+    setValue("");
+  };
 
   const handleSwapProduct = () => {
     setSwap(false);
@@ -294,9 +299,9 @@ export default function AppShellLayout() {
       </Group>
       {!swap ? (
         <Group position="center">
-          {isLoading ? (
+          {isLoading || isRefetching ? (
             <LoadingOverlay
-              visible={isLoading}
+              visible={isLoading || isRefetching}
               overlayBlur={6}
               loaderProps={{ size: "xl", color: "dark" }}
               overlayOpacity={0.3}
@@ -306,10 +311,10 @@ export default function AppShellLayout() {
               <React.Fragment key={i}>
                 {group?.map((item) => {
                   return (
-                    <Group key={item.id} m={10}>
+                    <Group key={item.id} m={5}>
                       <ProductCard
                         data={item}
-                        onClick={(e) => handleAddCart(e, item)}
+                        onClick={() => handleAddCart(item)}
                       />
                     </Group>
                   );
@@ -320,16 +325,16 @@ export default function AppShellLayout() {
         </Group>
       ) : (
         <Group position="center">
-          {isFetching ? (
+          {isLoading || isRefetching ? (
             <LoadingOverlay
-              visible={isFetching}
+              visible={isLoading || isRefetching}
               overlayBlur={6}
               loaderProps={{ size: "xl", color: "dark" }}
             />
           ) : (
             category?.map((item) => {
               return (
-                <Group key={item.id} m={10}>
+                <Group key={item.id} m={5}>
                   <CategoryCard
                     data={item}
                     onClick={(e) => handleCategoryClick(item.id)}

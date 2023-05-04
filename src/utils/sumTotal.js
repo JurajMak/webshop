@@ -1,4 +1,4 @@
-const sumPrice = (item) => {
+const sumTotal = (item) => {
   return item
     .reduce((acc, cart) => {
       const total = cart.is_sale ? cart.sale_price : cart.price;
@@ -7,4 +7,4 @@ const sumPrice = (item) => {
     .toFixed(2);
 };
 
-export { sumPrice };
+export { sumTotal };

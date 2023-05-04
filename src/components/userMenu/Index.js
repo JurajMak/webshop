@@ -23,23 +23,7 @@ import React, { useContext, useState } from "react";
 import { AuthContext } from "../../contexts/Index";
 import NotificationIcon from "../notificationCartIcon/Index";
 import { useViewportSize } from "@mantine/hooks";
-
-const useStyles = createStyles((theme) => ({
-  notification: {
-    justifyContent: "center",
-    textAlign: "center",
-    backgroundColor: theme.colors.blue[6],
-    width: 30,
-    height: 20,
-    borderRadius: 50,
-    marginRight: 50,
-  },
-  text: {
-    fontSize: 12,
-    fontWeight: 400,
-    color: theme.colors.gray[0],
-  },
-}));
+import { useStyles } from "./Styles";
 
 export default function UserMenu({ orders, onDrawer, onCategory, onProduct }) {
   const [userMenuOpened, setUserMenuOpened] = useState(false);
@@ -47,7 +31,6 @@ export default function UserMenu({ orders, onDrawer, onCategory, onProduct }) {
   const { classes } = useStyles();
   const { height, width } = useViewportSize();
   const [burgerOpen, setBurgerOpen] = useState(false);
-  const theme = useMantineTheme();
 
   return (
     <Group mx={10}>

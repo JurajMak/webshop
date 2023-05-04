@@ -9,8 +9,7 @@ export function FilterDrawer({ opened, onClose }) {
       padding="xs"
       opened={opened}
       onClose={onClose}
-      transition="rotate-left"
-      transitionDuration={250}
+      transitionDuration={550}
       transitionTimingFunction="ease"
       overlayColor={
         theme.colorScheme === "dark"

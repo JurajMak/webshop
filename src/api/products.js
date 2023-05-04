@@ -97,22 +97,6 @@ const getProductById = async (id) => {
   return data;
 };
 
-const getProductByCategory = async (searchValue) => {
-  const { data: categories } = await supabase
-    .from("categories")
-    .select("id")
-    .ilike("name", `%${searchValue}%`);
-
-  const categoryIds = categories.map((category) => category.id);
-
-  const { data } = await supabase
-    .from("products")
-    .select("*")
-    .in("category_id", categoryIds);
-
-  return data;
-};
-
 export {
   getProducts,
   createProduct,
@@ -138,4 +122,20 @@ export {
 
 //     setSearch(productData);
 //   }
+// };
+
+// const getProductByCategory = async (searchValue) => {
+//   const { data: categories } = await supabase
+//     .from("categories")
+//     .select("id")
+//     .ilike("name", `%${searchValue}%`);
+
+//   const categoryIds = categories.map((category) => category.id);
+
+//   const { data } = await supabase
+//     .from("products")
+//     .select("*")
+//     .in("category_id", categoryIds);
+
+//   return data;
 // };
