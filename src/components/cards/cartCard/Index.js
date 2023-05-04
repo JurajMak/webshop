@@ -8,7 +8,7 @@ import {
   Badge,
 } from "@mantine/core";
 import { IconSquarePlus, IconSquareMinus, IconX } from "@tabler/icons";
-import home from "../../assets/login.jpg";
+import home from "../../../assets/login.jpg";
 
 const useStyles = createStyles((theme) => ({
   card: {
@@ -27,7 +27,7 @@ const useStyles = createStyles((theme) => ({
   },
 }));
 
-export function CartItem({ cartData, onQuantity, onDelete, onRemove }) {
+export function CartCard({ cartData, onQuantity, onDelete, onRemove }) {
   const { classes } = useStyles();
   const { name, price, description, quantity, sale_price, is_sale, image } =
     cartData;
@@ -38,9 +38,9 @@ export function CartItem({ cartData, onQuantity, onDelete, onRemove }) {
       <Group noWrap spacing={0}>
         <Image src={image ? image : home} height={140} width={140} />
         <div className={classes.body}>
-          {/* <Text transform="uppercase" color="dimmed" weight={700} size="xs">
-            {category}
-          </Text> */}
+          <Text transform="uppercase" color="dimmed" weight={700} size="xs">
+            Quantity: {quantity}
+          </Text>
           <Group mx="auto">
             <Text className={classes.title} mt="xs" mb="md" size={20}>
               {name}
@@ -53,9 +53,9 @@ export function CartItem({ cartData, onQuantity, onDelete, onRemove }) {
           </Group>
           <Group noWrap spacing="xs">
             {/* <Group spacing="xs" noWrap>
-              <Text size="xs">{description}</Text>
+              <Text size="xs"> Quanity: {quantity}</Text>
             </Group> */}
-            <Text size="xs" color="dark">
+            <Text size="xs" color="dark" lineClamp={5}>
               • {description}
             </Text>
 

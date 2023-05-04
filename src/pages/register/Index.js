@@ -75,8 +75,9 @@ const RegisterForm = () => {
         },
       },
     });
-
-    navigate("/login");
+    if (data) {
+      navigate("/login");
+    }
   };
 
   const returnHome = async () => {
@@ -130,11 +131,16 @@ const RegisterForm = () => {
         <Checkbox
           label="Are you admin?"
           mt={20}
+          color="dark"
           {...form.getInputProps("is_admin")}
         />
         <Group mt={20}>
-          <Button type="submit">Submit</Button>
-          <Button onClick={returnHome}>Return</Button>
+          <Button color="dark" type="submit">
+            Submit
+          </Button>
+          <Button color="dark" onClick={returnHome}>
+            Return
+          </Button>
         </Group>
       </Form>
 

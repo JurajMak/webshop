@@ -13,10 +13,13 @@ import {
   Select,
   Group,
   Flex,
+  Title,
+  Tabs,
 } from "@mantine/core";
 import { AuthContext } from "../../../contexts/Index";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "../../../config/Supabase";
+import UserMenu from "../../../components/userMenu/Index";
 
 export default function Dashboard() {
   const theme = useMantineTheme();
@@ -65,26 +68,23 @@ export default function Dashboard() {
     setSwapOrder(true);
   };
 
-  const handleShowAll = (e) => {
-    e.preventDefault();
-  };
-  const handleCategoryEnter = async (e) => {
-    if (e.key === "Enter") {
-      const { data: categories } = await supabase
-        .from("categories")
-        .select("id")
-        .ilike("name", `%${value}%`);
+  // const handleCategoryEnter = async (e) => {
+  //   if (e.key === "Enter") {
+  //     const { data: categories } = await supabase
+  //       .from("categories")
+  //       .select("id")
+  //       .ilike("name", `%${value}%`);
 
-      const categoryIds = categories.map((category) => category.id);
+  //     const categoryIds = categories.map((category) => category.id);
 
-      const { data: productData } = await supabase
-        .from("products")
-        .select("*")
-        .in("category_id", categoryIds);
+  //     const { data: productData } = await supabase
+  //       .from("products")
+  //       .select("*")
+  //       .in("category_id", categoryIds);
 
-      setSearch(productData);
-    }
-  };
+  //     setSearch(productData);
+  //   }
+  // };
 
   return (
     <AppShell
@@ -103,63 +103,24 @@ export default function Dashboard() {
           hiddenBreakpoint="sm"
           hidden={!opened}
           width={{ sm: 200, lg: 300 }}>
-          <SearchBar
-            placeholder="Search"
-            onChange={(e) => handleSearchText(e)}
-            onKeyDown={(e) => handleSearchEnter(e)}
-          />
-          <Button
-            variant="white"
-            radius="xl"
-            w={100}
-            ml="auto"
-            onClick={handleShowAll}>
-            Show All
-          </Button>
-          {/* <Select
-            searchable
-            clearable
-            placeholder="Categories"
-            value={value}
-            data={mappedCategories}
-            onChange={setValue}
-            onKeyDown={(e) => handleCategoryEnter(e)}
-          /> */}
-          {/* <Button
-            variant="white"
-            radius="xl"
-            w={100}
-            
-            ml="auto"
-            onClick={handleSearchButtonClick}>
-            Search
-          </Button> */}
-          <Button
-            mt={10}
-            ml="auto"
-            mr="auto"
-            w={150}
-            variant="white"
-            radius="md"
-            size="xl"
-            onClick={handleSwapProduct}>
-            Products
-          </Button>
-          <Button
-            mb={10}
-            variant="white"
-            ml="auto"
-            mr="auto"
-            w={150}
-            radius="md"
-            size="xl"
-            onClick={handleSwapOrder}>
-            Orders
-          </Button>
-
-          <Button mt="auto" mb={20} onClick={signOut}>
-            Logout
-          </Button>
+          <Group position="left">
+            <Tabs defaultValue="products" orientation="vertical">
+              <Tabs.List>
+                <Tabs.Tab value="products" onClick={handleSwapProduct}>
+                  Products
+                </Tabs.Tab>
+                <Tabs.Tab value="orders" onClick={handleSwapOrder}>
+                  Orders
+                </Tabs.Tab>
+              </Tabs.List>
+              <Tabs.Panel value="products" pl="xs">
+                Products table
+              </Tabs.Panel>
+              <Tabs.Panel value="orders" pl="xs">
+                Orders table
+              </Tabs.Panel>
+            </Tabs>
+          </Group>
         </Navbar>
       }
       footer={
@@ -168,19 +129,28 @@ export default function Dashboard() {
         </Footer>
       }
       header={
-        <Header height={{ base: 50, md: 70 }} p="md">
-          <Flex align="center" justify="space-between">
-            <Text>Dashboard</Text>
-            <Text mr={100}>
-              Admin logged in : {user.user_metadata.full_name}
-            </Text>
-            <Group mr={50}>
-              <Button mr={100} onClick={navigateToCategory}>
-                Add Category
-              </Button>
-              <Button onClick={navigateToCreate}>Add product</Button>
+        <Header height={95} p="md">
+          <Group position="apart">
+            <Title>Admin panel</Title>
+            <Group>
+              <SearchBar
+                // miw={width * 0.3}
+                mx="auto"
+                size="xs"
+                radius="xl"
+                pt={10}
+                placeholder="Search"
+                onChange={(e) => handleSearchText(e)}
+                onKeyDown={(e) => handleSearchEnter(e)}
+              />
             </Group>
-          </Flex>
+            <Group mr={70}>
+              <UserMenu
+                onCategory={navigateToCategory}
+                onProduct={navigateToCreate}
+              />
+            </Group>
+          </Group>
         </Header>
       }>
       {swapProduct ? (

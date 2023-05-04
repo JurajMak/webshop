@@ -32,12 +32,13 @@ const getCategory = async (category) => {
   if (category) {
     query = query.eq("name", category);
   }
+
   const { data, error } = await query;
 
   if (error) {
     throw new Error(error.message);
   }
-  console.log("api", data);
+
   return data;
 };
 
@@ -70,7 +71,7 @@ const updateProductCategory = async (value, id) => {
   if (error) {
     throw new Error(error.message);
   }
-  console.log("cata", value);
+
   return data;
 };
 
