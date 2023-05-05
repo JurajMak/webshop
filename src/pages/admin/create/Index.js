@@ -22,6 +22,7 @@ import { getCategory } from "../../../api/categories";
 import { QueryClient, useMutation, useQuery } from "@tanstack/react-query";
 import { handleSuccessCreationNotification } from "../../../components/notifications/successNotification";
 import { createProduct } from "../../../api/products";
+import { salePriceCalc } from "../../../utils/calcs";
 
 const useStyles = createStyles((theme) => ({
   wrapper: {
@@ -130,9 +131,7 @@ const Create = () => {
   React.useEffect(() => {
     refetch();
   }, [value]);
-  console.log("sale", typeof sale_price, sale_price);
-  console.log("price", typeof price, price);
-  console.log("percent", typeof percent, percent);
+
   return (
     <Container sizes="xl" className={classes.wrapper}>
       <Title order={1} className={classes.title} align="center" pt={50} mb={50}>
@@ -198,10 +197,7 @@ const Create = () => {
             mb={10}
             label={`Set sale %`}
             onChange={(number) => {
-              let calc = ((price / 100) * number).toFixed(2);
-              let total = (price - calc).toFixed(2);
-              console.log("calc", total);
-              form.setFieldValue("sale_price", total);
+              form.setFieldValue("sale_price", salePriceCalc(price, number));
               setPercent(number);
             }}
             value={percent}
