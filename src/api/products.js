@@ -17,6 +17,9 @@ const getProducts = async (sortKey, searchValue, page, categoryId) => {
   if (sortKey === "sale") {
     query = query.eq("is_sale", true);
   }
+  if (sortKey === "popular") {
+    query = query.order("updated_at", { ascending: true });
+  }
 
   if (searchValue) {
     query = query.or(

@@ -11,6 +11,7 @@ import { IconSquarePlus, IconSquareMinus, IconX } from "@tabler/icons";
 import home from "../../../assets/login.jpg";
 import { useStyles } from "./Styles";
 import { useViewportSize } from "@mantine/hooks";
+import { percentageCalc } from "../../../utils/calcs";
 
 export function CartCard({ cartData, onQuantity, onDelete, onRemove }) {
   const { classes } = useStyles();
@@ -33,7 +34,7 @@ export function CartCard({ cartData, onQuantity, onDelete, onRemove }) {
         <Flex direction="column" gap={10} ml={20}>
           {is_sale && (
             <Badge color="red" variant="filled" size="lg">
-              {Math.floor(((price - sale_price) / price) * 100)}% off
+              {percentageCalc(price, sale_price)}% off
             </Badge>
           )}
           <Text

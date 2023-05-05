@@ -2,6 +2,7 @@ import { IconFileDescription } from "@tabler/icons";
 import { Card, Text, Group, Center, Badge, Image, Button } from "@mantine/core";
 import test from "../../../assets/register.jpg";
 import { useStyles } from "./Styles";
+import { percentageCalc } from "../../../utils/calcs";
 
 export function ProductCard({ data, onClick }) {
   const { classes, theme } = useStyles();
@@ -29,7 +30,7 @@ export function ProductCard({ data, onClick }) {
           color="red"
           size="lg"
           className={classes.rating}>
-          {Math.round(((price - sale_price) / price) * 100)}% off
+          {percentageCalc(price, sale_price)}% off
         </Badge>
       )}
       <div className={classes.overlay} />

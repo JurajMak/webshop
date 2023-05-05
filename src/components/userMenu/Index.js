@@ -14,10 +14,7 @@ import {
   Menu,
   UnstyledButton,
   Flex,
-  createStyles,
   Burger,
-  useMantineTheme,
-  Tabs,
 } from "@mantine/core";
 import React, { useContext, useState } from "react";
 import { AuthContext } from "../../contexts/Index";

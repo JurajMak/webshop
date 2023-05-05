@@ -25,6 +25,8 @@ import {
 import { handleSuccessUpdateNotification } from "../../../components/notifications/successNotification";
 import { updateProduct, updateSale } from "../../../api/products";
 import { QueryClient, useMutation, useQuery } from "@tanstack/react-query";
+import { salePriceEdit } from "../../../utils/calcs";
+import { percentageCalc, editSalePriceCalc } from "../../../utils/calcs";
 const useStyles = createStyles((theme) => ({
   wrapper: {
     minHeight: 900,
@@ -83,13 +85,9 @@ const Edit = () => {
   const [value, setValue] = useState("");
   const [selectedValue, setSelectedValue] = useState("");
   const queryClient = new QueryClient();
-  const percentageCalc = Math.floor(
-    ((state.price - state.sale_price) / state.price) * 100
-  );
   const [percent, setPercent] = React.useState(
-    state.is_sale ? percentageCalc : null
+    state.is_sale ? percentageCalc(state.price, state.sale_price) : null
   );
-  const prevPercentageCalc = price - (percent / 100) * price;
 
   const handleUploadImage = async (file) => {
     setLoading(true);
@@ -147,7 +145,9 @@ const Edit = () => {
     mutationFn: (item) => updateProduct(item, item.id),
     onSuccess: () => {
       setLoading(false);
-      updateCategory();
+      if (value !== "") {
+        updateCategory();
+      }
       handleSuccessUpdateNotification(name);
       queryClient.invalidateQueries("products", state.id);
     },
@@ -155,14 +155,21 @@ const Edit = () => {
 
   const handleUpdateProduct = async () => {
     setLoading(true);
+    // const update = {
+    //   name: name === "" ? state.name : name,
+    //   description: description === "" ? state.description : description,
+    //   price: price === null ? state.price : price,
+    //   quantity: quantity === "" ? state.quantity : state.quantity + quantity,
+    //   sale_price: salePriceEdit(),
+    //   image: image === "" ? state.image : image,
+    // };
     const update = {
-      name: name === "" ? state.name : name,
-      description: description === "" ? state.description : description,
-      price: price === null ? state.price : price,
+      name: name || state.name,
+      description: description || state.description,
+      price: price ?? state.price,
       quantity: quantity === "" ? state.quantity : state.quantity + quantity,
-      sale_price:
-        sale_price === null ? prevPercentageCalc.toFixed(2) : sale_price,
-      image: image === "" ? state.image : image,
+      sale_price: salePriceEdit(price, sale_price, percent, state),
+      image: image || state.image,
     };
 
     await updateProductMutation.mutateAsync({ ...update, id: state.id });
@@ -248,18 +255,10 @@ const Edit = () => {
               percent > 0 ? `Current sale ${percent} %` : `Current sale 0 %`
             }
             onChange={(number) => {
-              let total;
-
-              if (price === null) {
-                let calc = ((state.price / 100) * number).toFixed(2);
-                total = (state.price - calc).toFixed(2);
-              }
-              if (price !== null) {
-                let calc = ((price / 100) * number).toFixed(2);
-                total = (price - calc).toFixed(2);
-              }
-
-              form.setFieldValue("sale_price", total);
+              form.setFieldValue(
+                "sale_price",
+                editSalePriceCalc(price, state, number)
+              );
               setPercent(number);
             }}
             value={percent}

@@ -195,7 +195,6 @@ export default function AppShellLayout() {
             return setSelectValue(value);
           }}
           value={selectValue}
-          clearable
           // mx="auto"
           size="xs"
           data={[
