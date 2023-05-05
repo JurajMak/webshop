@@ -268,7 +268,7 @@ export function HeaderTabs({
                   </ActionIcon>
                 </Indicator>
               )}
-              <Button variant="white" color="dark" onClick={navigateLogin}>
+              <Button color="dark" onClick={navigateLogin}>
                 Log in
               </Button>
             </Group>
