@@ -16,14 +16,13 @@ import {
 import { ProductCard } from "../cards/productCard/Index";
 import HeaderTabs from "../header/Index";
 import { CategoryCard } from "../cards/categoryCard/Index";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useReducer } from "react";
 import { warningQuantityNotification } from "../notifications/warningNotification";
 import { getProducts } from "../../api/products";
 import {
   useInfiniteQuery,
   useQuery,
   useQueryClient,
-  useMutation,
 } from "@tanstack/react-query";
 import { handleInfiniteScroll } from "../../utils/infiniteScroll";
 import { useWindowScroll, useViewportSize } from "@mantine/hooks";
@@ -35,6 +34,7 @@ import {
   IconChevronDown,
 } from "@tabler/icons";
 import { FilterDrawer } from "../filterDrawer/Index";
+import { CartReducer } from "../../utils/cartReducer";
 
 export default function AppShellLayout() {
   const theme = useMantineTheme();
@@ -42,13 +42,12 @@ export default function AppShellLayout() {
   const [search, setSearch] = useState("");
   const [selectValue, setSelectValue] = useState("popular");
   const [searchWord, setSearchWord] = useState("");
-  const [shoppingData, setShoppingData] = useState([]);
   const [value, setValue] = useState("");
-  const [scroll, scrollTo] = useWindowScroll();
-  const { height, width } = useViewportSize();
   const [swap, setSwap] = useState(false);
   const [categoryId, setCategoryId] = useState("");
-  const queryClient = useQueryClient();
+  const [shoppingData, dispatch] = useReducer(CartReducer, []);
+  const [scroll, scrollTo] = useWindowScroll();
+  const { height, width } = useViewportSize();
   const {
     data,
     isLoading,
@@ -68,117 +67,35 @@ export default function AppShellLayout() {
       },
     }
   );
+
   const { data: category } = useQuery({
     queryKey: ["categories"],
     queryFn: () => getCategory(value),
   });
 
   const handleAddCart = (item) => {
-    const ifExists = shoppingData?.some((cart) => {
-      return cart.id === item.id;
-    });
-
-    if (ifExists) {
-      setShoppingData(
-        shoppingData?.map((cart) => {
-          if (cart.id === item.id) {
-            const updatedQuantity = cart.quantity + 1;
-            if (updatedQuantity > item.quantity) {
-              warningQuantityNotification();
-
-              return cart;
-            }
-            const updatedItem = { ...cart, quantity: updatedQuantity };
-            localStorage.setItem(
-              `shoppingData_${item.id}`,
-
-              JSON.stringify(updatedItem)
-            );
-            return updatedItem;
-          }
-          return cart;
-        })
-      );
-    } else {
-      const newItem = { ...item, quantity: 1 };
-      if (newItem.quantity > item.quantity) {
-        warningQuantityNotification();
-        return;
-      }
-      localStorage.setItem(`shoppingData_${item.id}`, JSON.stringify(newItem));
-      setShoppingData([...shoppingData, newItem]);
-    }
+    const payload = { item };
+    dispatch({ type: "ADD_TO_CART", payload });
   };
 
   const handleAddQuantity = (item) => {
-    const dataItem = data?.pages[0].find((dataItem) => dataItem.id === item.id);
-
-    const cartItemIndex = shoppingData.findIndex(
-      (cartItem) => cartItem.id === item.id
-    );
-    const cartItem = shoppingData[cartItemIndex];
-
-    if (cartItem && cartItem.quantity >= dataItem.quantity) {
-      warningQuantityNotification();
-      return;
-    }
-
-    const updatedCartItem = cartItem
-      ? { ...cartItem, quantity: cartItem.quantity + 1 }
-      : { ...item, quantity: 1 };
-
-    const updatedShoppingData = [...shoppingData];
-    if (cartItemIndex >= 0) {
-      updatedShoppingData[cartItemIndex] = updatedCartItem;
-    } else {
-      updatedShoppingData.push(updatedCartItem);
-    }
-
-    localStorage.setItem(
-      `shoppingData_${item.id}`,
-      JSON.stringify(updatedCartItem)
-    );
-
-    setShoppingData(updatedShoppingData);
+    const payload = { item, data };
+    dispatch({ type: "ADD_QUANTITY", payload });
   };
 
   const handleRemoveQuantity = (item) => {
-    const isExists = shoppingData?.some((cart) => {
-      return cart.id === item.id;
-    });
-
-    if (isExists) {
-      return setShoppingData(
-        shoppingData?.map((cart) => {
-          if (cart.id === item.id && cart.quantity > 1) {
-            const updatedItem = { ...cart, quantity: cart.quantity - 1 };
-            localStorage.setItem(
-              `shoppingData_${item.id}`,
-              JSON.stringify(updatedItem)
-            );
-            return updatedItem;
-          } else if (cart.id === item.id && cart.quantity > 1) {
-            localStorage.removeItem(`shoppingData_${item.id}`);
-          }
-          return cart;
-        })
-      );
-    }
-  };
-
-  const handleDeleteAllCart = () => {
-    for (let key in localStorage) {
-      if (key.includes(`shoppingData_`)) {
-        localStorage.removeItem(key);
-      }
-    }
-    setShoppingData([]);
-    refetch();
+    const payload = { item };
+    dispatch({ type: "REMOVE_QUANTITY", payload });
   };
 
   const handleDeleteItem = (id) => {
-    setShoppingData(shoppingData?.filter((item) => item.id !== id));
-    localStorage.removeItem(`shoppingData_${id}`);
+    const payload = { id };
+    dispatch({ type: "DELETE_ITEM", payload });
+  };
+
+  const handleDeleteAllCart = () => {
+    dispatch({ type: "DELETE_ALL_CART" });
+    refetch();
   };
 
   const handleSearchText = (e) => {
@@ -211,25 +128,19 @@ export default function AppShellLayout() {
     setCategoryId(id);
   };
 
-  useEffect(() => {
-    const savedData = [];
-    for (let i = 0; i < localStorage.length; i++) {
-      const key = localStorage.key(i);
-      if (key.includes("shoppingData_")) {
-        const item = JSON.parse(localStorage.getItem(key));
-        savedData.push(item);
-      }
-    }
+  const test = data?.pages.flatMap((item) => item);
 
-    document.addEventListener("scroll", (e) =>
-      handleInfiniteScroll(e, hasNextPage, fetchNextPage)
+  useEffect(() => {
+    dispatch({ type: "LOAD_CART_FROM_STORAGE" });
+    window.addEventListener("scroll", (e) =>
+      handleInfiniteScroll(e, hasNextPage, fetchNextPage, isFetchingNextPage)
     );
 
-    setShoppingData(savedData);
     refetch();
+
     return () => {
-      document.removeEventListener("scroll", (e) =>
-        handleInfiniteScroll(e, hasNextPage, fetchNextPage)
+      window.removeEventListener("scroll", (e) =>
+        handleInfiniteScroll(e, hasNextPage, fetchNextPage, isFetchingNextPage)
       );
     };
   }, [selectValue, searchWord, categoryId, fetchNextPage, hasNextPage]);
@@ -299,9 +210,9 @@ export default function AppShellLayout() {
       </Group>
       {!swap ? (
         <Group position="center">
-          {isLoading || isRefetching ? (
+          {isLoading ? (
             <LoadingOverlay
-              visible={isLoading || isRefetching}
+              visible={isLoading}
               overlayBlur={6}
               loaderProps={{ size: "xl", color: "dark" }}
               overlayOpacity={0.3}
