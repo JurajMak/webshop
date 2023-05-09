@@ -35,9 +35,11 @@ import {
 } from "@tabler/icons";
 import { FilterDrawer } from "../filterDrawer/Index";
 import { CartReducer } from "../../utils/cartReducer";
+import { useNavigate } from "react-router-dom";
 
 export default function AppShellLayout() {
   const theme = useMantineTheme();
+  const navigate = useNavigate();
   const [opened, setOpened] = useState(false);
   const [search, setSearch] = useState("");
   const [selectValue, setSelectValue] = useState("popular");
@@ -104,6 +106,7 @@ export default function AppShellLayout() {
   const handleSearchEnter = (e) => {
     if (e.key === "Enter") {
       setSearchWord(search);
+      setSwap(false);
     }
   };
 
@@ -127,8 +130,9 @@ export default function AppShellLayout() {
     setSwap(false);
     setCategoryId(id);
   };
-
-  const test = data?.pages.flatMap((item) => item);
+  const handleProductsDetails = (item) => {
+    navigate(`/products/${item.id}`);
+  };
 
   useEffect(() => {
     dispatch({ type: "LOAD_CART_FROM_STORAGE" });
@@ -156,13 +160,11 @@ export default function AppShellLayout() {
           overflow: "hidden",
         },
       }}
-      navbarOffsetBreakpoint="sm"
-      asideOffsetBreakpoint="sm"
-      footer={
-        <Footer height={60} p="md">
-          Application footer
-        </Footer>
-      }
+      // footer={
+      //   <Footer height={60} p="md">
+      //     Application footer
+      //   </Footer>
+      // }
       header={
         <HeaderTabs
           orders={shoppingData}
@@ -175,9 +177,10 @@ export default function AppShellLayout() {
           onBtn={handleSearchBtn}
           onProduct={handleSwapProduct}
           onCategory={handleSwapCategory}
+          onAll={handleShowAll}
         />
       }>
-      <Group position="center" m={10} mt={30}>
+      <Group position="center" m={10} mb={20}>
         <UnstyledButton onClick={() => setOpened(!opened)}>
           <Group>
             <IconAdjustmentsHorizontal size={25} color={theme.colors.blue[6]} />
@@ -225,6 +228,7 @@ export default function AppShellLayout() {
                       <ProductCard
                         data={item}
                         onClick={() => handleAddCart(item)}
+                        onDetails={() => handleProductsDetails(item)}
                       />
                     </Group>
                   );

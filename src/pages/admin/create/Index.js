@@ -19,45 +19,12 @@ import { Form } from "./Styles";
 import React, { useContext, useState } from "react";
 import { AuthContext } from "../../../contexts/Index";
 import { getCategory } from "../../../api/categories";
-import { QueryClient, useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { handleSuccessCreationNotification } from "../../../components/notifications/successNotification";
 import { createProduct } from "../../../api/products";
 import { salePriceCalc } from "../../../utils/calcs";
-
-const useStyles = createStyles((theme) => ({
-  wrapper: {
-    minHeight: 900,
-    backgroundSize: "cover",
-    backgroundImage:
-      "url(https://images.unsplash.com/photo-1484242857719-4b9144542727?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1280&q=80)",
-  },
-
-  form: {
-    borderRight: `1px solid ${
-      theme.colorScheme === "dark" ? theme.colors.dark[7] : theme.colors.gray[3]
-    }`,
-    minHeight: 900,
-    maxWidth: 450,
-    paddingTop: 80,
-
-    [`@media (max-width: ${theme.breakpoints.sm}px)`]: {
-      maxWidth: "100%",
-    },
-  },
-
-  title: {
-    color: theme.colorScheme === "dark" ? theme.white : theme.black,
-    fontFamily: `Greycliff CF, ${theme.fontFamily}`,
-  },
-
-  logo: {
-    color: theme.colorScheme === "dark" ? theme.white : theme.black,
-    width: 120,
-    display: "block",
-    marginLeft: "auto",
-    marginRight: "auto",
-  },
-}));
+import { useStyles } from "./Styles";
+import { useViewportSize } from "@mantine/hooks";
 
 const Create = () => {
   const { classes } = useStyles();
@@ -66,7 +33,8 @@ const Create = () => {
   const [file, setFile] = useState("");
   const [percent, setPercent] = React.useState(0);
   const [value, setValue] = React.useState("");
-  const queryClient = new QueryClient();
+  const queryClient = new useQueryClient();
+  const { height, width } = useViewportSize();
 
   const form = useForm({
     initialValues: {
@@ -133,7 +101,10 @@ const Create = () => {
   }, [value]);
 
   return (
-    <Container sizes="xl" className={classes.wrapper}>
+    <Container
+      sizes="xl"
+      className={classes.wrapper}
+      sx={{ minHeight: height }}>
       <Title order={1} className={classes.title} align="center" pt={50} mb={50}>
         Add new product
       </Title>

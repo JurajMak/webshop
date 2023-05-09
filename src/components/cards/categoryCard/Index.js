@@ -17,8 +17,8 @@ export function CategoryCard({ data, onClick }) {
   return (
     <UnstyledButton onClick={onClick}>
       <Card
-        miw={300}
-        maw={300}
+        miw={250}
+        maw={250}
         p="lg"
         shadow="lg"
         className={classes.card}
