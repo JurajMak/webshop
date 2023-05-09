@@ -15,6 +15,7 @@ import {
   UnstyledButton,
   Flex,
   Burger,
+  useMantineTheme,
 } from "@mantine/core";
 import React, { useContext, useState } from "react";
 import { AuthContext } from "../../contexts/Index";
@@ -24,6 +25,7 @@ import { useStyles } from "./Styles";
 
 export default function UserMenu({ orders, onDrawer, onCategory, onProduct }) {
   const [userMenuOpened, setUserMenuOpened] = useState(false);
+  const theme = useMantineTheme();
   const { user, signOut } = useContext(AuthContext);
   const { classes } = useStyles();
   const { height, width } = useViewportSize();
@@ -45,14 +47,20 @@ export default function UserMenu({ orders, onDrawer, onCategory, onProduct }) {
             <UnstyledButton>
               <Group spacing={7}>
                 <Avatar radius="xl" size={30} />
-                <Text weight={500} size="md" sx={{ lineHeight: 1 }} mr={3}>
+                <Text
+                  weight={500}
+                  size="md"
+                  sx={{ lineHeight: 1 }}
+                  mr={3}
+                  color={theme.colors.gray[3]}>
                   {user?.user_metadata.full_name}
                 </Text>
-                <IconChevronDown size={12} stroke={1.5} />
+                <IconChevronDown size={12} stroke={1.5} color="white" />
               </Group>
             </UnstyledButton>
           ) : (
             <Burger
+              color="white"
               transitionDuration={500}
               opened={burgerOpen}
               onClick={() => setBurgerOpen(true)}

@@ -4,15 +4,10 @@ import { useQuery } from "@tanstack/react-query";
 import { getOrders } from "../../../api/orders";
 
 export function OrderTable({ titles }) {
-  const { data, isLoading, isSucces, refetch } = useQuery({
+  const { data } = useQuery({
     queryKey: ["orders"],
     queryFn: () => getOrders(),
   });
-
-  // React.useEffect(() => {
-
-  //   refetch();
-  // }, []);
 
   return (
     <ScrollArea>

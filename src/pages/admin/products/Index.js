@@ -15,14 +15,11 @@ import { AuthContext } from "../../../contexts/Index";
 import { ImageWrap } from "./Styles";
 import altimg from "../../../assets/login.jpg";
 import { warningProductNotification } from "../../../components/notifications/warningNotification";
-import {
-  handleDeleteNotification,
-  handleDeleteProductNotification,
-} from "../../../components/notifications/deleteNotification";
+import { handleDeleteProductNotification } from "../../../components/notifications/deleteNotification";
 import { getProducts, deleteProduct } from "../../../api/products";
 import { handleInfiniteScroll } from "../../../utils/infiniteScroll";
 import {
-  QueryClient,
+  useQueryClient,
   useInfiniteQuery,
   useMutation,
 } from "@tanstack/react-query";
@@ -31,11 +28,12 @@ export function ProductsTable({ titles, search }) {
   const theme = useMantineTheme();
   const navigate = useNavigate();
   const { user } = useContext(AuthContext);
-  const queryClient = new QueryClient();
+  const queryClient = new useQueryClient();
 
   const toEdit = async (item) => {
     navigate(`/admin/products/${item.id}`, { state: item });
   };
+
   const {
     data,
     isSuccess,
@@ -59,9 +57,8 @@ export function ProductsTable({ titles, search }) {
   const deleteProductMutation = useMutation({
     mutationFn: (item) => deleteProduct(item),
     onSuccess: () => {
-      handleDeleteProductNotification();
       queryClient.invalidateQueries("products");
-      refetch();
+      handleDeleteProductNotification();
     },
 
     onError: () => {

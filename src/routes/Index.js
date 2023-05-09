@@ -8,6 +8,7 @@ import Dashboard from "../pages/admin/dashboard/Index";
 import Create from "../pages/admin/create/Index";
 import Edit from "../pages/admin/edit/Index";
 import CreateCategory from "../pages/admin/category/Index";
+import ProductDetails from "../pages/product/Index";
 
 const RenderRoutes = () => {
   return (
@@ -16,6 +17,7 @@ const RenderRoutes = () => {
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<UserLogin />} />
         <Route path="/register" element={<RegisterForm />} />
+        <Route path="/products/:id" element={<ProductDetails />} />
         <Route path="/" element={<ProtectedRoute />}>
           <Route path="/admin" element={<Dashboard />} />
           <Route path="/admin/products/create" element={<Create />} />

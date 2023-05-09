@@ -63,6 +63,37 @@ export const CartReducer = (state, action) => {
       return updatedState;
     }
 
+    case "ADD_QUANTITY_PRODUCT": {
+      const { item } = action.payload;
+      const flatten = state.map((item) => item);
+      const dataItem = flatten.find((dataItem) => dataItem.id === item.id);
+      const cartItemIndex = state.findIndex(
+        (cartItem) => cartItem.id === item.id
+      );
+      const cartItem = state[cartItemIndex];
+
+      if (cartItem && cartItem.quantity >= dataItem.quantity) {
+        return state;
+      }
+      // console.log("data", data);
+      const updatedCartItem = cartItem
+        ? { ...cartItem, quantity: cartItem.quantity + 1 }
+        : { ...item, quantity: 1 };
+
+      const updatedState = [...state];
+      if (cartItemIndex >= 0) {
+        updatedState[cartItemIndex] = updatedCartItem;
+      } else {
+        updatedState.push(updatedCartItem);
+      }
+
+      localStorage.setItem(
+        `shoppingData_${item.id}`,
+        JSON.stringify(updatedCartItem)
+      );
+      return updatedState;
+    }
+
     case "REMOVE_QUANTITY": {
       const { item } = action.payload;
       const updatedState = state.map((cart) => {
