@@ -53,7 +53,7 @@ export function ProductCard({ data, onClick, onDetails }) {
                     weight={500}
                     sx={{ lineHeight: 1 }}
                     mb={5}>
-                    ${price}
+                    {price}€
                   </Text>
                   <Text
                     truncate
@@ -61,8 +61,8 @@ export function ProductCard({ data, onClick, onDetails }) {
                     color="red.6"
                     weight={500}
                     sx={{ lineHeight: 1 }}>
-                    ${sale_price}
-                  </Text>{" "}
+                    {sale_price}€
+                  </Text>
                 </div>
               ) : (
                 <div>
@@ -72,7 +72,7 @@ export function ProductCard({ data, onClick, onDetails }) {
                     color="gray.5"
                     weight={500}
                     sx={{ lineHeight: 1 }}>
-                    ${price}
+                    {price}€
                   </Text>
                 </div>
               )}

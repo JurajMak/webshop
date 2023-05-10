@@ -192,7 +192,7 @@ const Edit = () => {
 
         <NumberInput
           precision={2}
-          label={`Price: $ ${state.price}`}
+          label={`Price: € ${state.price}`}
           placeholder={state.price}
           {...form.getInputProps("price")}
         />

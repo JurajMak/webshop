@@ -25,6 +25,8 @@ import { sumTotal } from "../../utils/sumTotal";
 import CartDrawer from "../cartDrawer/Index";
 import { useStyles } from "./Styles";
 import { MantineLogo } from "@mantine/ds";
+import { ReactComponent as Logo } from "../../assets/logo.svg";
+import Icon from "../icons/Index";
 
 export function HeaderTabs({
   orders,
@@ -112,10 +114,10 @@ export function HeaderTabs({
     handlePaymentNotification();
     onClear();
   };
-  // console.log("tab", tabValue);
+
   return (
     <Box>
-      <Header height={width < 500 ? 140 : 110} px="sm" bg="dark.4">
+      <Header height={width < 768 ? 140 : 110} px="sm" bg="dark.4">
         <Flex direction="column">
           <Group position="apart" sx={{ height: "100%", gap: 0 }} mt={10}>
             <Group
@@ -123,18 +125,13 @@ export function HeaderTabs({
               spacing={0}
               className={classes.hiddenMobile}
               position="apart">
-              {/* <Text
-                mr={width * 0.25}
-                fw={500}
-                color={theme.colors.gray[3]}
-                onClick={() => navigate("/")}
-                sx={{
-                  cursor: "pointer",
-                }}>
-                App logo/name
-              </Text> */}
-              <UnstyledButton mr={width * 0.25} onClick={() => navigate("/")}>
-                <MantineLogo size={34} inverted color="yellow" />
+              <UnstyledButton onClick={() => navigate("/")}>
+                <Flex justify="center" style={{ alignItems: "center" }}>
+                  <Logo width={50} />
+                  <Text c="white" fw={600} fz={20}>
+                    Online-Shop
+                  </Text>
+                </Flex>
               </UnstyledButton>
 
               <SearchBar
@@ -143,6 +140,7 @@ export function HeaderTabs({
                 size="xs"
                 radius="md"
                 p={10}
+                ml={width > 1100 ? width * 0.2 : 0}
                 onChange={onText}
                 onKeyPress={onEnter}
                 onClick={onBtn}
@@ -177,18 +175,14 @@ export function HeaderTabs({
               <Group
                 position="apart"
                 spacing="xl"
-                miw={width < 500 && width * 0.9}>
+                miw={width < 768 && width * 0.9}>
                 <UserMenu orders={orders} onDrawer={() => setOpened(true)} />
 
-                {width < 500 && (
-                  // <Text
-                  //   fw={500}
-                  //   color={theme.colors.gray[3]}
-                  //   onClick={() => navigate("/")}>
-                  //   App logo/name
-                  // </Text>
+                {width < 768 && (
                   <UnstyledButton onClick={() => navigate("/")}>
-                    <MantineLogo size={34} inverted color="yellow" />
+                    <Flex justify="center" style={{ alignItems: "center" }}>
+                      <Logo width={50} />
+                    </Flex>
                   </UnstyledButton>
                 )}
 
@@ -217,7 +211,7 @@ export function HeaderTabs({
               <Group
                 position="apart"
                 spacing="xl"
-                miw={width < 500 && width * 0.9}>
+                miw={width < 768 && width * 0.9}>
                 <Button
                   sx={{
                     [`&:hover`]: {
@@ -229,13 +223,12 @@ export function HeaderTabs({
                   onClick={() => navigate("/login")}>
                   Log in
                 </Button>
-                {width < 500 && (
-                  <Text
-                    fw={500}
-                    color={theme.colors.gray[3]}
-                    onClick={() => navigate("/")}>
-                    App logo/name
-                  </Text>
+                {width < 768 && (
+                  <UnstyledButton onClick={() => navigate("/")}>
+                    <Flex justify="center" style={{ alignItems: "center" }}>
+                      <Logo width={50} />
+                    </Flex>
+                  </UnstyledButton>
                 )}
                 {orders.length > 0 && (
                   <Indicator
@@ -259,7 +252,7 @@ export function HeaderTabs({
               </Group>
             )}
 
-            {width < 500 && (
+            {width < 768 && (
               <Group mt={20}>
                 <SearchBar
                   miw={width * 0.95}

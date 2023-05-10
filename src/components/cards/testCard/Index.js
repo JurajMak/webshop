@@ -122,15 +122,15 @@ export function TestCard({ data, onClick }) {
                     weight={500}
                     sx={{ lineHeight: 1 }}
                     mb={5}>
-                    ${price}
+                    {price}€
                   </Text>
                   <Text
                     size="xl"
                     color="red"
                     weight={500}
                     sx={{ lineHeight: 1 }}>
-                    ${sale_price}
-                  </Text>{" "}
+                    {sale_price}€
+                  </Text>
                 </div>
               ) : (
                 <div>
@@ -139,7 +139,7 @@ export function TestCard({ data, onClick }) {
                     color="gray"
                     weight={500}
                     sx={{ lineHeight: 1 }}>
-                    ${price}
+                    {price}€
                   </Text>
                 </div>
               )}

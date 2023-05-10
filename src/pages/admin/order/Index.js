@@ -32,7 +32,7 @@ export function OrderTable({ titles }) {
 
               <td>
                 <Text fz="sm" c="blue">
-                  $ {item.total}
+                  {item.total} €
                 </Text>
               </td>
               <td>
