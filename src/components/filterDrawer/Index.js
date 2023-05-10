@@ -32,6 +32,7 @@ export function FilterDrawer({
 
   return (
     <Drawer
+      title="Filters"
       size="xl"
       padding="xs"
       opened={opened}
@@ -55,6 +56,7 @@ export function FilterDrawer({
           width: "30px",
           height: "30px",
         },
+        [".mantine-Drawer-title"]: { fontSize: 30, fontWeight: 600 },
       }}>
       <Accordion
         multiple

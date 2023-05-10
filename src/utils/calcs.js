@@ -10,7 +10,7 @@ export const salePriceEdit = (price, sale_price, percent, state) => {
 };
 
 export const percentageCalc = (price, sale_price) => {
-  return Math.floor(((price - sale_price) / price) * 100);
+  return Math.round(((price - sale_price) / price) * 100);
 };
 
 export const salePriceCalc = (price, number) => {
