@@ -104,16 +104,16 @@ export function ProductsCard({ data, onClick }) {
                   size="sm"
                   weight={700}
                   sx={{ lineHeight: 1 }}>
-                  ${price}
+                  {price}€
                 </Text>
                 <Text size="xl" color="red" weight={700} sx={{ lineHeight: 1 }}>
-                  ${sale_price}
+                  {sale_price}€
                 </Text>{" "}
               </div>
             ) : (
               <div>
                 <Text size="xl" weight={700} sx={{ lineHeight: 1 }}>
-                  ${price}
+                  {price}€
                 </Text>
               </div>
             )}

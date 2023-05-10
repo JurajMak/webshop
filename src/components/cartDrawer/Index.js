@@ -83,7 +83,7 @@ export default function CartDrawer({
               Total :
             </Text>
             <Text fz="lg" fw={500}>
-              $ {sumTotal(orders)}
+              {sumTotal(orders)}€
             </Text>
           </Group>
 
@@ -94,7 +94,7 @@ export default function CartDrawer({
               disabled={orders.length <= 0 ? true : false}
               onClick={handleCheckout}
               loading={loading}>
-              $ Checkout
+              Checkout €
             </Button>
           ) : (
             <Button color="dark" miw={250} onClick={navigateLogin}>

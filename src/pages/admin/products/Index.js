@@ -119,7 +119,7 @@ export function ProductsTable({ titles, search }) {
                     </td>
                     <td>
                       <Text fz="sm" c="dimmed" fw={500}>
-                        $ {item.price}
+                        {item.price}€
                       </Text>
                     </td>
                     <td>
@@ -129,7 +129,7 @@ export function ProductsTable({ titles, search }) {
                     </td>
                     <td>
                       <Text fz="sm" c="red" fw={500}>
-                        $ {item.sale_price}
+                        {item.sale_price}€
                       </Text>
                     </td>
                     <td>

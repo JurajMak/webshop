@@ -43,7 +43,7 @@ export default function UserMenu({ orders, onDrawer, onCategory, onProduct }) {
         }}
         onOpen={() => setUserMenuOpened(true)}>
         <Menu.Target>
-          {width > 500 ? (
+          {width > 800 ? (
             <UnstyledButton>
               <Group spacing={7}>
                 <Avatar radius="xl" size={30} />

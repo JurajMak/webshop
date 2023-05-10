@@ -55,20 +55,20 @@ export function CartCard({ cartData, onQuantity, onDelete, onRemove }) {
                     size="sm"
                     weight={700}
                     sx={{ lineHeight: 1 }}>
-                    ${total.toFixed(2)}
+                    {total.toFixed(2)}€
                   </Text>
                   <Text
                     size="lg"
                     color="red"
                     weight={700}
                     sx={{ lineHeight: 1 }}>
-                    ${sale.toFixed(2)}
+                    {sale.toFixed(2)}€
                   </Text>
                 </div>
               ) : (
                 <div>
                   <Text size="lg" weight={700} sx={{ lineHeight: 1 }}>
-                    ${total.toFixed(2)}
+                    {total.toFixed(2)}€
                   </Text>
                 </div>
               )}
