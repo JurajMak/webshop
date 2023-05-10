@@ -58,7 +58,7 @@ export const handleSuccessUpdateNotification = (item) => {
 export const handleSuccessLogoutNotification = (item) => {
   showNotification({
     title: `You are now logged out, ${item}.`,
-    message: `Thank you for using our app.`,
+    message: `Thank you for visiting us.`,
     color: "teal",
     icon: <IconCheck />,
     onClose: () => cleanNotifications(),

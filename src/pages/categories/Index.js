@@ -13,8 +13,10 @@ import {
   Group,
   UnstyledButton,
 } from "@mantine/core";
-import { ProductCard } from "../cards/productCard/Index";
-import HeaderTabs from "../header/Index";
+import { ProductCard } from "../../components/cards/productCard/Index";
+
+import HeaderTabs from "../../components/header/Index";
+import { CategoryCard } from "../../components/cards/categoryCard/Index";
 import React, { useState, useEffect, useReducer } from "react";
 import { getProducts } from "../../api/products";
 import {
@@ -25,17 +27,16 @@ import {
 import { handleInfiniteScroll } from "../../utils/infiniteScroll";
 import { useWindowScroll, useViewportSize } from "@mantine/hooks";
 import { getCategory } from "../../api/categories";
-
 import {
   IconArrowUp,
   IconAdjustmentsHorizontal,
   IconChevronDown,
 } from "@tabler/icons";
-import { FilterDrawer } from "../filterDrawer/Index";
+import { FilterDrawer } from "../../components/filterDrawer/Index";
 import { CartReducer } from "../../utils/cartReducer";
 import { useNavigate } from "react-router-dom";
 
-export default function AppShellLayout() {
+export default function Categories() {
   const theme = useMantineTheme();
   const navigate = useNavigate();
   const [opened, setOpened] = useState(false);
@@ -48,12 +49,6 @@ export default function AppShellLayout() {
   const [shoppingData, dispatch] = useReducer(CartReducer, []);
   const [scroll, scrollTo] = useWindowScroll();
   const { height, width } = useViewportSize();
-  const [chipValue, setChipValue] = useState();
-  const [priceRange, setPriceRange] = useState();
-
-  // console.log("chip", chipValue);
-  // console.log("id", categoryId);
-  // console.log("price", priceRange);
   const {
     data,
     isLoading,
@@ -65,7 +60,7 @@ export default function AppShellLayout() {
   } = useInfiniteQuery(
     ["products"],
     ({ pageParam = 1 }) =>
-      getProducts(selectValue, searchWord, pageParam, categoryId, priceRange),
+      getProducts(selectValue, searchWord, pageParam, categoryId),
     {
       getNextPageParam: (lastPage, pages) => {
         const nextPage = pages.length + 1;
@@ -74,7 +69,7 @@ export default function AppShellLayout() {
     }
   );
 
-  const { data: category } = useQuery({
+  const { data: category, isSuccess } = useQuery({
     queryKey: ["categories"],
     queryFn: () => getCategory(value),
   });
@@ -103,9 +98,6 @@ export default function AppShellLayout() {
     dispatch({ type: "DELETE_ALL_CART" });
     refetch();
   };
-  const handleCategoryClick = (id) => {
-    setCategoryId(id);
-  };
 
   const handleSearchText = (e) => {
     setSearch(e.target.value);
@@ -125,6 +117,18 @@ export default function AppShellLayout() {
     setValue("");
   };
 
+  const handleSwapProduct = () => {
+    setSwap(false);
+    setCategoryId("");
+  };
+  const handleSwapCategory = () => {
+    setSwap(false);
+  };
+
+  const handleCategoryClick = async (id) => {
+    setSwap(true);
+    setCategoryId(id);
+  };
   const handleProductsDetails = (item) => {
     navigate(`/products/${item.id}`);
   };
@@ -142,14 +146,7 @@ export default function AppShellLayout() {
         handleInfiniteScroll(e, hasNextPage, fetchNextPage, isFetchingNextPage)
       );
     };
-  }, [
-    selectValue,
-    searchWord,
-    categoryId,
-    priceRange,
-    fetchNextPage,
-    hasNextPage,
-  ]);
+  }, [selectValue, searchWord, categoryId, fetchNextPage, hasNextPage]);
 
   return (
     <AppShell
@@ -178,6 +175,7 @@ export default function AppShellLayout() {
           onEnter={handleSearchEnter}
           onBtn={handleSearchBtn}
           onAll={handleShowAll}
+          onCategory={handleSwapCategory}
         />
       }>
       <Group position="center" m={10} mb={20}>
@@ -204,42 +202,89 @@ export default function AppShellLayout() {
           // mx="auto"
           size="xs"
           data={[
-            { label: "Highest price", value: "highest" },
-            { label: "Lowest price", value: "lowest" },
-            { label: "On sale", value: "sale" },
+            { label: "Sort from highest price", value: "highest" },
+            { label: "Sort from lowest price", value: "lowest" },
+            { label: "Sort on sale", value: "sale" },
             { label: "Popular", value: "popular" },
           ]}
           rightSection={<IconChevronDown size="1rem" />}
           rightSectionWidth={30}
         />
       </Group>
-
-      <Group position="center">
-        {isLoading ? (
-          <LoadingOverlay
-            visible={isLoading}
-            overlayBlur={6}
-            loaderProps={{ size: "xl", color: "dark" }}
-            overlayOpacity={0.3}
-          />
-        ) : (
-          data?.pages?.map((group, i) => (
-            <React.Fragment key={i}>
-              {group?.map((item) => {
-                return (
-                  <Group key={item.id} m={5}>
-                    <ProductCard
-                      data={item}
-                      onClick={() => handleAddCart(item)}
-                      onDetails={() => handleProductsDetails(item)}
-                    />
-                  </Group>
-                );
-              })}
-            </React.Fragment>
-          ))
-        )}
-      </Group>
+      {!swap ? (
+        <Group position="center">
+          {!isSuccess ? (
+            <LoadingOverlay
+              visible={!isSuccess}
+              overlayBlur={6}
+              loaderProps={{ size: "xl", color: "dark" }}
+              overlayOpacity={0.3}
+            />
+          ) : (
+            // data?.pages?.map((group, i) => (
+            //   <React.Fragment key={i}>
+            //     {group?.map((item) => {
+            //       return (
+            //         <Group key={item.id} m={5}>
+            //           <ProductCard
+            //             data={item}
+            //             onClick={() => handleAddCart(item)}
+            //             onDetails={() => handleProductsDetails(item)}
+            //           />
+            //         </Group>
+            //       );
+            //     })}
+            //   </React.Fragment>
+            // ))
+            category?.map((item) => {
+              return (
+                <Group key={item.id} m={5}>
+                  <CategoryCard
+                    data={item}
+                    onClick={() => handleCategoryClick(item.id)}
+                  />
+                </Group>
+              );
+            })
+          )}
+        </Group>
+      ) : (
+        <Group position="center">
+          {isLoading ? (
+            <LoadingOverlay
+              visible={isLoading}
+              overlayBlur={6}
+              loaderProps={{ size: "xl", color: "dark" }}
+            />
+          ) : (
+            // category?.map((item) => {
+            //   return (
+            //     <Group key={item.id} m={5}>
+            //       <CategoryCard
+            //         data={item}
+            //         onClick={(e) => handleCategoryClick(item.id)}
+            //       />
+            //     </Group>
+            //   );
+            // })
+            data?.pages?.map((group, i) => (
+              <React.Fragment key={i}>
+                {group?.map((item) => {
+                  return (
+                    <Group key={item.id} m={5}>
+                      <ProductCard
+                        data={item}
+                        onClick={() => handleAddCart(item)}
+                        onDetails={() => handleProductsDetails(item)}
+                      />
+                    </Group>
+                  );
+                })}
+              </React.Fragment>
+            ))
+          )}
+        </Group>
+      )}
 
       {!swap && isFetchingNextPage && hasNextPage && (
         <Flex direction="column">
@@ -256,16 +301,7 @@ export default function AppShellLayout() {
           </Text>
         </Flex>
       )}
-      <FilterDrawer
-        priceRange={priceRange}
-        onRange={setPriceRange}
-        category={category}
-        value={chipValue}
-        onCategory={handleCategoryClick}
-        setValue={setChipValue}
-        opened={opened}
-        onClose={() => setOpened(!opened)}
-      />
+      <FilterDrawer opened={opened} onClose={() => setOpened(!opened)} />
 
       <Affix position={{ bottom: height * 0.05, right: width * 0.01 }}>
         <Transition transition="slide-up" mounted={scroll.y > 0}>
@@ -283,53 +319,3 @@ export default function AppShellLayout() {
     </AppShell>
   );
 }
-
-// {!swap ? (
-//   <Group position="center">
-//     {isLoading ? (
-//       <LoadingOverlay
-//         visible={isLoading}
-//         overlayBlur={6}
-//         loaderProps={{ size: "xl", color: "dark" }}
-//         overlayOpacity={0.3}
-//       />
-//     ) : (
-//       data?.pages?.map((group, i) => (
-//         <React.Fragment key={i}>
-//           {group?.map((item) => {
-//             return (
-//               <Group key={item.id} m={5}>
-//                 <ProductCard
-//                   data={item}
-//                   onClick={() => handleAddCart(item)}
-//                   onDetails={() => handleProductsDetails(item)}
-//                 />
-//               </Group>
-//             );
-//           })}
-//         </React.Fragment>
-//       ))
-//     )}
-//   </Group>
-// ) : (
-//   <Group position="center">
-//     {isLoading || isRefetching ? (
-//       <LoadingOverlay
-//         visible={isLoading || isRefetching}
-//         overlayBlur={6}
-//         loaderProps={{ size: "xl", color: "dark" }}
-//       />
-//     ) : (
-//       category?.map((item) => {
-//         return (
-//           <Group key={item.id} m={5}>
-//             <CategoryCard
-//               data={item}
-//               onClick={(e) => handleCategoryClick(item.id)}
-//             />
-//           </Group>
-//         );
-//       })
-//     )}
-//   </Group>
-// )}

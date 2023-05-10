@@ -1,23 +1,19 @@
 import {
-  createStyles,
   Header,
   Group,
   Button,
   Box,
-  Drawer,
   Text,
   Indicator,
-  Divider,
-  ScrollArea,
   Flex,
-  Title,
-  Image,
   useMantineTheme,
   ActionIcon,
   Tabs,
+  Container,
+  UnstyledButton,
 } from "@mantine/core";
 import { useViewportSize } from "@mantine/hooks";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import React, { useContext, useState } from "react";
 import { AuthContext } from "../../contexts/Index";
 import { supabase } from "../../config/Supabase";
@@ -28,6 +24,7 @@ import SearchBar from "../search/Index";
 import { sumTotal } from "../../utils/sumTotal";
 import CartDrawer from "../cartDrawer/Index";
 import { useStyles } from "./Styles";
+import { MantineLogo } from "@mantine/ds";
 
 export function HeaderTabs({
   orders,
@@ -38,9 +35,8 @@ export function HeaderTabs({
   onText,
   onEnter,
   onBtn,
-  onProduct,
-  onCategory,
   onAll,
+  onCategory,
 }) {
   const { classes } = useStyles();
   const theme = useMantineTheme();
@@ -49,10 +45,8 @@ export function HeaderTabs({
   const { user, signOut } = useContext(AuthContext);
   const [loading, setLoading] = useState(false);
   const { height, width } = useViewportSize();
-
-  const navigateLogin = async () => {
-    navigate("/login");
-  };
+  const [tabValue, setTabValue] = useState("");
+  // const { tabValue } = useParams();
 
   const totalString = sumTotal(orders);
   const total = Number(totalString).toFixed();
@@ -118,7 +112,7 @@ export function HeaderTabs({
     handlePaymentNotification();
     onClear();
   };
-
+  // console.log("tab", tabValue);
   return (
     <Box>
       <Header height={width < 500 ? 140 : 110} px="sm" bg="dark.4">
@@ -129,7 +123,7 @@ export function HeaderTabs({
               spacing={0}
               className={classes.hiddenMobile}
               position="apart">
-              <Text
+              {/* <Text
                 mr={width * 0.25}
                 fw={500}
                 color={theme.colors.gray[3]}
@@ -138,7 +132,11 @@ export function HeaderTabs({
                   cursor: "pointer",
                 }}>
                 App logo/name
-              </Text>
+              </Text> */}
+              <UnstyledButton mr={width * 0.25} onClick={() => navigate("/")}>
+                <MantineLogo size={34} inverted color="yellow" />
+              </UnstyledButton>
+
               <SearchBar
                 placeholder="Search products..."
                 miw={width * 0.3}
@@ -155,6 +153,10 @@ export function HeaderTabs({
                 sx={{
                   [".mantine-Button-label"]: {
                     color: "white",
+                  },
+                  [`&:hover`]: {
+                    background: theme.colors.yellow[8],
+                    color: theme.colors.dark[4],
                   },
                 }}
                 onClick={onAll}>
@@ -179,16 +181,22 @@ export function HeaderTabs({
                 <UserMenu orders={orders} onDrawer={() => setOpened(true)} />
 
                 {width < 500 && (
-                  <Text fw={500} color={theme.colors.gray[3]}>
-                    App logo/name
-                  </Text>
+                  // <Text
+                  //   fw={500}
+                  //   color={theme.colors.gray[3]}
+                  //   onClick={() => navigate("/")}>
+                  //   App logo/name
+                  // </Text>
+                  <UnstyledButton onClick={() => navigate("/")}>
+                    <MantineLogo size={34} inverted color="yellow" />
+                  </UnstyledButton>
                 )}
 
                 {orders.length > 0 && (
                   <Indicator
                     mx={10}
                     // color={theme.colors.blue[6]}
-                    color={theme.colors.yellow[6]}
+                    color={theme.colors.yellow[8]}
                     sx={{
                       [".mantine-Indicator-common"]: { color: "black" },
                     }}
@@ -213,23 +221,26 @@ export function HeaderTabs({
                 <Button
                   sx={{
                     [`&:hover`]: {
-                      background: theme.colors.yellow[6],
+                      background: theme.colors.yellow[8],
                       color: theme.colors.dark[4],
                     },
                   }}
                   color="dark.4"
-                  onClick={navigateLogin}>
+                  onClick={() => navigate("/login")}>
                   Log in
                 </Button>
                 {width < 500 && (
-                  <Text fw={500} color={theme.colors.gray[3]}>
+                  <Text
+                    fw={500}
+                    color={theme.colors.gray[3]}
+                    onClick={() => navigate("/")}>
                     App logo/name
                   </Text>
                 )}
                 {orders.length > 0 && (
                   <Indicator
                     // color={theme.colors.blue[6]}
-                    color={theme.colors.yellow[6]}
+                    color={theme.colors.yellow[8]}
                     sx={{
                       [".mantine-Indicator-common"]: { color: "black" },
                     }}
@@ -266,23 +277,22 @@ export function HeaderTabs({
             <Tabs
               mt={10}
               variant="pills"
-              defaultValue="products"
-              color="yellow"
+              // value={tabValue}
+              color="yellow.8"
               sx={{
                 [".mantine-Tabs-tab"]: {
                   color: "white",
+                  fontWeight: 600,
                   "&:hover": {
-                    backgroundColor: theme.colors.yellow[6],
+                    backgroundColor: theme.colors.yellow[8],
+                    // color: theme.colors.dark[8],
                   },
                 },
               }}
-              onTabChange={(value) => navigate(`/`)}>
+              onTabChange={(value) => navigate(`/${value}`)}>
               <Tabs.List position="center">
-                <Tabs.Tab value="home">Home</Tabs.Tab>
-                <Tabs.Tab value="products" onClick={onProduct}>
-                  Products
-                </Tabs.Tab>
-                <Tabs.Tab value="category" onClick={onCategory}>
+                <Tabs.Tab value="products">Products</Tabs.Tab>
+                <Tabs.Tab value="categories" onClick={onCategory}>
                   Categories
                 </Tabs.Tab>
               </Tabs.List>
