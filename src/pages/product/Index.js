@@ -115,7 +115,10 @@ export default function ProductDetails() {
               </Accordion>
 
               <Flex mt={50} justify="space-between">
-                <Button color="dark" radius={6} onClick={() => navigate("/")}>
+                <Button
+                  color="dark"
+                  radius={6}
+                  onClick={() => navigate("/products")}>
                   Return
                 </Button>
               </Flex>

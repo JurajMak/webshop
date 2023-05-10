@@ -36,7 +36,9 @@ export function OrderTable({ titles }) {
                 </Text>
               </td>
               <td>
-                <Text fz="sm"> {item.profile_name}</Text>
+                <Text fz="sm" c="dark">
+                  {item.profile_name}
+                </Text>
               </td>
               {/* <td>
                 <Text fz="sm" c="dark">

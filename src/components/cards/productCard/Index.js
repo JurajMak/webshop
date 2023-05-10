@@ -14,7 +14,7 @@ export function ProductCard({ data, onClick, onDetails }) {
       miw={250}
       maw={250}
       p="lg"
-      shadow="lg"
+      shadow="xl"
       className={classes.card}
       radius="md"
       component="a"
