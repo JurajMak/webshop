@@ -19,7 +19,7 @@ const RenderRoutes = () => {
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<UserLogin />} />
         <Route path="/register" element={<RegisterForm />} />
-        <Route path="/products" element={<AppShellLayout />} />
+        <Route path="/:tabValue" element={<AppShellLayout />} />
         <Route path="/products/:id" element={<ProductDetails />} />
         <Route path="/categories" element={<Categories />} />
         <Route path="/" element={<ProtectedRoute />}>

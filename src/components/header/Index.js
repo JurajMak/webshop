@@ -27,6 +27,7 @@ import { useStyles } from "./Styles";
 import { MantineLogo } from "@mantine/ds";
 import { ReactComponent as Logo } from "../../assets/logo.svg";
 import Icon from "../icons/Index";
+import { tab } from "@testing-library/user-event/dist/tab";
 
 export function HeaderTabs({
   orders,
@@ -47,8 +48,8 @@ export function HeaderTabs({
   const { user, signOut } = useContext(AuthContext);
   const [loading, setLoading] = useState(false);
   const { height, width } = useViewportSize();
-  const [tabValue, setTabValue] = useState("");
-  // const { tabValue } = useParams();
+  // const [tabValue, setTabValue] = useState("");
+  const { tabValue } = useParams();
 
   const totalString = sumTotal(orders);
   const total = Number(totalString).toFixed();
@@ -129,7 +130,7 @@ export function HeaderTabs({
                 <Flex justify="center" style={{ alignItems: "center" }}>
                   <Logo width={50} />
                   <Text c="white" fw={600} fz={20}>
-                    Online-Shop
+                    Shopvert
                   </Text>
                 </Flex>
               </UnstyledButton>
@@ -270,7 +271,7 @@ export function HeaderTabs({
             <Tabs
               mt={10}
               variant="pills"
-              // value={tabValue}
+              value={tabValue}
               color="yellow.8"
               sx={{
                 [".mantine-Tabs-tab"]: {
