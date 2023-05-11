@@ -32,6 +32,16 @@ export const CartReducer = (state, action) => {
       }
     }
 
+    case "ADD_PRODUCT_TO_CART": {
+      const { item, selectedQuantity } = action.payload;
+      const newItem = { ...item, quantity: selectedQuantity };
+      if (newItem.quantity > item.quantity) {
+        return state;
+      }
+      localStorage.setItem(`shoppingData_${item.id}`, JSON.stringify(newItem));
+      return [...state, newItem];
+    }
+
     case "ADD_QUANTITY": {
       const { item, data } = action.payload;
       const flatten = data?.pages.flatMap((item) => item);
@@ -41,10 +51,10 @@ export const CartReducer = (state, action) => {
       );
       const cartItem = state[cartItemIndex];
 
-      if (cartItem && cartItem.quantity >= dataItem.quantity) {
+      if (cartItem && cartItem.quantity === dataItem.quantity) {
         return state;
       }
-      console.log("data", data);
+      console.log("dataITem", dataItem);
       const updatedCartItem = cartItem
         ? { ...cartItem, quantity: cartItem.quantity + 1 }
         : { ...item, quantity: 1 };
@@ -64,18 +74,17 @@ export const CartReducer = (state, action) => {
     }
 
     case "ADD_QUANTITY_PRODUCT": {
-      const { item } = action.payload;
-      const flatten = state.map((item) => item);
-      const dataItem = flatten.find((dataItem) => dataItem.id === item.id);
+      const { item, product } = action.payload;
       const cartItemIndex = state.findIndex(
         (cartItem) => cartItem.id === item.id
       );
       const cartItem = state[cartItemIndex];
 
-      if (cartItem && cartItem.quantity >= dataItem.quantity) {
+      if (cartItem && cartItem.quantity === product.quantity) {
         return state;
       }
-      // console.log("data", data);
+      console.log("item", item);
+      console.log("product", product);
       const updatedCartItem = cartItem
         ? { ...cartItem, quantity: cartItem.quantity + 1 }
         : { ...item, quantity: 1 };
@@ -132,7 +141,7 @@ export const CartReducer = (state, action) => {
       const cartItems = [];
       for (let i = 0; i < localStorage.length; i++) {
         const key = localStorage.key(i);
-        if (key.startsWith("shoppingData_")) {
+        if (key.includes("shoppingData_")) {
           cartItems.push(JSON.parse(localStorage.getItem(key)));
         }
       }

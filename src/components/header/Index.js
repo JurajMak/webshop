@@ -22,12 +22,10 @@ import { handlePaymentNotification } from "../notifications/checkoutNotification
 import UserMenu from "../userMenu/Index";
 import SearchBar from "../search/Index";
 import { sumTotal } from "../../utils/sumTotal";
-import CartDrawer from "../cartDrawer/Index";
+// import CartDrawer from "../cartDrawer/Index";
+import CartDrawer from "../drawers/cartDrawer/Index";
 import { useStyles } from "./Styles";
-import { MantineLogo } from "@mantine/ds";
 import { ReactComponent as Logo } from "../../assets/logo.svg";
-import Icon from "../icons/Index";
-import { tab } from "@testing-library/user-event/dist/tab";
 
 export function HeaderTabs({
   orders,
