@@ -1,37 +1,5 @@
 export const CartReducer = (state, action) => {
   switch (action.type) {
-    case "ADD_TO_CART": {
-      const { item } = action.payload;
-      const ifExists = state.some((cart) => cart.id === item.id);
-      if (ifExists) {
-        return state.map((cart) => {
-          if (cart.id === item.id) {
-            const updatedQuantity = cart.quantity + 1;
-            if (updatedQuantity > item.quantity) {
-              return cart;
-            }
-            const updatedItem = { ...cart, quantity: updatedQuantity };
-            localStorage.setItem(
-              `shoppingData_${item.id}`,
-              JSON.stringify(updatedItem)
-            );
-            return updatedItem;
-          }
-          return cart;
-        });
-      } else {
-        const newItem = { ...item, quantity: 1 };
-        if (newItem.quantity > item.quantity) {
-          return state;
-        }
-        localStorage.setItem(
-          `shoppingData_${item.id}`,
-          JSON.stringify(newItem)
-        );
-        return [...state, newItem];
-      }
-    }
-
     case "ADD_PRODUCT_TO_CART": {
       const { item, selectedQuantity } = action.payload;
       const newItem = { ...item, quantity: selectedQuantity };
@@ -73,7 +41,7 @@ export const CartReducer = (state, action) => {
       return updatedState;
     }
 
-    case "ADD_QUANTITY_PRODUCT": {
+    case "ADD_QUANTITY_PRODUCT_PAGE": {
       const { item, product } = action.payload;
       const cartItemIndex = state.findIndex(
         (cartItem) => cartItem.id === item.id

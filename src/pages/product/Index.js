@@ -71,7 +71,7 @@ export default function ProductDetails() {
   const addCartQuantity = (item) => {
     const payload = { item, product };
     console.log("payload", payload);
-    dispatch({ type: "ADD_QUANTITY_PRODUCT", payload });
+    dispatch({ type: "ADD_QUANTITY_PRODUCT_PAGE", payload });
   };
 
   useEffect(() => {

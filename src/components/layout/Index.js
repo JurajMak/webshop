@@ -31,7 +31,6 @@ import {
   IconAdjustmentsHorizontal,
   IconChevronDown,
 } from "@tabler/icons";
-// import { FilterDrawer } from "../filterDrawer/Index";
 import { FilterDrawer } from "../drawers/filterDrawer/Index";
 import { CartReducer } from "../../utils/cartReducer";
 import { useNavigate } from "react-router-dom";
@@ -52,9 +51,6 @@ export default function AppShellLayout() {
   const [chipValue, setChipValue] = useState();
   const [priceRange, setPriceRange] = useState();
 
-  // console.log("chip", chipValue);
-  // console.log("id", categoryId);
-  // console.log("price", priceRange);
   const {
     data,
     isLoading,
@@ -79,11 +75,6 @@ export default function AppShellLayout() {
     queryKey: ["categories"],
     queryFn: () => getCategory(value),
   });
-
-  const handleAddCart = (item) => {
-    const payload = { item };
-    dispatch({ type: "ADD_TO_CART", payload });
-  };
 
   const handleAddQuantity = (item) => {
     const payload = { item, data };
@@ -231,7 +222,6 @@ export default function AppShellLayout() {
                   <Group key={item.id} m={5}>
                     <ProductCard
                       data={item}
-                      onClick={() => handleAddCart(item)}
                       onDetails={() => handleProductsDetails(item)}
                     />
                   </Group>
