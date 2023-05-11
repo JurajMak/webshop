@@ -34,6 +34,7 @@ import {
 import { FilterDrawer } from "../drawers/filterDrawer/Index";
 import { CartReducer } from "../../utils/cartReducer";
 import { useNavigate } from "react-router-dom";
+import { warningQuantityNotification } from "../notifications/warningNotification";
 
 export default function AppShellLayout() {
   const theme = useMantineTheme();
@@ -78,6 +79,12 @@ export default function AppShellLayout() {
 
   const handleAddQuantity = (item) => {
     const payload = { item, data };
+    const flatten = data?.pages.flatMap((item) => item);
+    const dataItem = flatten.find((dataItem) => dataItem.id === item.id);
+    console.log("quant", dataItem);
+    if (item.quantity === dataItem.quantity) {
+      warningQuantityNotification();
+    }
     dispatch({ type: "ADD_QUANTITY", payload });
   };
 
