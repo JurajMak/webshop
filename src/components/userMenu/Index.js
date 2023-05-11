@@ -14,40 +14,22 @@ import {
   Menu,
   UnstyledButton,
   Flex,
-  createStyles,
   Burger,
   useMantineTheme,
-  Tabs,
 } from "@mantine/core";
 import React, { useContext, useState } from "react";
 import { AuthContext } from "../../contexts/Index";
 import NotificationIcon from "../notificationCartIcon/Index";
 import { useViewportSize } from "@mantine/hooks";
-
-const useStyles = createStyles((theme) => ({
-  notification: {
-    justifyContent: "center",
-    textAlign: "center",
-    backgroundColor: theme.colors.blue[6],
-    width: 30,
-    height: 20,
-    borderRadius: 50,
-    marginRight: 50,
-  },
-  text: {
-    fontSize: 12,
-    fontWeight: 400,
-    color: theme.colors.gray[0],
-  },
-}));
+import { useStyles } from "./Styles";
 
 export default function UserMenu({ orders, onDrawer, onCategory, onProduct }) {
   const [userMenuOpened, setUserMenuOpened] = useState(false);
+  const theme = useMantineTheme();
   const { user, signOut } = useContext(AuthContext);
   const { classes } = useStyles();
   const { height, width } = useViewportSize();
   const [burgerOpen, setBurgerOpen] = useState(false);
-  const theme = useMantineTheme();
 
   return (
     <Group mx={10}>
@@ -61,18 +43,24 @@ export default function UserMenu({ orders, onDrawer, onCategory, onProduct }) {
         }}
         onOpen={() => setUserMenuOpened(true)}>
         <Menu.Target>
-          {width > 500 ? (
+          {width > 800 ? (
             <UnstyledButton>
               <Group spacing={7}>
                 <Avatar radius="xl" size={30} />
-                <Text weight={500} size="md" sx={{ lineHeight: 1 }} mr={3}>
+                <Text
+                  weight={500}
+                  size="md"
+                  sx={{ lineHeight: 1 }}
+                  mr={3}
+                  color={theme.colors.gray[3]}>
                   {user?.user_metadata.full_name}
                 </Text>
-                <IconChevronDown size={12} stroke={1.5} />
+                <IconChevronDown size={12} stroke={1.5} color="white" />
               </Group>
             </UnstyledButton>
           ) : (
             <Burger
+              color="white"
               transitionDuration={500}
               opened={burgerOpen}
               onClick={() => setBurgerOpen(true)}
