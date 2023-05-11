@@ -31,7 +31,8 @@ import {
   IconAdjustmentsHorizontal,
   IconChevronDown,
 } from "@tabler/icons";
-import { FilterDrawer } from "../filterDrawer/Index";
+// import { FilterDrawer } from "../filterDrawer/Index";
+import { FilterDrawer } from "../drawers/filterDrawer/Index";
 import { CartReducer } from "../../utils/cartReducer";
 import { useNavigate } from "react-router-dom";
 
