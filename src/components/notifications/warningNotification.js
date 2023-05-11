@@ -4,8 +4,7 @@ import { IconX } from "@tabler/icons";
 export const warningQuantityNotification = () => {
   showNotification({
     title: "Quantity exceeded",
-    message:
-      " Cannot add more of that product to cart remaining quantity is 0 🤥",
+    message: " Cannot add more of that product to cart!",
     color: "red",
     icon: <IconX />,
     onClose: () => cleanNotifications(),

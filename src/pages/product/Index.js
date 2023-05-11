@@ -23,6 +23,7 @@ import HeaderTabs from "../../components/header/Index";
 import { percentageCalc } from "../../utils/calcs";
 import { useViewportSize } from "@mantine/hooks";
 import { IconSquareMinus, IconSquarePlus } from "@tabler/icons";
+import { warningQuantityNotification } from "../../components/notifications/warningNotification";
 
 export default function ProductDetails() {
   const { id } = useParams();
@@ -35,6 +36,7 @@ export default function ProductDetails() {
     data: product,
     isLoading,
     isSuccess,
+    refetch,
   } = useQuery({
     queryKey: ["product"],
     queryFn: () => getProductById(id),
@@ -48,6 +50,7 @@ export default function ProductDetails() {
   };
   const handleAddQuantity = () => {
     if (selectedQuantity === product.quantity) {
+      warningQuantityNotification();
       return;
     }
     setSelectedQuantity((prev) => prev + 1);
@@ -55,13 +58,14 @@ export default function ProductDetails() {
 
   const handleAddCart = (item) => {
     const payload = { item, selectedQuantity };
-    console.log("payload", payload);
+    // console.log("payload", payload);
     dispatch({ type: "ADD_PRODUCT_TO_CART", payload });
     setSelectedQuantity(0);
   };
 
   const removeCartQuantity = (item) => {
     const payload = { item };
+
     dispatch({ type: "REMOVE_QUANTITY", payload });
   };
   const deleteCartItem = (id) => {
@@ -70,15 +74,22 @@ export default function ProductDetails() {
   };
   const addCartQuantity = (item) => {
     const payload = { item, product };
-    console.log("payload", payload);
+
+    if (item.quantity + 1 >= product.quantity) {
+      warningQuantityNotification();
+    }
     dispatch({ type: "ADD_QUANTITY_PRODUCT_PAGE", payload });
+  };
+  const clearCartData = () => {
+    dispatch({ type: "DELETE_ALL_CART" });
+    refetch();
   };
 
   useEffect(() => {
     dispatch({ type: "LOAD_CART_FROM_STORAGE" });
   }, []);
-  console.log("product", product);
-  console.log("quantity", selectedQuantity);
+  // console.log("product", product);
+  // console.log("quantity", selectedQuantity);
   return (
     <>
       {isLoading ? (
@@ -96,6 +107,7 @@ export default function ProductDetails() {
               onRemove={removeCartQuantity}
               onDelete={deleteCartItem}
               onQuantity={addCartQuantity}
+              onClear={clearCartData}
             />
             <Box>
               <Container size="xl" mt={20}>
@@ -112,13 +124,15 @@ export default function ProductDetails() {
                     justify="space-evenly"
                     direction={width < 800 && "column"}>
                     <Flex direction="column">
-                      <Text color="dimmed" weight={500} size="xl">
+                      <Text color="dimmed" weight={500} size="xl" mb={20}>
                         Available quantity: {product?.quantity}
                       </Text>
                       <Image src={product.image} maw={500} alt="Random image" />
                     </Flex>
                     <Flex direction="column" gap={30}>
-                      <Group style={{ flexDirection: "column", gap: 30 }}>
+                      <Group
+                        style={{ flexDirection: "column", gap: 30 }}
+                        mt={width < 800 ? 30 : 10}>
                         <Text color="dimmed" weight={500} size="xl">
                           Add quantity
                         </Text>
