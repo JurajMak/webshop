@@ -9,9 +9,9 @@ import {
   Button,
   ActionIcon,
   Text,
+  Group,
 } from "@mantine/core";
 import { IconX } from "@tabler/icons";
-// import { filterRangePrice } from "../../utils/priceRanges";
 import { filterRangePrice } from "../../../utils/priceRanges";
 
 export function FilterDrawer({
@@ -61,11 +61,12 @@ export function FilterDrawer({
       }}>
       <Accordion
         multiple
-        defaultValue={["price", "category", "focus-ring", "active"]}>
+        // defaultValue={["active", "price", "category", "focus-ring"]}
+        value={["active", "price", "category", "focus-ring"]}>
         {isOpen && (
           <Accordion.Item value="active">
             <Accordion.Control>
-              <Flex justify="space-between">
+              <Group position="apart" style={{ gap: 20 }}>
                 <Text>Active Filter</Text>
                 <Button
                   variant="transparent"
@@ -78,7 +79,7 @@ export function FilterDrawer({
                   }}>
                   Clear filter
                 </Button>
-              </Flex>
+              </Group>
             </Accordion.Control>
             <Accordion.Panel>
               {value && (
@@ -96,7 +97,7 @@ export function FilterDrawer({
                 </Flex>
               )}
 
-              {priceRange && (
+              {priceRange > 0 && (
                 <Flex align="center">
                   <Badge color="dark" fz={13}>
                     {matchedRangeLabel.label}

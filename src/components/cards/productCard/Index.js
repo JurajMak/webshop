@@ -4,7 +4,7 @@ import test from "../../../assets/register.jpg";
 import { useStyles } from "./Styles";
 import { percentageCalc } from "../../../utils/calcs";
 
-export function ProductCard({ data, onClick, onDetails }) {
+export function ProductCard({ data, onDetails }) {
   const { classes, theme } = useStyles();
   const { name, price, description, quantity, sale_price, is_sale, image } =
     data;
@@ -83,8 +83,7 @@ export function ProductCard({ data, onClick, onDetails }) {
                 color="dark"
                 size="xs"
                 radius="xl"
-                style={{ flex: 1 }}
-                onClick={onClick}>
+                style={{ flex: 1 }}>
                 Add to cart
               </Button>
             ) : (
