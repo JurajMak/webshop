@@ -22,7 +22,6 @@ import { handlePaymentNotification } from "../notifications/checkoutNotification
 import UserMenu from "../userMenu/Index";
 import SearchBar from "../search/Index";
 import { sumTotal } from "../../utils/sumTotal";
-// import CartDrawer from "../cartDrawer/Index";
 import CartDrawer from "../drawers/cartDrawer/Index";
 import { useStyles } from "./Styles";
 import { ReactComponent as Logo } from "../../assets/logo.svg";
@@ -120,8 +119,8 @@ export function HeaderTabs({
         <Flex direction="column">
           <Group position="apart" sx={{ height: "100%", gap: 0 }} mt={10}>
             <Group
-              sx={{ height: "100%" }}
-              spacing={0}
+              sx={{ height: "100%", marginTop: 10 }}
+              spacing={10}
               className={classes.hiddenMobile}
               position="apart">
               <UnstyledButton onClick={() => navigate("/")}>
@@ -252,7 +251,7 @@ export function HeaderTabs({
             )}
 
             {width < 768 && (
-              <Group mt={20}>
+              <Group mt={10}>
                 <SearchBar
                   miw={width * 0.95}
                   placeholder="Search products..."
@@ -267,7 +266,7 @@ export function HeaderTabs({
           </Group>
           <Group position="center">
             <Tabs
-              mt={10}
+              mt={width < 768 ? 10 : 5}
               variant="pills"
               value={tabValue}
               color="yellow.8"
