@@ -1,10 +1,8 @@
-const handleInfiniteScroll = async (e, nextPage, fetchNext) => {
-  let fetching = false;
+const handleInfiniteScroll = async (e, nextPage, fetchNext, isFetching) => {
+  console.log("vrtim se");
   const { scrollHeight, scrollTop, clientHeight } = e.target.scrollingElement;
-  if (!fetching && scrollHeight - scrollTop <= clientHeight * 1.5) {
-    fetching = true;
+  if (!isFetching && scrollHeight - scrollTop <= clientHeight * 1.5) {
     if (nextPage) await fetchNext();
-    fetching = false;
   }
 };
 

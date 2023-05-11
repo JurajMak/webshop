@@ -20,6 +20,7 @@ import { AuthContext } from "../../../contexts/Index";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "../../../config/Supabase";
 import UserMenu from "../../../components/userMenu/Index";
+import { useViewportSize } from "@mantine/hooks";
 
 export default function Dashboard() {
   const theme = useMantineTheme();
@@ -31,6 +32,7 @@ export default function Dashboard() {
   const [swapProduct, setSwapProduct] = useState(true);
   const [swapOrder, setSwapOrder] = useState(false);
   const navigate = useNavigate();
+  const { height, width } = useViewportSize();
   const titles = [
     "Image",
     "Name",
@@ -68,24 +70,6 @@ export default function Dashboard() {
     setSwapOrder(true);
   };
 
-  // const handleCategoryEnter = async (e) => {
-  //   if (e.key === "Enter") {
-  //     const { data: categories } = await supabase
-  //       .from("categories")
-  //       .select("id")
-  //       .ilike("name", `%${value}%`);
-
-  //     const categoryIds = categories.map((category) => category.id);
-
-  //     const { data: productData } = await supabase
-  //       .from("products")
-  //       .select("*")
-  //       .in("category_id", categoryIds);
-
-  //     setSearch(productData);
-  //   }
-  // };
-
   return (
     <AppShell
       styles={{
@@ -102,39 +86,52 @@ export default function Dashboard() {
           p="md"
           hiddenBreakpoint="sm"
           hidden={!opened}
+          // bg="dark.4"
           width={{ sm: 200, lg: 300 }}>
-          <Group position="left">
-            <Tabs defaultValue="products" orientation="vertical">
-              <Tabs.List>
-                <Tabs.Tab value="products" onClick={handleSwapProduct}>
-                  Products
-                </Tabs.Tab>
-                <Tabs.Tab value="orders" onClick={handleSwapOrder}>
-                  Orders
-                </Tabs.Tab>
-              </Tabs.List>
-              <Tabs.Panel value="products" pl="xs">
-                Products table
-              </Tabs.Panel>
-              <Tabs.Panel value="orders" pl="xs">
-                Orders table
-              </Tabs.Panel>
-            </Tabs>
-          </Group>
+          <Tabs
+            defaultValue="products"
+            variant="pills"
+            color="yellow"
+            sx={{
+              [".mantine-Tabs-tab"]: {
+                color: "black",
+                fontWeight: 600,
+                "&:hover": {
+                  backgroundColor: theme.colors.dark[4],
+                  color: theme.colors.gray[0],
+                },
+              },
+              // [".mantine-Tabs-panel"]: { color: "white" },
+            }}>
+            <Tabs.List grow position="center">
+              <Tabs.Tab value="products" onClick={handleSwapProduct}>
+                Products
+              </Tabs.Tab>
+              <Tabs.Tab value="orders" onClick={handleSwapOrder}>
+                Orders
+              </Tabs.Tab>
+            </Tabs.List>
+            <Tabs.Panel value="products" pl="xs">
+              Products table
+            </Tabs.Panel>
+            <Tabs.Panel ml={146} value="orders" pl="xs">
+              Orders table
+            </Tabs.Panel>
+          </Tabs>
         </Navbar>
       }
-      footer={
-        <Footer height={60} p="md">
-          Application footer
-        </Footer>
-      }
+      // footer={
+      //   <Footer height={60} p="md">
+      //     Application footer
+      //   </Footer>
+      // }
       header={
-        <Header height={95} p="md">
+        <Header height={95} p="md" bg="dark.4">
           <Group position="apart">
-            <Title>Admin panel</Title>
+            <Title color={theme.colors.gray[3]}>Admin panel</Title>
             <Group>
               <SearchBar
-                // miw={width * 0.3}
+                miw={width * 0.3}
                 mx="auto"
                 size="xs"
                 radius="xl"

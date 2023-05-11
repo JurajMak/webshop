@@ -1,61 +1,31 @@
 import {
-  createStyles,
   Header,
   Group,
   Button,
   Box,
-  Drawer,
   Text,
   Indicator,
-  Divider,
-  ScrollArea,
   Flex,
-  Title,
-  Image,
   useMantineTheme,
   ActionIcon,
   Tabs,
+  Container,
+  UnstyledButton,
 } from "@mantine/core";
 import { useViewportSize } from "@mantine/hooks";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import React, { useContext, useState } from "react";
 import { AuthContext } from "../../contexts/Index";
 import { supabase } from "../../config/Supabase";
 import { IconShoppingCart } from "@tabler/icons";
-import { CartCard } from "../cards/cartCard/Index";
 import { handlePaymentNotification } from "../notifications/checkoutNotification";
 import UserMenu from "../userMenu/Index";
 import SearchBar from "../search/Index";
-
-const useStyles = createStyles((theme) => ({
-  link: {
-    display: "flex",
-    alignItems: "center",
-    height: "100%",
-    paddingLeft: theme.spacing.md,
-    paddingRight: theme.spacing.md,
-    textDecoration: "none",
-    color: theme.colorScheme === "dark" ? theme.white : theme.black,
-    fontWeight: 500,
-    fontSize: theme.fontSizes.sm,
-    [theme.fn.smallerThan("sm")]: {
-      height: 42,
-      display: "flex",
-      alignItems: "center",
-      width: "100%",
-    },
-  },
-  hiddenMobile: {
-    [theme.fn.smallerThan("sm")]: {
-      display: "none",
-    },
-  },
-  mobile: {
-    [theme.fn.smallerThan("sm")]: {
-      position: "right",
-    },
-  },
-}));
+import { sumTotal } from "../../utils/sumTotal";
+// import CartDrawer from "../cartDrawer/Index";
+import CartDrawer from "../drawers/cartDrawer/Index";
+import { useStyles } from "./Styles";
+import { ReactComponent as Logo } from "../../assets/logo.svg";
 
 export function HeaderTabs({
   orders,
@@ -66,7 +36,7 @@ export function HeaderTabs({
   onText,
   onEnter,
   onBtn,
-  onProduct,
+  onAll,
   onCategory,
 }) {
   const { classes } = useStyles();
@@ -76,24 +46,10 @@ export function HeaderTabs({
   const { user, signOut } = useContext(AuthContext);
   const [loading, setLoading] = useState(false);
   const { height, width } = useViewportSize();
+  // const [tabValue, setTabValue] = useState("");
+  const { tabValue } = useParams();
 
-  const navigateLogin = async () => {
-    navigate("/login");
-  };
-  const navigateRegister = async () => {
-    navigate("/register");
-  };
-
-  const sumPrice = (item) => {
-    return item
-      .reduce((acc, cart) => {
-        const total = cart.is_sale ? cart.sale_price : cart.price;
-        return cart.quantity * total + acc;
-      }, 0)
-      .toFixed(2);
-  };
-
-  const totalString = sumPrice(orders);
+  const totalString = sumTotal(orders);
   const total = Number(totalString).toFixed();
 
   const handleCheckout = async () => {
@@ -160,172 +116,181 @@ export function HeaderTabs({
 
   return (
     <Box>
-      <Header height={width < 500 ? 100 : 100} px="md">
-        <Group position="apart" sx={{ height: "100%", gap: 0 }}>
-          <Group
-            sx={{ height: "100%" }}
-            spacing={0}
-            className={classes.hiddenMobile}
-            position="apart">
-            <Text mr={width * 0.25} fw={500}>
-              App logo/name
-            </Text>
-            <SearchBar
-              placeholder="Search products..."
-              miw={width * 0.3}
-              size="xs"
-              radius="md"
-              p={10}
-              onChange={onText}
-              onKeyPress={onEnter}
-              onClick={onBtn}
-            />
-          </Group>
-
-          <Drawer
-            opened={opened}
-            onClose={() => setOpened(false)}
-            padding="xs"
-            size="xl"
-            transition="rotate-left"
-            transitionDuration={250}
-            transitionTimingFunction="ease"
-            overlayColor={
-              theme.colorScheme === "dark"
-                ? theme.colors.dark[9]
-                : theme.colors.gray[7]
-            }
-            overlayOpacity={0.55}
-            overlayBlur={3}
-            sx={{
-              [".mantine-Drawer-closeButton"]: {
-                width: "30px",
-                height: "30px",
-              },
-              ["& .mantine-Drawer-closeButton svg"]: {
-                color: "black",
-                width: "30px",
-                height: "30px",
-              },
-            }}>
-            <Flex direction="column">
-              <ScrollArea type="never" style={{ height: height * 0.7 }}>
-                {orders?.map((item) => {
-                  return (
-                    <CartCard
-                      key={item.id}
-                      cartData={item}
-                      onRemove={onRemove}
-                      onQuantity={onQuantity}
-                      onDelete={onDelete}
-                    />
-                  );
-                })}
-              </ScrollArea>
-
-              <Divider size="md" mb={30} />
-
-              <Flex mx="auto" direction="column" gap={20} align="center">
-                <Group>
-                  <Text fz="lg" fw={500}>
-                    Total :
-                  </Text>
-                  <Text fz="lg" fw={500}>
-                    $ {sumPrice(orders)}
-                  </Text>
-                </Group>
-
-                {user?.user_metadata.role === "user" ? (
-                  <Button
-                    miw={250}
-                    disabled={orders.length <= 0 ? true : false}
-                    onClick={handleCheckout}
-                    loading={loading}>
-                    $ Checkout
-                  </Button>
-                ) : (
-                  <Button color="dark" miw={250} onClick={navigateLogin}>
-                    Log in to shop
-                  </Button>
-                )}
-              </Flex>
-            </Flex>
-          </Drawer>
-          {user?.user_metadata.role === "user" ? (
+      <Header height={width < 768 ? 140 : 110} px="sm" bg="dark.4">
+        <Flex direction="column">
+          <Group position="apart" sx={{ height: "100%", gap: 0 }} mt={10}>
             <Group
-              position="apart"
-              spacing="xl"
-              miw={width < 500 && width * 0.9}>
-              <UserMenu orders={orders} onDrawer={() => setOpened(true)} />
+              sx={{ height: "100%" }}
+              spacing={0}
+              className={classes.hiddenMobile}
+              position="apart">
+              <UnstyledButton onClick={() => navigate("/")}>
+                <Flex justify="center" style={{ alignItems: "center" }}>
+                  <Logo width={50} />
+                  <Text c="white" fw={600} fz={20}>
+                    Shopvert
+                  </Text>
+                </Flex>
+              </UnstyledButton>
 
-              {width < 500 && <Text fw={500}>App logo/name </Text>}
-
-              {orders.length > 0 && (
-                <Indicator
-                  mx={10}
-                  color={theme.colors.blue[6]}
-                  position="bottom-start"
-                  inline
-                  label={orders.length}
-                  size={20}>
-                  <ActionIcon
-                    variant="transparent"
-                    color="dark"
-                    onClick={() => setOpened(true)}>
-                    <IconShoppingCart size={25} stroke={1} />
-                  </ActionIcon>
-                </Indicator>
-              )}
-            </Group>
-          ) : (
-            <Group position="apart">
-              {orders.length > 0 && (
-                <Indicator
-                  color={theme.colors.blue[6]}
-                  position="bottom-start"
-                  inline
-                  label={orders.length}
-                  size={20}>
-                  <ActionIcon
-                    variant="transparent"
-                    color="dark"
-                    onClick={() => setOpened(true)}>
-                    <IconShoppingCart size={25} stroke={1} />
-                  </ActionIcon>
-                </Indicator>
-              )}
-              <Button variant="white" color="dark" onClick={navigateLogin}>
-                Log in
+              <SearchBar
+                placeholder="Search products..."
+                miw={width * 0.3}
+                size="xs"
+                radius="md"
+                p={10}
+                ml={width > 1100 ? width * 0.2 : 0}
+                onChange={onText}
+                onKeyPress={onEnter}
+                onClick={onBtn}
+              />
+              <Button
+                variant="transparent"
+                color="dark"
+                sx={{
+                  [".mantine-Button-label"]: {
+                    color: "white",
+                  },
+                  [`&:hover`]: {
+                    background: theme.colors.yellow[8],
+                    color: theme.colors.dark[4],
+                  },
+                }}
+                onClick={onAll}>
+                Reset search
               </Button>
             </Group>
-          )}
-
-          {width < 500 && (
-            <SearchBar
-              miw={width * 0.9}
-              placeholder="Search products..."
-              mx="auto"
-              size="xs"
-              radius="xl"
-              // mb={10}
-              onChange={onText}
-              onKeyPress={onEnter}
-              onClick={onBtn}
+            <CartDrawer
+              handleCheckout={handleCheckout}
+              loading={loading}
+              opened={opened}
+              setOpened={setOpened}
+              orders={orders}
+              onRemove={onRemove}
+              onQuantity={onQuantity}
+              onDelete={onDelete}
             />
-          )}
-        </Group>
-        <Group position="center">
-          <Tabs defaultValue="products">
-            <Tabs.List>
-              <Tabs.Tab value="products" onClick={onProduct}>
-                Products
-              </Tabs.Tab>
-              <Tabs.Tab value="category" onClick={onCategory}>
-                Categories
-              </Tabs.Tab>
-            </Tabs.List>
-          </Tabs>
-        </Group>
+            {user?.user_metadata.role === "user" ? (
+              <Group
+                position="apart"
+                spacing="xl"
+                miw={width < 768 && width * 0.9}>
+                <UserMenu orders={orders} onDrawer={() => setOpened(true)} />
+
+                {width < 768 && (
+                  <UnstyledButton onClick={() => navigate("/")}>
+                    <Flex justify="center" style={{ alignItems: "center" }}>
+                      <Logo width={50} />
+                    </Flex>
+                  </UnstyledButton>
+                )}
+
+                {orders.length > 0 && (
+                  <Indicator
+                    mx={10}
+                    // color={theme.colors.blue[6]}
+                    color={theme.colors.yellow[8]}
+                    sx={{
+                      [".mantine-Indicator-common"]: { color: "black" },
+                    }}
+                    position="bottom-start"
+                    inline
+                    label={orders.length}
+                    size={20}>
+                    <ActionIcon
+                      variant="transparent"
+                      color="gray.0"
+                      onClick={() => setOpened(true)}>
+                      <IconShoppingCart size={25} stroke={2} />
+                    </ActionIcon>
+                  </Indicator>
+                )}
+              </Group>
+            ) : (
+              <Group
+                position="apart"
+                spacing="xl"
+                miw={width < 768 && width * 0.9}>
+                <Button
+                  sx={{
+                    [`&:hover`]: {
+                      background: theme.colors.yellow[8],
+                      color: theme.colors.dark[4],
+                    },
+                  }}
+                  color="dark.4"
+                  onClick={() => navigate("/login")}>
+                  Log in
+                </Button>
+                {width < 768 && (
+                  <UnstyledButton onClick={() => navigate("/")}>
+                    <Flex justify="center" style={{ alignItems: "center" }}>
+                      <Logo width={50} />
+                    </Flex>
+                  </UnstyledButton>
+                )}
+                {orders.length > 0 && (
+                  <Indicator
+                    // color={theme.colors.blue[6]}
+                    color={theme.colors.yellow[8]}
+                    sx={{
+                      [".mantine-Indicator-common"]: { color: "black" },
+                    }}
+                    position="bottom-start"
+                    inline
+                    label={orders.length}
+                    size={20}>
+                    <ActionIcon
+                      variant="transparent"
+                      color="gray.0"
+                      onClick={() => setOpened(true)}>
+                      <IconShoppingCart size={25} stroke={2} />
+                    </ActionIcon>
+                  </Indicator>
+                )}
+              </Group>
+            )}
+
+            {width < 768 && (
+              <Group mt={20}>
+                <SearchBar
+                  miw={width * 0.95}
+                  placeholder="Search products..."
+                  size="xs"
+                  radius="xl"
+                  onChange={onText}
+                  onKeyPress={onEnter}
+                  onClick={onBtn}
+                />
+              </Group>
+            )}
+          </Group>
+          <Group position="center">
+            <Tabs
+              mt={10}
+              variant="pills"
+              value={tabValue}
+              color="yellow.8"
+              sx={{
+                [".mantine-Tabs-tab"]: {
+                  color: "white",
+                  fontWeight: 600,
+                  "&:hover": {
+                    backgroundColor: theme.colors.yellow[8],
+                    // color: theme.colors.dark[8],
+                  },
+                },
+              }}
+              onTabChange={(value) => navigate(`/${value}`)}>
+              <Tabs.List position="center">
+                <Tabs.Tab value="products">Products</Tabs.Tab>
+                <Tabs.Tab value="categories" onClick={onCategory}>
+                  Categories
+                </Tabs.Tab>
+              </Tabs.List>
+            </Tabs>
+          </Group>
+        </Flex>
       </Header>
     </Box>
   );

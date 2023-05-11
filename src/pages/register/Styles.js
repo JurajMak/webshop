@@ -1,24 +1,9 @@
-import styled from "@emotion/styled";
 import { createStyles } from "@mantine/core";
-import Image from "../../assets/login.jpg";
-// import Image from "../../assets/register.jpg";
-
-export const Form = styled.form`
-  margin-left: auto;
-  margin-right: auto;
-  max-width: 500px;
-  border: 1px solid black;
-  border-radius: 8px;
-  padding: 20px;
-`;
-
 export const useStyles = createStyles((theme) => ({
   wrapper: {
     backgroundSize: "cover",
     backgroundImage:
       "url(https://images.unsplash.com/photo-1484242857719-4b9144542727?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1280&q=80)",
-
-    // `url(${Image})`,
   },
 
   form: {

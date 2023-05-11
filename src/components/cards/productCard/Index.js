@@ -1,95 +1,25 @@
-import { IconMessageCircle, IconFileDescription } from "@tabler/icons";
-import {
-  Card,
-  Text,
-  Group,
-  Center,
-  createStyles,
-  Badge,
-  Image,
-  Button,
-} from "@mantine/core";
+import { IconFileDescription } from "@tabler/icons";
+import { Card, Text, Group, Center, Badge, Image, Button } from "@mantine/core";
 import test from "../../../assets/register.jpg";
+import { useStyles } from "./Styles";
+import { percentageCalc } from "../../../utils/calcs";
 
-const useStyles = createStyles((theme) => ({
-  card: {
-    position: "relative",
-    height: 300,
-    backgroundColor:
-      theme.colorScheme === "dark"
-        ? theme.colors.dark[6]
-        : theme.colors.gray[0],
-
-    [`&:hover`]: {
-      transform: "scale(1.03)",
-      transition: "transform 500ms ease",
-    },
-  },
-
-  image: {
-    ...theme.fn.cover(),
-    backgroundSize: "cover",
-  },
-
-  overlay: {
-    position: "absolute",
-    top: "20%",
-    left: 0,
-    right: 0,
-    bottom: 0,
-    backgroundImage:
-      "linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, .85) 90%)",
-  },
-
-  content: {
-    height: "100%",
-    position: "relative",
-    display: "flex",
-    flexDirection: "column",
-    justifyContent: "flex-end",
-    zIndex: 1,
-  },
-
-  title: {
-    color: theme.white,
-    marginBottom: 5,
-  },
-
-  bodyText: {
-    color: theme.colors.dark[2],
-    // marginLeft: 20,
-  },
-
-  author: {
-    color: theme.colors.dark[2],
-  },
-  rating: {
-    position: "absolute",
-    top: 10,
-    left: 10,
-    pointerEvents: "none",
-  },
-  btn: {
-    position: "absolute",
-    top: -10,
-    right: -10,
-  },
-}));
-
-export function ProductCard({ data, onClick }) {
+export function ProductCard({ data, onClick, onDetails }) {
   const { classes, theme } = useStyles();
   const { name, price, description, quantity, sale_price, is_sale, image } =
     data;
 
   return (
     <Card
-      miw={300}
+      miw={250}
+      maw={250}
       p="lg"
-      shadow="lg"
+      shadow="xl"
       className={classes.card}
       radius="md"
       component="a"
-      target="_blank">
+      target="_blank"
+      onClick={onDetails}>
       <Image
         className={classes.image}
         src={image ? image : test}
@@ -101,14 +31,14 @@ export function ProductCard({ data, onClick }) {
           color="red"
           size="lg"
           className={classes.rating}>
-          {Math.round(((price - sale_price) / price) * 100)}% off
+          {percentageCalc(price, sale_price)}% off
         </Badge>
       )}
       <div className={classes.overlay} />
 
       <div className={classes.content}>
         <div>
-          <Text size="xl" className={classes.title} weight={500}>
+          <Text truncate size="xl" className={classes.title} weight={500}>
             {name}
           </Text>
           <Group spacing={30}>
@@ -116,30 +46,33 @@ export function ProductCard({ data, onClick }) {
               {is_sale ? (
                 <div>
                   <Text
+                    truncate
                     td="line-through"
-                    color="gray"
+                    color="gray.5"
                     size="sm"
                     weight={500}
                     sx={{ lineHeight: 1 }}
                     mb={5}>
-                    ${price}
+                    {price}€
                   </Text>
                   <Text
+                    truncate
                     size="xl"
-                    color="red"
+                    color="red.6"
                     weight={500}
                     sx={{ lineHeight: 1 }}>
-                    ${sale_price}
-                  </Text>{" "}
+                    {sale_price}€
+                  </Text>
                 </div>
               ) : (
                 <div>
                   <Text
+                    truncate
                     size="xl"
-                    color="gray"
+                    color="gray.5"
                     weight={500}
                     sx={{ lineHeight: 1 }}>
-                    ${price}
+                    {price}€
                   </Text>
                 </div>
               )}
@@ -172,9 +105,13 @@ export function ProductCard({ data, onClick }) {
               {/* {description} */}
             </Text>
 
-            <Group spacing="lg">
+            <Group spacing="sm">
               <Center>
-                <Text size="sm" className={classes.bodyText} lineClamp={1}>
+                <Text
+                  truncate={1}
+                  maw={100}
+                  size="sm"
+                  className={classes.bodyText}>
                   {description}
                 </Text>
                 <IconFileDescription
