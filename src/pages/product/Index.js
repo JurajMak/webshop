@@ -40,6 +40,9 @@ export default function ProductDetails() {
   } = useQuery({
     queryKey: ["product"],
     queryFn: () => getProductById(id),
+    onSuccess: () => {
+      dispatch({ type: "LOAD_CART_FROM_STORAGE" });
+    },
   });
 
   const handleRemoveQuantity = () => {
@@ -85,11 +88,6 @@ export default function ProductDetails() {
     refetch();
   };
 
-  useEffect(() => {
-    dispatch({ type: "LOAD_CART_FROM_STORAGE" });
-  }, []);
-  // console.log("product", product);
-  // console.log("quantity", selectedQuantity);
   return (
     <>
       {isLoading ? (
@@ -194,10 +192,7 @@ export default function ProductDetails() {
               </Accordion>
 
               <Group mt={50} mb={50} position="center">
-                <Button
-                  color="dark"
-                  radius={6}
-                  onClick={() => navigate("/products")}>
+                <Button color="dark" radius={6} onClick={() => navigate(-1)}>
                   Return
                 </Button>
               </Group>

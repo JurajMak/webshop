@@ -26,7 +26,7 @@ import CartDrawer from "../drawers/cartDrawer/Index";
 import { useStyles } from "./Styles";
 import { ReactComponent as Logo } from "../../assets/logo.svg";
 
-export function HeaderTabs({
+export function HomeHeader({
   orders,
   onRemove,
   onDelete,
@@ -36,8 +36,6 @@ export function HeaderTabs({
   onEnter,
   onBtn,
   onAll,
-  onCategory,
-  category,
 }) {
   const { classes } = useStyles();
   const theme = useMantineTheme();
@@ -132,33 +130,28 @@ export function HeaderTabs({
                   </Text>
                 </Flex>
               </UnstyledButton>
-
-              <SearchBar
-                placeholder="Search products..."
-                miw={width * 0.3}
-                size="xs"
-                radius="md"
-                p={10}
-                ml={width > 1100 ? width * 0.2 : 0}
-                onChange={onText}
-                onKeyPress={onEnter}
-                onClick={onBtn}
-              />
-              <Button
-                variant="transparent"
-                color="dark"
+            </Group>
+            <Group position="center">
+              <Tabs
+                mt={width < 768 ? 10 : 5}
+                variant="pills"
+                value={tabValue}
+                color="yellow.8"
                 sx={{
-                  [".mantine-Button-label"]: {
+                  [".mantine-Tabs-tab"]: {
                     color: "white",
-                  },
-                  [`&:hover`]: {
-                    background: theme.colors.yellow[8],
-                    color: theme.colors.dark[4],
+                    fontWeight: 600,
+                    "&:hover": {
+                      backgroundColor: theme.colors.yellow[8],
+                      // color: theme.colors.dark[8],
+                    },
                   },
                 }}
-                onClick={onAll}>
-                Reset search
-              </Button>
+                onTabChange={(value) => navigate(`/${value}`)}>
+                <Tabs.List position="center">
+                  <Tabs.Tab value="products">Products</Tabs.Tab>
+                </Tabs.List>
+              </Tabs>
             </Group>
             <CartDrawer
               handleCheckout={handleCheckout}
@@ -265,7 +258,7 @@ export function HeaderTabs({
               </Group>
             )}
           </Group>
-          <Group position="center">
+          {/* <Group position="center">
             <Tabs
               mt={width < 768 ? 10 : 5}
               variant="pills"
@@ -284,16 +277,13 @@ export function HeaderTabs({
               onTabChange={(value) => navigate(`/${value}`)}>
               <Tabs.List position="center">
                 <Tabs.Tab value="products">Products</Tabs.Tab>
-                {/* <Tabs.Tab value="categories" onClick={onCategory}>
-                  Categories
-                </Tabs.Tab> */}
               </Tabs.List>
             </Tabs>
-          </Group>
+          </Group> */}
         </Flex>
       </Header>
     </Box>
   );
 }
 
-export default HeaderTabs;
+export default HomeHeader;

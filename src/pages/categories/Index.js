@@ -32,7 +32,6 @@ import {
   IconAdjustmentsHorizontal,
   IconChevronDown,
 } from "@tabler/icons";
-// import { FilterDrawer } from "../../components/filterDrawer/Index";
 import { FilterDrawer } from "../../components/drawers/filterDrawer/Index";
 import { CartReducer } from "../../utils/cartReducer";
 import { useNavigate } from "react-router-dom";
@@ -140,7 +139,7 @@ export default function Categories() {
       handleInfiniteScroll(e, hasNextPage, fetchNextPage, isFetchingNextPage)
     );
 
-    refetch();
+    // refetch();
 
     return () => {
       window.removeEventListener("scroll", (e) =>
@@ -200,7 +199,6 @@ export default function Categories() {
             return setSelectValue(value);
           }}
           value={selectValue}
-          // mx="auto"
           size="xs"
           data={[
             { label: "Sort from highest price", value: "highest" },
@@ -222,21 +220,6 @@ export default function Categories() {
               overlayOpacity={0.3}
             />
           ) : (
-            // data?.pages?.map((group, i) => (
-            //   <React.Fragment key={i}>
-            //     {group?.map((item) => {
-            //       return (
-            //         <Group key={item.id} m={5}>
-            //           <ProductCard
-            //             data={item}
-            //             onClick={() => handleAddCart(item)}
-            //             onDetails={() => handleProductsDetails(item)}
-            //           />
-            //         </Group>
-            //       );
-            //     })}
-            //   </React.Fragment>
-            // ))
             category?.map((item) => {
               return (
                 <Group key={item.id} m={5}>
@@ -258,16 +241,6 @@ export default function Categories() {
               loaderProps={{ size: "xl", color: "dark" }}
             />
           ) : (
-            // category?.map((item) => {
-            //   return (
-            //     <Group key={item.id} m={5}>
-            //       <CategoryCard
-            //         data={item}
-            //         onClick={(e) => handleCategoryClick(item.id)}
-            //       />
-            //     </Group>
-            //   );
-            // })
             data?.pages?.map((group, i) => (
               <React.Fragment key={i}>
                 {group?.map((item) => {

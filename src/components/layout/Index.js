@@ -59,11 +59,12 @@ export default function AppShellLayout() {
     hasNextPage,
     isFetchingNextPage,
     refetch,
-    isRefetching,
+    isFetching,
   } = useInfiniteQuery(
     ["products"],
     ({ pageParam = 1 }) =>
       getProducts(selectValue, searchWord, pageParam, categoryId, priceRange),
+
     {
       getNextPageParam: (lastPage, pages) => {
         const nextPage = pages.length + 1;
@@ -134,8 +135,6 @@ export default function AppShellLayout() {
       handleInfiniteScroll(e, hasNextPage, fetchNextPage, isFetchingNextPage)
     );
 
-    refetch();
-
     return () => {
       window.removeEventListener("scroll", (e) =>
         handleInfiniteScroll(e, hasNextPage, fetchNextPage, isFetchingNextPage)
@@ -169,6 +168,7 @@ export default function AppShellLayout() {
       header={
         <HeaderTabs
           orders={shoppingData}
+          category={category}
           onDelete={handleDeleteItem}
           onQuantity={handleAddQuantity}
           onRemove={handleRemoveQuantity}
@@ -272,7 +272,10 @@ export default function AppShellLayout() {
               color="dark"
               style={transitionStyles}
               onClick={() => scrollTo({ y: 0 })}>
-              <IconArrowUp size={20} style={{ marginRight: 5 }} />
+              <IconArrowUp
+                size={20}
+                style={width > 800 ? { marginRight: 5 } : { marginRight: 0 }}
+              />
               {width > 500 ? "To top" : ""}
             </Button>
           )}

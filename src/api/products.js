@@ -58,6 +58,15 @@ const getProducts = async (sortKey, searchValue, page, categoryId, price) => {
 
   return data;
 };
+const getProductsImages = async () => {
+  const { data } = await supabase
+    .from("products")
+    .select("*")
+    .neq("image", "")
+    .neq("image", null)
+    .order("updated_at", { ascending: true });
+  return data;
+};
 
 const createProduct = async (values) => {
   const { data, error } = await supabase.from("products").insert(values);
@@ -124,6 +133,7 @@ export {
   updateSale,
   deleteProduct,
   getProductById,
+  getProductsImages,
 };
 
 // const handleCategoryEnter = async (e) => {

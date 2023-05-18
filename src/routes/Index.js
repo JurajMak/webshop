@@ -21,7 +21,7 @@ const RenderRoutes = () => {
         <Route path="/register" element={<RegisterForm />} />
         <Route path="/:tabValue" element={<AppShellLayout />} />
         <Route path="/products/:id" element={<ProductDetails />} />
-        <Route path="/categories" element={<Categories />} />
+        {/* <Route path="/categories" element={<Categories />} /> */}
         <Route path="/" element={<ProtectedRoute />}>
           <Route path="/admin" element={<Dashboard />} />
           <Route path="/admin/products/create" element={<Create />} />
