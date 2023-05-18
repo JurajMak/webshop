@@ -134,7 +134,7 @@ export default function AppShellLayout() {
     window.addEventListener("scroll", (e) =>
       handleInfiniteScroll(e, hasNextPage, fetchNextPage, isFetchingNextPage)
     );
-
+    refetch();
     return () => {
       window.removeEventListener("scroll", (e) =>
         handleInfiniteScroll(e, hasNextPage, fetchNextPage, isFetchingNextPage)

@@ -75,7 +75,7 @@ export function ProductsTable({ titles, search }) {
     document.addEventListener("scroll", (e) =>
       handleInfiniteScroll(e, hasNextPage, fetchNextPage)
     );
-
+    refetch();
     return () => {
       document.removeEventListener("scroll", (e) =>
         handleInfiniteScroll(e, hasNextPage, fetchNextPage)
