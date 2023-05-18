@@ -26,6 +26,13 @@ export function FilterDrawer({
 }) {
   const theme = useMantineTheme();
   const [isOpen, setIsOpen] = useState(false);
+  const [accord, setAccord] = useState([
+    "active",
+    "price",
+    "category",
+    "sizes",
+    "focus-ring",
+  ]);
 
   const matchedRangeLabel = filterRangePrice.find(
     (option) => option.value === Number(priceRange)
@@ -59,15 +66,12 @@ export function FilterDrawer({
         },
         [".mantine-Drawer-title"]: { fontSize: 30, fontWeight: 600 },
       }}>
-      <Accordion
-        multiple
-        // defaultValue={["active", "price", "category", "focus-ring"]}
-        value={["active", "price", "category", "focus-ring"]}>
+      <Accordion multiple value={accord} onChange={setAccord}>
         {isOpen && (
           <Accordion.Item value="active">
             <Accordion.Control>
               <Group position="apart" style={{ gap: 20 }}>
-                <Text>Active Filter</Text>
+                <Text>Active Filters</Text>
                 <Button
                   variant="transparent"
                   color="dark"
@@ -115,7 +119,9 @@ export function FilterDrawer({
         )}
 
         <Accordion.Item value="price">
-          <Accordion.Control>Price range</Accordion.Control>
+          <Accordion.Control>
+            <Text>Price range</Text>
+          </Accordion.Control>
           <Accordion.Panel>
             <Flex wrap="wrap" gap={5}>
               {filterRangePrice?.map((item, i) => {
@@ -128,7 +134,10 @@ export function FilterDrawer({
                     <Chip
                       color="dark"
                       value={item.value}
-                      onClick={() => setIsOpen(true)}>
+                      onClick={() => {
+                        setIsOpen(true);
+                        setAccord([...accord, "active"]);
+                      }}>
                       {item.label}
                     </Chip>
                   </Chip.Group>
@@ -139,7 +148,9 @@ export function FilterDrawer({
         </Accordion.Item>
 
         <Accordion.Item value="category">
-          <Accordion.Control>Category</Accordion.Control>
+          <Accordion.Control>
+            <Text>Categories</Text>
+          </Accordion.Control>
           <Accordion.Panel>
             <Flex wrap="wrap" gap={5}>
               {category?.map((item, i) => {
@@ -155,6 +166,7 @@ export function FilterDrawer({
                       onClick={() => {
                         onCategory(item.id);
                         setIsOpen(true);
+                        setAccord([...accord, "active"]);
                       }}>
                       {item.name}
                     </Chip>
@@ -164,8 +176,8 @@ export function FilterDrawer({
             </Flex>
           </Accordion.Panel>
         </Accordion.Item>
-        <Accordion.Item value="customization">
-          <Accordion.Control>Sizes</Accordion.Control>
+        <Accordion.Item value="sizes">
+          <Accordion.Control>TODO Sizes</Accordion.Control>
           <Accordion.Panel>
             Colors, fonts, shadows and many other parts are customizable to fit
             your design needs
@@ -173,7 +185,7 @@ export function FilterDrawer({
         </Accordion.Item>
 
         <Accordion.Item value="focus-ring">
-          <Accordion.Control>Some other filter</Accordion.Control>
+          <Accordion.Control>TODO Some other filter</Accordion.Control>
           <Accordion.Panel>
             With new :focus-visible pseudo-class focus ring appears only when
             user navigates with keyboard
