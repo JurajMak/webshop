@@ -1,6 +1,5 @@
 import {
   AppShell,
-  Footer,
   Text,
   useMantineTheme,
   Select,
@@ -49,8 +48,8 @@ export default function AppShellLayout() {
   const [shoppingData, dispatch] = useReducer(CartReducer, []);
   const [scroll, scrollTo] = useWindowScroll();
   const { height, width } = useViewportSize();
-  const [chipValue, setChipValue] = useState();
-  const [priceRange, setPriceRange] = useState();
+  const [chipValue, setChipValue] = useState("");
+  const [priceRange, setPriceRange] = useState("");
 
   const {
     data,
@@ -148,6 +147,9 @@ export default function AppShellLayout() {
     fetchNextPage,
     hasNextPage,
   ]);
+
+  // console.log(chipValue);
+  // console.log(priceRange);
 
   return (
     <AppShell

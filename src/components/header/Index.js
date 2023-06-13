@@ -25,6 +25,8 @@ import { sumTotal } from "../../utils/sumTotal";
 import CartDrawer from "../drawers/cartDrawer/Index";
 import { useStyles } from "./Styles";
 import { ReactComponent as Logo } from "../../assets/logo.svg";
+import { useQuery } from "@tanstack/react-query";
+import { getProducts } from "../../api/products";
 
 export function HeaderTabs({
   orders,
@@ -47,7 +49,7 @@ export function HeaderTabs({
   const [loading, setLoading] = useState(false);
   const { height, width } = useViewportSize();
   // const [tabValue, setTabValue] = useState("");
-  const { tabValue } = useParams();
+  // const { tabValue } = useParams();
 
   const totalString = sumTotal(orders);
   const total = Number(totalString).toFixed();
@@ -116,7 +118,7 @@ export function HeaderTabs({
 
   return (
     <Box>
-      <Header height={width < 768 ? 140 : 110} px="sm" bg="dark.4">
+      <Header height={width < 768 ? 140 : 90} px="sm" bg="dark.4">
         <Flex direction="column">
           <Group position="apart" sx={{ height: "100%", gap: 0 }} mt={10}>
             <Group
@@ -144,7 +146,7 @@ export function HeaderTabs({
                 onKeyPress={onEnter}
                 onClick={onBtn}
               />
-              <Button
+              {/* <Button
                 variant="transparent"
                 color="dark"
                 sx={{
@@ -158,6 +160,21 @@ export function HeaderTabs({
                 }}
                 onClick={onAll}>
                 Reset search
+              </Button> */}
+              <Button
+                variant="transparent"
+                color="dark"
+                sx={{
+                  [".mantine-Button-label"]: {
+                    color: "white",
+                  },
+                  [`&:hover`]: {
+                    background: theme.colors.yellow[8],
+                    color: theme.colors.dark[4],
+                  },
+                }}
+                onClick={() => navigate("/products")}>
+                Products
               </Button>
             </Group>
             <CartDrawer
@@ -265,10 +282,10 @@ export function HeaderTabs({
               </Group>
             )}
           </Group>
-          <Group position="center">
+          {/* <Group position="center">
             <Tabs
               mt={width < 768 ? 10 : 5}
-              variant="pills"
+              variant="default"
               value={tabValue}
               color="yellow.8"
               sx={{
@@ -277,19 +294,19 @@ export function HeaderTabs({
                   fontWeight: 600,
                   "&:hover": {
                     backgroundColor: theme.colors.yellow[8],
-                    // color: theme.colors.dark[8],
+                    color: theme.colors.dark[8],
                   },
                 },
               }}
               onTabChange={(value) => navigate(`/${value}`)}>
               <Tabs.List position="center">
                 <Tabs.Tab value="products">Products</Tabs.Tab>
-                {/* <Tabs.Tab value="categories" onClick={onCategory}>
+                <Tabs.Tab value="categories" onClick={onCategory}>
                   Categories
-                </Tabs.Tab> */}
+                </Tabs.Tab>
               </Tabs.List>
             </Tabs>
-          </Group>
+          </Group> */}
         </Flex>
       </Header>
     </Box>

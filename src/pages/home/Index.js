@@ -3,7 +3,7 @@ import HeaderTabs from "../../components/header/Index";
 import { CartReducer } from "../../utils/cartReducer";
 import { HomeCarousel } from "../../components/carousel/Index";
 import { Box } from "@mantine/core";
-import HomeHeader from "../../components/homeHeader/Index";
+// import HomeHeader from "../../components/homeHeader/Index";
 
 const Home = () => {
   const [shoppingData, dispatch] = useReducer(CartReducer, []);
@@ -14,8 +14,7 @@ const Home = () => {
 
   return (
     <Box>
-      {/* <HeaderTabs orders={shoppingData} /> */}
-      <HomeHeader orders={shoppingData} />
+      <HeaderTabs orders={shoppingData} />
       <HomeCarousel />
     </Box>
   );
