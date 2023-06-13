@@ -3,16 +3,15 @@ import {
   Drawer,
   useMantineTheme,
   Accordion,
-  Badge,
   Chip,
   Flex,
-  Button,
   ActionIcon,
   Text,
   Group,
 } from "@mantine/core";
 import { IconX } from "@tabler/icons";
 import { filterRangePrice } from "../../../utils/priceRanges";
+import CustomChip from "../../customChip/Index";
 
 export function FilterDrawer({
   opened,
@@ -35,8 +34,11 @@ export function FilterDrawer({
   ]);
 
   const matchedRangeLabel = filterRangePrice.find(
-    (option) => option.value === Number(priceRange)
+    (option) => option.label === Number(priceRange)
   );
+
+  console.log("priceRange", priceRange);
+  console.log("matched", matchedRangeLabel);
 
   return (
     <Drawer
@@ -72,48 +74,46 @@ export function FilterDrawer({
             <Accordion.Control>
               <Group position="apart" style={{ gap: 20 }}>
                 <Text>Active Filters</Text>
-                <Button
+                <Chip
                   variant="transparent"
                   color="dark"
                   onClick={() => {
                     setValue("");
                     onCategory("");
-                    onRange();
+                    onRange("");
                     setIsOpen(false);
                   }}>
                   Clear filter
-                </Button>
+                </Chip>
               </Group>
             </Accordion.Control>
             <Accordion.Panel>
-              {value && (
-                <Flex align="center">
-                  <Badge color="dark" fz={13}>
-                    {value}
-                  </Badge>
-                  <ActionIcon
-                    onClick={() => {
-                      setValue("");
-                      onCategory("");
-                    }}>
-                    <IconX size={16} />
-                  </ActionIcon>
-                </Flex>
-              )}
+              <Flex gap={15}>
+                {value && (
+                  <Flex align="center">
+                    <CustomChip checked>{value}</CustomChip>
+                    <ActionIcon
+                      onClick={() => {
+                        setValue("");
+                        onCategory("");
+                      }}>
+                      <IconX size={16} />
+                    </ActionIcon>
+                  </Flex>
+                )}
 
-              {priceRange > 0 && (
-                <Flex align="center">
-                  <Badge color="dark" fz={13}>
-                    {matchedRangeLabel.label}
-                  </Badge>
-                  <ActionIcon
-                    onClick={() => {
-                      onRange();
-                    }}>
-                    <IconX size={16} />
-                  </ActionIcon>
-                </Flex>
-              )}
+                {priceRange && (
+                  <Flex align="center">
+                    <CustomChip checked>{priceRange}</CustomChip>
+                    <ActionIcon
+                      onClick={() => {
+                        onRange("");
+                      }}>
+                      <IconX size={16} />
+                    </ActionIcon>
+                  </Flex>
+                )}
+              </Flex>
             </Accordion.Panel>
           </Accordion.Item>
         )}
@@ -131,15 +131,15 @@ export function FilterDrawer({
                     multiple={false}
                     value={priceRange}
                     onChange={onRange}>
-                    <Chip
-                      color="dark"
-                      value={item.value}
+                    <CustomChip
+                      variant="outline"
+                      value={item.label}
                       onClick={() => {
                         setIsOpen(true);
                         setAccord([...accord, "active"]);
                       }}>
                       {item.label}
-                    </Chip>
+                    </CustomChip>
                   </Chip.Group>
                 );
               })}
@@ -160,8 +160,9 @@ export function FilterDrawer({
                     multiple={false}
                     value={value}
                     onChange={setValue}>
-                    <Chip
+                    <CustomChip
                       color="dark"
+                      variant="outline"
                       value={item.name}
                       onClick={() => {
                         onCategory(item.id);
@@ -169,7 +170,7 @@ export function FilterDrawer({
                         setAccord([...accord, "active"]);
                       }}>
                       {item.name}
-                    </Chip>
+                    </CustomChip>
                   </Chip.Group>
                 );
               })}
