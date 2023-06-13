@@ -117,10 +117,10 @@ export default function UserMenu({ orders, onDrawer, onCategory, onProduct }) {
           <Menu.Divider />
           <Menu.Label>Settings</Menu.Label>
           <Menu.Item icon={<IconSettings size={14} stroke={1.5} />}>
-            Account settings
+            Account settings #TODO
           </Menu.Item>
           <Menu.Item color="red.9" icon={<IconTrash size={14} stroke={1.5} />}>
-            Delete account
+            Delete account #TODO
           </Menu.Item>
           <Menu.Divider />
           <Menu.Item

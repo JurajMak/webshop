@@ -15,6 +15,7 @@ import {
   Flex,
   Title,
   Tabs,
+  Box,
 } from "@mantine/core";
 import { AuthContext } from "../../../contexts/Index";
 import { useNavigate } from "react-router-dom";
@@ -80,46 +81,6 @@ export default function Dashboard() {
               : theme.colors.gray[0],
         },
       }}
-      navbarOffsetBreakpoint="sm"
-      navbar={
-        <Navbar
-          p="md"
-          hiddenBreakpoint="sm"
-          hidden={!opened}
-          // bg="dark.4"
-          width={{ sm: 200, lg: 300 }}>
-          <Tabs
-            defaultValue="products"
-            variant="pills"
-            color="yellow"
-            sx={{
-              [".mantine-Tabs-tab"]: {
-                color: "black",
-                fontWeight: 600,
-                "&:hover": {
-                  backgroundColor: theme.colors.dark[4],
-                  color: theme.colors.gray[0],
-                },
-              },
-              // [".mantine-Tabs-panel"]: { color: "white" },
-            }}>
-            <Tabs.List grow position="center">
-              <Tabs.Tab value="products" onClick={handleSwapProduct}>
-                Products
-              </Tabs.Tab>
-              <Tabs.Tab value="orders" onClick={handleSwapOrder}>
-                Orders
-              </Tabs.Tab>
-            </Tabs.List>
-            <Tabs.Panel value="products" pl="xs">
-              Products table
-            </Tabs.Panel>
-            <Tabs.Panel ml={146} value="orders" pl="xs">
-              Orders table
-            </Tabs.Panel>
-          </Tabs>
-        </Navbar>
-      }
       // footer={
       //   <Footer height={60} p="md">
       //     Application footer
@@ -147,6 +108,35 @@ export default function Dashboard() {
                 onProduct={navigateToCreate}
               />
             </Group>
+          </Group>
+          <Group position="center">
+            <Box>
+              <Tabs
+                defaultValue="products"
+                variant="pills"
+                color="yellow.8"
+                sx={{
+                  [".mantine-Tabs-tab"]: {
+                    // color: "black",
+                    color: theme.colors.gray[0],
+                    fontWeight: 600,
+                    "&:hover": {
+                      backgroundColor: theme.colors.yellow[6],
+                      color: theme.colors.dark[4],
+                    },
+                  },
+                  // [".mantine-Tabs-panel"]: { color: "white" },
+                }}>
+                <Tabs.List grow position="center">
+                  <Tabs.Tab value="products" onClick={handleSwapProduct}>
+                    Products
+                  </Tabs.Tab>
+                  <Tabs.Tab value="orders" onClick={handleSwapOrder}>
+                    Orders
+                  </Tabs.Tab>
+                </Tabs.List>
+              </Tabs>
+            </Box>
           </Group>
         </Header>
       }>
