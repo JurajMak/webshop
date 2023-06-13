@@ -155,7 +155,11 @@ const Edit = () => {
               return setFile(file);
             }}
             accept="image/png,image/jpeg,image/jpg">
-            {(props) => <Button {...props}>Change Image</Button>}
+            {(props) => (
+              <Button color="dark" {...props}>
+                Change Image
+              </Button>
+            )}
           </FileButton>
         </Group>
         {file && (
@@ -243,11 +247,13 @@ const Edit = () => {
         )}
 
         <Group mt={20}>
-          <Button type="submit" loading={loading} miw={120}>
+          <Button color="dark" type="submit" loading={loading} miw={120}>
             Submit
           </Button>
 
-          <Button onClick={returnDashboard}>Return</Button>
+          <Button color="dark" onClick={returnDashboard}>
+            Return
+          </Button>
         </Group>
       </Form>
     </div>
