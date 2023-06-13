@@ -8,8 +8,6 @@ import {
   Flex,
   useMantineTheme,
   ActionIcon,
-  Tabs,
-  Container,
   UnstyledButton,
 } from "@mantine/core";
 import { useViewportSize } from "@mantine/hooks";
@@ -25,8 +23,6 @@ import { sumTotal } from "../../utils/sumTotal";
 import CartDrawer from "../drawers/cartDrawer/Index";
 import { useStyles } from "./Styles";
 import { ReactComponent as Logo } from "../../assets/logo.svg";
-import { useQuery } from "@tanstack/react-query";
-import { getProducts } from "../../api/products";
 
 export function HeaderTabs({
   orders,

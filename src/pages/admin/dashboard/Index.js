@@ -4,13 +4,8 @@ import { ProductsTable } from "../products/Index";
 import { OrderTable } from "../order/Index";
 import {
   AppShell,
-  Navbar,
   Header,
-  Footer,
-  Text,
   useMantineTheme,
-  Button,
-  Select,
   Group,
   Flex,
   Title,
@@ -19,9 +14,10 @@ import {
 } from "@mantine/core";
 import { AuthContext } from "../../../contexts/Index";
 import { useNavigate } from "react-router-dom";
-import { supabase } from "../../../config/Supabase";
 import UserMenu from "../../../components/userMenu/Index";
 import { useViewportSize } from "@mantine/hooks";
+import { ReactComponent as Logo } from "../../../assets/logo.svg";
+import { IconShirt, IconTruckDelivery } from "@tabler/icons";
 
 export default function Dashboard() {
   const theme = useMantineTheme();
@@ -87,9 +83,13 @@ export default function Dashboard() {
       //   </Footer>
       // }
       header={
-        <Header height={95} p="md" bg="dark.4">
+        <Header height={105} p="md" bg="dark.4">
           <Group position="apart">
-            <Title color={theme.colors.gray[3]}>Admin panel</Title>
+            <Group>
+              <Logo />
+              <Title color={theme.colors.gray[3]}>Admin panel</Title>
+            </Group>
+
             <Group>
               <SearchBar
                 miw={width * 0.3}
@@ -117,21 +117,26 @@ export default function Dashboard() {
                 color="yellow.8"
                 sx={{
                   [".mantine-Tabs-tab"]: {
-                    // color: "black",
                     color: theme.colors.gray[0],
                     fontWeight: 600,
                     "&:hover": {
-                      backgroundColor: theme.colors.yellow[6],
+                      backgroundColor: theme.colors.yellow[8],
                       color: theme.colors.dark[4],
                     },
                   },
-                  // [".mantine-Tabs-panel"]: { color: "white" },
+                  [".mantine-Tabs-panel"]: {},
                 }}>
                 <Tabs.List grow position="center">
-                  <Tabs.Tab value="products" onClick={handleSwapProduct}>
+                  <Tabs.Tab
+                    value="products"
+                    icon={<IconShirt stroke={1.5} />}
+                    onClick={handleSwapProduct}>
                     Products
                   </Tabs.Tab>
-                  <Tabs.Tab value="orders" onClick={handleSwapOrder}>
+                  <Tabs.Tab
+                    value="orders"
+                    icon={<IconTruckDelivery stroke={1.5} />}
+                    onClick={handleSwapOrder}>
                     Orders
                   </Tabs.Tab>
                 </Tabs.List>
