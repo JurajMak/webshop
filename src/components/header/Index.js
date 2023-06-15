@@ -114,7 +114,10 @@ export function HeaderTabs({
 
   return (
     <Box>
-      <Header height={width < 768 ? 140 : 90} px="sm" bg="dark.4">
+      <Header
+        height={width < 768 ? 140 : 90}
+        px="sm"
+        bg="linear-gradient(to right, #062343, #041428, #000205)">
         <Flex direction="column">
           <Group position="apart" sx={{ height: "100%", gap: 0 }} mt={10}>
             <Group
@@ -159,13 +162,11 @@ export function HeaderTabs({
               </Button> */}
               <Button
                 variant="transparent"
-                color="dark"
+                color="gray.0"
                 sx={{
-                  [".mantine-Button-label"]: {
-                    color: "white",
-                  },
                   [`&:hover`]: {
                     background: theme.colors.yellow[8],
+
                     color: theme.colors.dark[4],
                   },
                 }}
@@ -201,7 +202,6 @@ export function HeaderTabs({
                 {orders.length > 0 && (
                   <Indicator
                     mx={10}
-                    // color={theme.colors.blue[6]}
                     color={theme.colors.yellow[8]}
                     sx={{
                       [".mantine-Indicator-common"]: { color: "black" },

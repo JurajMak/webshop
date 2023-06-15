@@ -49,6 +49,8 @@ export function HomeCarousel() {
 
   return (
     <Carousel
+      mt={200}
+      mb={200}
       withControls={false}
       loop
       slideSize="50%"

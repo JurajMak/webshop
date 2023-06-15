@@ -52,7 +52,11 @@ export default function CartDrawer({
       overlayOpacity={0.55}
       overlayBlur={3}
       sx={{
-        // [".mantine-Drawer-drawer"]: { background: theme.colors.dark[0] },
+        [".mantine-Drawer-drawer"]: {
+          // background: "linear-gradient(to right, #062343, #041428, #000205)",
+          // background: "#F08C00",
+          background: "linear-gradient(135deg, #c13584, #f56040, #fcaf45)",
+        },
         [".mantine-Drawer-closeButton"]: {
           width: "30px",
           height: "30px",
