@@ -30,7 +30,7 @@ export function ProductsTable({ titles, search }) {
   const { user } = useContext(AuthContext);
   const queryClient = new useQueryClient();
 
-  const toEdit = async (item) => {
+  const toEdit = (item) => {
     navigate(`/admin/products/${item.id}`, { state: item });
   };
 
@@ -84,8 +84,8 @@ export function ProductsTable({ titles, search }) {
   }, [search, fetchNextPage, hasNextPage]);
 
   return (
-    <ScrollArea>
-      <Table sx={{ minWidth: 800 }} verticalSpacing="sm">
+    <ScrollArea mx={200}>
+      <Table sx={{ minWidth: 800 }} verticalSpacing="md">
         <thead>
           <tr>
             {titles?.map((item, index) => {
@@ -106,11 +106,9 @@ export function ProductsTable({ titles, search }) {
                         alt="No image"></ImageWrap>
                     </td>
                     <td>
-                      <Group spacing="sm">
-                        <Text fz="sm" fw={500}>
-                          {item.name}
-                        </Text>
-                      </Group>
+                      <Text fz="sm" fw={500}>
+                        {item.name}
+                      </Text>
                     </td>
 
                     <td>
@@ -118,9 +116,10 @@ export function ProductsTable({ titles, search }) {
                         {item.description}
                       </Text>
                     </td>
+
                     <td>
                       <Text fz="sm" c="dimmed" fw={500}>
-                        {item.price}€
+                        €{item.price}
                       </Text>
                     </td>
                     <td>
@@ -130,7 +129,7 @@ export function ProductsTable({ titles, search }) {
                     </td>
                     <td>
                       <Text fz="sm" c="red" fw={500}>
-                        {item.sale_price}€
+                        {item.sale_price > 0 && `€${item.sale_price}`}
                       </Text>
                     </td>
                     <td>

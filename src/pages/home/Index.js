@@ -3,8 +3,13 @@ import HeaderTabs from "../../components/header/Index";
 import { CartReducer } from "../../utils/cartReducer";
 import { HomeCarousel } from "../../components/carousel/Index";
 import { Box } from "@mantine/core";
-// import HomeHeader from "../../components/homeHeader/Index";
+import { Features } from "../../components/features/Index";
+import { Footer } from "../../components/footer/Index";
+import { Faq } from "../../components/faq/Index";
+import { HeroImageRight } from "./heroContent/Index";
+// #062343 #041428 #000205
 
+// box #062343 #061221
 const Home = () => {
   const [shoppingData, dispatch] = useReducer(CartReducer, []);
 
@@ -13,9 +18,14 @@ const Home = () => {
   }, []);
 
   return (
-    <Box>
+    <Box bg="#062343">
       <HeaderTabs orders={shoppingData} />
-      <HomeCarousel />
+      <HeroImageRight />
+      {/* <Features /> */}
+      {/* <HomeCarousel />
+
+      <Faq /> */}
+      {/* <Footer /> */}
     </Box>
   );
 };
