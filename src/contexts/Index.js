@@ -90,7 +90,7 @@ const AuthProvider = ({ children }) => {
         <LoadingOverlay
           visible={isLoading}
           overlayBlur={2}
-          loaderProps={{ size: "xl", color: "dark" }}
+          loaderProps={{ size: "xl", color: "gray" }}
         />
       )}
     </AuthContext.Provider>

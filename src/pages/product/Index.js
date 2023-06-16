@@ -24,6 +24,8 @@ import { percentageCalc } from "../../utils/calcs";
 import { useViewportSize } from "@mantine/hooks";
 import { IconSquareMinus, IconSquarePlus } from "@tabler/icons";
 import { warningQuantityNotification } from "../../components/notifications/warningNotification";
+import { Footer } from "../../components/footer/Index";
+import { useStyles } from "./Styles";
 
 export default function ProductDetails() {
   const { id } = useParams();
@@ -31,6 +33,7 @@ export default function ProductDetails() {
   const navigate = useNavigate();
   const [shoppingData, dispatch] = useReducer(CartReducer, []);
   const [selectedQuantity, setSelectedQuantity] = useState(0);
+  const { classes } = useStyles();
 
   const {
     data: product,
@@ -61,7 +64,7 @@ export default function ProductDetails() {
 
   const handleAddCart = (item) => {
     const payload = { item, selectedQuantity };
-    // console.log("payload", payload);
+
     dispatch({ type: "ADD_PRODUCT_TO_CART", payload });
     setSelectedQuantity(0);
   };
@@ -92,14 +95,14 @@ export default function ProductDetails() {
     <>
       {isLoading ? (
         <LoadingOverlay
-          loaderProps={{ size: "xl", color: "#2524D1", variant: "oval" }}
+          loaderProps={{ size: "xl", color: "gray", variant: "oval" }}
           overlayOpacity={0.3}
           overlayColor="#c5c5c5"
           visible
         />
       ) : (
         isSuccess && (
-          <>
+          <Box>
             <HeaderTabs
               orders={shoppingData}
               onRemove={removeCartQuantity}
@@ -107,70 +110,66 @@ export default function ProductDetails() {
               onQuantity={addCartQuantity}
               onClear={clearCartData}
             />
-            <Box>
-              <Container size="xl" mt={20}>
-                <Flex mb={40} align="center">
-                  <Title order={1}>{product?.name}</Title>
-                  {product.is_sale && (
-                    <Badge ml={50} variant="filled" color="red" size="lg">
-                      {percentageCalc(product.price, product.sale_price)}% off
-                    </Badge>
-                  )}
-                </Flex>
-                <Stack pb={100}>
-                  <Flex
-                    justify="space-evenly"
-                    direction={width < 800 && "column"}>
-                    <Flex direction="column">
-                      <Text color="dimmed" weight={500} size="xl" mb={20}>
-                        Available quantity: {product?.quantity}
-                      </Text>
-                      <Image src={product.image} maw={500} alt="Random image" />
-                    </Flex>
-                    <Flex direction="column" gap={30}>
-                      <Group
-                        style={{ flexDirection: "column", gap: 30 }}
-                        mt={width < 800 ? 30 : 10}>
-                        <Text color="dimmed" weight={500} size="xl">
-                          Add quantity
-                        </Text>
-                        <Group>
-                          <ActionIcon onClick={() => handleRemoveQuantity()}>
-                            <IconSquareMinus size={30} />
-                          </ActionIcon>
-                          <Text color="dimmed" weight={500} size="sm">
-                            {selectedQuantity}
-                          </Text>
-                          <ActionIcon onClick={() => handleAddQuantity()}>
-                            <IconSquarePlus size={30} />
-                          </ActionIcon>
-                        </Group>
-                      </Group>
-                      <Group position="center">
-                        <Button
-                          disabled={!selectedQuantity ?? 0}
-                          color="dark"
-                          onClick={() => handleAddCart(product)}>
-                          Add to cart
-                        </Button>
-                      </Group>
-                    </Flex>
-                  </Flex>
-                </Stack>
-              </Container>
-            </Box>
 
-            <Container size="xl">
+            <Container size="xl" mt={20}>
+              <Flex mb={40} align="center">
+                <Title order={1}>{product?.name}</Title>
+                {product.is_sale && (
+                  <Badge ml={50} variant="filled" color="red" size="lg">
+                    {percentageCalc(product.price, product.sale_price)}% off
+                  </Badge>
+                )}
+              </Flex>
+              <Stack pb={100}>
+                <Flex
+                  justify="space-evenly"
+                  direction={width < 800 && "column"}>
+                  <Flex direction="column">
+                    <Text color="dimmed" weight={500} size="xl" mb={20}>
+                      Available quantity: {product?.quantity}
+                    </Text>
+                    <Image src={product.image} maw={500} alt="Random image" />
+                  </Flex>
+                  <Flex direction="column" gap={30}>
+                    <Group
+                      style={{ flexDirection: "column", gap: 30 }}
+                      mt={width < 800 ? 30 : 10}>
+                      <Text color="dimmed" weight={500} size="xl">
+                        Add quantity
+                      </Text>
+                      <Group>
+                        <ActionIcon
+                          className={classes.btn}
+                          onClick={() => handleRemoveQuantity()}>
+                          <IconSquareMinus size={30} />
+                        </ActionIcon>
+                        <Text color="dimmed" weight={500} size="sm">
+                          {selectedQuantity}
+                        </Text>
+                        <ActionIcon
+                          className={classes.btn}
+                          onClick={() => handleAddQuantity()}>
+                          <IconSquarePlus size={30} />
+                        </ActionIcon>
+                      </Group>
+                    </Group>
+                    <Group position="center">
+                      <Button
+                        disabled={!selectedQuantity ?? 0}
+                        color="dark"
+                        onClick={() => handleAddCart(product)}>
+                        Add to cart
+                      </Button>
+                    </Group>
+                  </Flex>
+                </Flex>
+              </Stack>
+
               <Accordion
-                sx={{
-                  [".mantine-Accordion-label"]: {
-                    fontWeight: 700,
-                    fontSize: 20,
-                  },
-                }}
+                className={classes.accord}
                 multiple
                 defaultValue={["description"]}>
-                <Accordion.Item value="description">
+                <Accordion.Item value="description" sx={{}}>
                   <Accordion.Control>Description</Accordion.Control>
                   <Accordion.Panel>{product.description}</Accordion.Panel>
                 </Accordion.Item>
@@ -197,7 +196,8 @@ export default function ProductDetails() {
                 </Button>
               </Group>
             </Container>
-          </>
+            <Footer />
+          </Box>
         )
       )}
     </>

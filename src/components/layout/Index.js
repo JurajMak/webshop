@@ -207,7 +207,7 @@ export default function AppShellLayout() {
           <LoadingOverlay
             visible={isLoading}
             overlayBlur={6}
-            loaderProps={{ size: "xl", color: "dark" }}
+            loaderProps={{ size: "xl", color: "gray" }}
             overlayOpacity={0.3}
           />
         ) : (

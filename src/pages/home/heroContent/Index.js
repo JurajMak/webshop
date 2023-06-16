@@ -10,15 +10,15 @@ import { useStyles } from "./Styles";
 import { Faq } from "../../../components/faq/Index";
 import { Features } from "../../../components/features/Index";
 import { HomeCarousel } from "../../../components/carousel/Index";
-import { useNavigate } from "react-router-dom";
+
 import { Footer } from "../../../components/footer/Index";
 import { useViewportSize } from "@mantine/hooks";
 
 export function HeroImageRight() {
   const { classes } = useStyles();
-  const navigate = useNavigate();
+
   const { width } = useViewportSize();
-  // "Your Shopping Destination, Elevated."
+
   return (
     <div className={classes.root}>
       <Container>
