@@ -7,7 +7,7 @@ export function SearchBar(props) {
       radius="sm"
       size="md"
       maxLength={30}
-      placeholder={props.placeholder}
+      // placeholder={props.placeholder}
       rightSection={
         <ActionIcon size={32} radius="xl" variant="transparent" mr="auto">
           <IconSearch size="1.1rem" stroke={1.5} onClick={props.onClick} />

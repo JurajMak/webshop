@@ -25,9 +25,10 @@ export function CartCard({ cartData, onQuantity, onDelete, onRemove }) {
       withBorder
       radius="md"
       p={0}
-      m={10}
+      // m={10}
       className={classes.card}
-      maw={500}>
+      maw={500}
+      miw={280}>
       <Group noWrap spacing={0}>
         <Image src={image ? image : home} height={140} width={140} />
 
@@ -39,7 +40,7 @@ export function CartCard({ cartData, onQuantity, onDelete, onRemove }) {
           )}
           <Text
             truncate={1}
-            maw={135}
+            maw={100}
             className={classes.title}
             mr="auto"
             size={18}>
