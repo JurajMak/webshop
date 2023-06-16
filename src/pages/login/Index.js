@@ -41,7 +41,7 @@ export function UserLogin() {
     });
     if (data) {
       setUser(data.user);
-      navigate("/");
+      navigate("/products");
       if (data.user.user_metadata.role === "admin") {
         navigate("/admin");
         return;

@@ -3,16 +3,16 @@ import {
   Drawer,
   useMantineTheme,
   Accordion,
-  Badge,
   Chip,
   Flex,
-  Button,
   ActionIcon,
   Text,
   Group,
 } from "@mantine/core";
 import { IconX } from "@tabler/icons";
 import { filterRangePrice } from "../../../utils/priceRanges";
+import CustomChip from "../../customChip/Index";
+import { useStyles } from "./Styles";
 
 export function FilterDrawer({
   opened,
@@ -25,14 +25,19 @@ export function FilterDrawer({
   onRange,
 }) {
   const theme = useMantineTheme();
+  const { classes } = useStyles();
   const [isOpen, setIsOpen] = useState(false);
-
-  const matchedRangeLabel = filterRangePrice.find(
-    (option) => option.value === Number(priceRange)
-  );
+  const [accord, setAccord] = useState([
+    "active",
+    "price",
+    "category",
+    "sizes",
+    "focus-ring",
+  ]);
 
   return (
     <Drawer
+      className={classes.root}
       title="Filters"
       size="xl"
       padding="xs"
@@ -46,76 +51,69 @@ export function FilterDrawer({
           : theme.colors.gray[7]
       }
       overlayOpacity={0.55}
-      overlayBlur={3}
-      sx={{
-        [".mantine-Drawer-closeButton"]: {
-          width: "30px",
-          height: "30px",
-        },
-        ["& .mantine-Drawer-closeButton svg"]: {
-          color: "black",
-          width: "30px",
-          height: "30px",
-        },
-        [".mantine-Drawer-title"]: { fontSize: 30, fontWeight: 600 },
-      }}>
+      overlayBlur={3}>
       <Accordion
+        className={classes.accord}
         multiple
-        // defaultValue={["active", "price", "category", "focus-ring"]}
-        value={["active", "price", "category", "focus-ring"]}>
+        value={accord}
+        onChange={setAccord}>
         {isOpen && (
           <Accordion.Item value="active">
             <Accordion.Control>
               <Group position="apart" style={{ gap: 20 }}>
-                <Text>Active Filter</Text>
-                <Button
+                <Text>Active Filters</Text>
+                <Chip
                   variant="transparent"
                   color="dark"
                   onClick={() => {
                     setValue("");
                     onCategory("");
-                    onRange();
+                    onRange("");
                     setIsOpen(false);
                   }}>
                   Clear filter
-                </Button>
+                </Chip>
               </Group>
             </Accordion.Control>
             <Accordion.Panel>
-              {value && (
-                <Flex align="center">
-                  <Badge color="dark" fz={13}>
-                    {value}
-                  </Badge>
-                  <ActionIcon
-                    onClick={() => {
-                      setValue("");
-                      onCategory("");
-                    }}>
-                    <IconX size={16} />
-                  </ActionIcon>
-                </Flex>
-              )}
+              <Flex gap={15}>
+                {value && (
+                  <Flex align="center">
+                    <CustomChip checked>{value}</CustomChip>
+                    <ActionIcon
+                      className={classes.btn}
+                      radius="xl"
+                      onClick={() => {
+                        setValue("");
+                        onCategory("");
+                      }}>
+                      <IconX size={16} />
+                    </ActionIcon>
+                  </Flex>
+                )}
 
-              {priceRange > 0 && (
-                <Flex align="center">
-                  <Badge color="dark" fz={13}>
-                    {matchedRangeLabel.label}
-                  </Badge>
-                  <ActionIcon
-                    onClick={() => {
-                      onRange();
-                    }}>
-                    <IconX size={16} />
-                  </ActionIcon>
-                </Flex>
-              )}
+                {priceRange && (
+                  <Flex align="center">
+                    <CustomChip checked>{priceRange}</CustomChip>
+                    <ActionIcon
+                      className={classes.btn}
+                      radius="xl"
+                      onClick={() => {
+                        onRange("");
+                      }}>
+                      <IconX size={16} />
+                    </ActionIcon>
+                  </Flex>
+                )}
+              </Flex>
             </Accordion.Panel>
           </Accordion.Item>
         )}
 
         <Accordion.Item value="price">
-          <Accordion.Control>Price range</Accordion.Control>
+          <Accordion.Control>
+            <Text>Price range</Text>
+          </Accordion.Control>
           <Accordion.Panel>
             <Flex wrap="wrap" gap={5}>
               {filterRangePrice?.map((item, i) => {
@@ -125,12 +123,15 @@ export function FilterDrawer({
                     multiple={false}
                     value={priceRange}
                     onChange={onRange}>
-                    <Chip
-                      color="dark"
-                      value={item.value}
-                      onClick={() => setIsOpen(true)}>
+                    <CustomChip
+                      variant="outline"
+                      value={item.label}
+                      onClick={() => {
+                        setIsOpen(true);
+                        setAccord([...accord, "active"]);
+                      }}>
                       {item.label}
-                    </Chip>
+                    </CustomChip>
                   </Chip.Group>
                 );
               })}
@@ -139,7 +140,9 @@ export function FilterDrawer({
         </Accordion.Item>
 
         <Accordion.Item value="category">
-          <Accordion.Control>Category</Accordion.Control>
+          <Accordion.Control>
+            <Text>Categories</Text>
+          </Accordion.Control>
           <Accordion.Panel>
             <Flex wrap="wrap" gap={5}>
               {category?.map((item, i) => {
@@ -149,23 +152,25 @@ export function FilterDrawer({
                     multiple={false}
                     value={value}
                     onChange={setValue}>
-                    <Chip
+                    <CustomChip
                       color="dark"
+                      variant="outline"
                       value={item.name}
                       onClick={() => {
                         onCategory(item.id);
                         setIsOpen(true);
+                        setAccord([...accord, "active"]);
                       }}>
                       {item.name}
-                    </Chip>
+                    </CustomChip>
                   </Chip.Group>
                 );
               })}
             </Flex>
           </Accordion.Panel>
         </Accordion.Item>
-        <Accordion.Item value="customization">
-          <Accordion.Control>Sizes</Accordion.Control>
+        <Accordion.Item value="sizes">
+          <Accordion.Control>TODO Sizes</Accordion.Control>
           <Accordion.Panel>
             Colors, fonts, shadows and many other parts are customizable to fit
             your design needs
@@ -173,7 +178,7 @@ export function FilterDrawer({
         </Accordion.Item>
 
         <Accordion.Item value="focus-ring">
-          <Accordion.Control>Some other filter</Accordion.Control>
+          <Accordion.Control>TODO Some other filter</Accordion.Control>
           <Accordion.Panel>
             With new :focus-visible pseudo-class focus ring appears only when
             user navigates with keyboard

@@ -2,7 +2,7 @@ import { supabase } from "../config/Supabase";
 
 function getFileURL(key, storage = "uploads", ...rest) {
   const { data } = supabase.storage.from(storage).getPublicUrl(key);
-  console.log("datapublicurl", data?.publicUrl);
+
   return data?.publicUrl;
 }
 
@@ -24,8 +24,7 @@ export default async function uploadFile({
       upsert: false,
       contentType: file.type,
     });
-  console.log("filepath", filePath);
-  console.log("filepathwithoutspace", filePathWithoutSpaces);
+
   if (error) throw error;
 
   return getFileURL(filePathWithoutSpaces, storageName, rest);

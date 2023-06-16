@@ -8,15 +8,13 @@ import {
   useMantineTheme,
   Text,
 } from "@mantine/core";
-// import { CartCard } from "../cards/cartCard/Index";
 import { CartCard } from "../../cards/cartCard/Index";
-// import { sumTotal } from "../../utils/sumTotal";
 import { sumTotal } from "../../../utils/sumTotal";
 import { useNavigate } from "react-router-dom";
 import { useContext } from "react";
-// import { AuthContext } from "../../contexts/Index";
 import { AuthContext } from "../../../contexts/Index";
 import { useViewportSize } from "@mantine/hooks";
+import { useStyles } from "./Styles";
 
 export default function CartDrawer({
   orders,
@@ -29,6 +27,7 @@ export default function CartDrawer({
   setOpened,
 }) {
   const theme = useMantineTheme();
+  const { classes } = useStyles();
   const navigate = useNavigate();
   const { user } = useContext(AuthContext);
   const { height, width } = useViewportSize();
@@ -38,6 +37,7 @@ export default function CartDrawer({
   };
   return (
     <Drawer
+      className={classes.root}
       opened={opened}
       onClose={() => setOpened(false)}
       padding="xs"
@@ -50,19 +50,7 @@ export default function CartDrawer({
           : theme.colors.gray[7]
       }
       overlayOpacity={0.55}
-      overlayBlur={3}
-      sx={{
-        // [".mantine-Drawer-drawer"]: { background: theme.colors.dark[0] },
-        [".mantine-Drawer-closeButton"]: {
-          width: "30px",
-          height: "30px",
-        },
-        ["& .mantine-Drawer-closeButton svg"]: {
-          color: "black",
-          width: "30px",
-          height: "30px",
-        },
-      }}>
+      overlayBlur={3}>
       <Flex direction="column">
         <ScrollArea type="never" style={{ height: height * 0.7 }}>
           {orders?.map((item) => {
