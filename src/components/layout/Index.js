@@ -84,7 +84,7 @@ export default function AppShellLayout() {
     const payload = { item, data };
     const flatten = data?.pages.flatMap((item) => item);
     const dataItem = flatten.find((dataItem) => dataItem.id === item.id);
-    console.log("quant", dataItem);
+
     if (item.quantity === dataItem.quantity) {
       warningQuantityNotification();
     }

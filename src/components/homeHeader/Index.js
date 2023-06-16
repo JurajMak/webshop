@@ -143,7 +143,6 @@ export function HomeHeader({
                     fontWeight: 600,
                     "&:hover": {
                       backgroundColor: theme.colors.yellow[8],
-                      // color: theme.colors.dark[8],
                     },
                   },
                 }}
@@ -181,7 +180,6 @@ export function HomeHeader({
                 {orders.length > 0 && (
                   <Indicator
                     mx={10}
-                    // color={theme.colors.blue[6]}
                     color={theme.colors.yellow[8]}
                     sx={{
                       [".mantine-Indicator-common"]: { color: "black" },
@@ -258,28 +256,6 @@ export function HomeHeader({
               </Group>
             )}
           </Group>
-          {/* <Group position="center">
-            <Tabs
-              mt={width < 768 ? 10 : 5}
-              variant="pills"
-              value={tabValue}
-              color="yellow.8"
-              sx={{
-                [".mantine-Tabs-tab"]: {
-                  color: "white",
-                  fontWeight: 600,
-                  "&:hover": {
-                    backgroundColor: theme.colors.yellow[8],
-                    // color: theme.colors.dark[8],
-                  },
-                },
-              }}
-              onTabChange={(value) => navigate(`/${value}`)}>
-              <Tabs.List position="center">
-                <Tabs.Tab value="products">Products</Tabs.Tab>
-              </Tabs.List>
-            </Tabs>
-          </Group> */}
         </Flex>
       </Header>
     </Box>

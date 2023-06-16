@@ -22,7 +22,7 @@ export const CartReducer = (state, action) => {
       if (cartItem && cartItem.quantity === dataItem.quantity) {
         return state;
       }
-      console.log("dataITem", dataItem);
+
       const updatedCartItem = cartItem
         ? { ...cartItem, quantity: cartItem.quantity + 1 }
         : { ...item, quantity: 1 };
@@ -51,8 +51,7 @@ export const CartReducer = (state, action) => {
       if (cartItem && cartItem.quantity === product.quantity) {
         return state;
       }
-      console.log("item", item);
-      console.log("product", product);
+
       const updatedCartItem = cartItem
         ? { ...cartItem, quantity: cartItem.quantity + 1 }
         : { ...item, quantity: 1 };
