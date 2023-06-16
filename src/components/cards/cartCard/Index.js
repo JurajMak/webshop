@@ -25,7 +25,7 @@ export function CartCard({ cartData, onQuantity, onDelete, onRemove }) {
       withBorder
       radius="md"
       p={0}
-      // m={10}
+      mb={10}
       className={classes.card}
       maw={500}
       miw={280}>
