@@ -50,11 +50,11 @@ export function UserLogin() {
     }
   };
 
-  const returnHome = async () => {
-    navigate("/");
+  const returnHome = () => {
+    navigate(-1);
   };
 
-  const returnRegister = async () => {
+  const returnRegister = () => {
     navigate("/register");
   };
 

@@ -48,8 +48,8 @@ const RegisterForm = () => {
     }
   };
 
-  const returnHome = async () => {
-    navigate("/");
+  const returnHome = () => {
+    navigate(-1);
   };
 
   return (
