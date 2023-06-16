@@ -5,6 +5,7 @@ import {
   Text,
   Button,
   Group,
+  Box,
 } from "@mantine/core";
 import { useStyles } from "./Styles";
 import { Faq } from "../../../components/faq/Index";
@@ -50,8 +51,15 @@ export function HeroImageRight() {
       <Features />
       <HomeCarousel />
       <Faq />
-      <div className={classes.footer} style={{ minWidth: width * 0.95 }}>
-        <Footer />
+      <div className={classes.footer}>
+        <Box
+          pt={20}
+          sx={{
+            position: "absolute",
+            width: "100%",
+          }}>
+          <Footer />
+        </Box>
       </div>
     </div>
   );

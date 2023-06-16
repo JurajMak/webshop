@@ -3,8 +3,7 @@ import { createStyles } from "@mantine/core";
 export const useStyles = createStyles((theme) => ({
   wrapper: {
     paddingTop: theme.spacing.md,
-    paddingBottom: `calc(${theme.spacing.xl} * 2)`,
-    marginBottom: 100,
+    paddingBottom: 150,
   },
 
   header: {

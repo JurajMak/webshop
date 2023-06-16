@@ -25,7 +25,8 @@ const Home = () => {
       {/* <HomeCarousel />
 
       <Faq />
-      <Footer /> */}
+     */}
+      {/* <Footer /> */}
     </Box>
   );
 };

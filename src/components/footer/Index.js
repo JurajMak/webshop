@@ -31,7 +31,7 @@ export function Footer() {
         <Logo />
         <Group className={classes.links}>{items}</Group>
 
-        <Group spacing="xs" position="right" noWrap>
+        <Group spacing="md" position="right" noWrap>
           <Link to="https://www.twitter.com/" target="blank">
             <ActionIcon
               size="lg"

@@ -11,6 +11,7 @@ import {
   LoadingOverlay,
   Group,
   UnstyledButton,
+  Box,
 } from "@mantine/core";
 import { ProductCard } from "../cards/productCard/Index";
 import HeaderTabs from "../header/Index";
@@ -41,7 +42,7 @@ export default function AppShellLayout() {
   const [selectValue, setSelectValue] = useState("popular");
   const [searchWord, setSearchWord] = useState("");
   const [value, setValue] = useState("");
-  const [swap, setSwap] = useState(false);
+  // const [swap, setSwap] = useState(false);
   const [categoryId, setCategoryId] = useState("");
   const [shoppingData, dispatch] = useReducer(CartReducer, []);
   const [scroll, scrollTo] = useWindowScroll();
@@ -111,7 +112,7 @@ export default function AppShellLayout() {
   const handleSearchEnter = (e) => {
     if (e.key === "Enter") {
       setSearchWord(search);
-      setSwap(false);
+      // setSwap(false);
     }
   };
 
@@ -143,10 +144,16 @@ export default function AppShellLayout() {
     hasNextPage,
   ]);
 
+  console.log("op", opened);
+
   return (
     <AppShell
       className={classes.root}
-      footer={<Footer />}
+      footer={
+        <Box mb={20}>
+          <Footer />
+        </Box>
+      }
       header={
         <HeaderTabs
           orders={shoppingData}
@@ -219,7 +226,7 @@ export default function AppShellLayout() {
         )}
       </Group>
 
-      {!swap && isFetchingNextPage && hasNextPage && (
+      {isFetchingNextPage && hasNextPage && (
         <Flex direction="column">
           <Text mx="auto" fz="lg" fw="bold" c="gray.3">
             Loading more products
@@ -227,7 +234,7 @@ export default function AppShellLayout() {
           <Loader mx="auto" color="gray.4" size={50}></Loader>
         </Flex>
       )}
-      {!swap && !hasNextPage && (
+      {!hasNextPage && (
         <Flex direction="column">
           <Text mx="auto" fz="lg" fw="bold" c="gray.3">
             No more products to load
@@ -244,23 +251,24 @@ export default function AppShellLayout() {
         opened={opened}
         onClose={() => setOpened(!opened)}
       />
-
-      <Affix position={{ bottom: height * 0.08, right: width * 0.01 }}>
-        <Transition transition="slide-up" mounted={scroll.y > 0}>
-          {(transitionStyles) => (
-            <Button
-              color="dark"
-              style={transitionStyles}
-              onClick={() => scrollTo({ y: 0 })}>
-              <IconArrowUp
-                size={20}
-                style={width > 800 ? { marginRight: 5 } : { marginRight: 0 }}
-              />
-              {width > 500 ? "To top" : ""}
-            </Button>
-          )}
-        </Transition>
-      </Affix>
+      {!opened && (
+        <Affix position={{ bottom: height * 0.08, right: width * 0.01 }}>
+          <Transition transition="slide-up" mounted={scroll.y > 0}>
+            {(transitionStyles) => (
+              <Button
+                color="dark"
+                style={transitionStyles}
+                onClick={() => scrollTo({ y: 0 })}>
+                <IconArrowUp
+                  size={20}
+                  style={width > 800 ? { marginRight: 5 } : { marginRight: 0 }}
+                />
+                {width > 500 ? "To top" : ""}
+              </Button>
+            )}
+          </Transition>
+        </Affix>
+      )}
     </AppShell>
   );
 }
