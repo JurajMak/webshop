@@ -14,7 +14,8 @@ export function Footer() {
 
   const items = mockLinks.map((link) => (
     <Anchor
-      color="gray.4"
+      c=" #868E96"
+      fw={500}
       key={link.label}
       href={link.link}
       sx={{ lineHeight: 1 }}

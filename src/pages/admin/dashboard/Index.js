@@ -18,6 +18,7 @@ import UserMenu from "../../../components/userMenu/Index";
 import { useViewportSize } from "@mantine/hooks";
 import { ReactComponent as Logo } from "../../../assets/logo.svg";
 import { IconShirt, IconTruckDelivery } from "@tabler/icons";
+import { useStyle } from "./Styles";
 
 export default function Dashboard() {
   const theme = useMantineTheme();
@@ -30,6 +31,7 @@ export default function Dashboard() {
   const [swapOrder, setSwapOrder] = useState(false);
   const navigate = useNavigate();
   const { height, width } = useViewportSize();
+  const { classes } = useStyle();
   const titles = [
     "Image",
     "Name",
@@ -77,13 +79,11 @@ export default function Dashboard() {
               : theme.colors.gray[0],
         },
       }}
-      // footer={
-      //   <Footer height={60} p="md">
-      //     Application footer
-      //   </Footer>
-      // }
       header={
-        <Header height={105} p="md" bg="dark.4">
+        <Header
+          height={105}
+          p="md"
+          bg="linear-gradient(to right, #062343, #041428, #000205)">
           <Group position="apart">
             <Group>
               <Logo />
@@ -112,20 +112,10 @@ export default function Dashboard() {
           <Group position="center">
             <Box>
               <Tabs
+                className={classes.tabs}
                 defaultValue="products"
                 variant="pills"
-                color="yellow.8"
-                sx={{
-                  [".mantine-Tabs-tab"]: {
-                    color: theme.colors.gray[0],
-                    fontWeight: 600,
-                    "&:hover": {
-                      backgroundColor: theme.colors.yellow[8],
-                      color: theme.colors.dark[4],
-                    },
-                  },
-                  [".mantine-Tabs-panel"]: {},
-                }}>
+                color="yellow.8">
                 <Tabs.List grow position="center">
                   <Tabs.Tab
                     value="products"

@@ -8,8 +8,7 @@ export const useStyles = createStyles((theme) => ({
     [".mantine-Drawer-closeButton"]: {
       width: "30px",
       height: "30px",
-      borderRadius: "30px",
-      borderRadius: "30px",
+
       "&:hover": {
         background: "#062343",
       },
@@ -18,7 +17,7 @@ export const useStyles = createStyles((theme) => ({
       color: "black",
       width: "30px",
       height: "30px",
-      borderRadius: "30px",
+
       "&:hover": {
         color: "#fff",
       },
