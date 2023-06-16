@@ -30,8 +30,6 @@ export const useStyles = createStyles((theme) => ({
 
   content: {
     paddingTop: 50,
-    // paddingBottom: 50,
-    // marginRight: 50,
     [theme.fn.smallerThan("md")]: {
       marginRight: 0,
     },
@@ -73,8 +71,6 @@ export const useStyles = createStyles((theme) => ({
     },
   },
   footer: {
-    position: "absolute",
-    bottom: 0,
-    padding: 20,
+    position: "relative",
   },
 }));
