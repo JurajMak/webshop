@@ -4,7 +4,7 @@ export const useStyles = createStyles((theme) => ({
   notification: {
     justifyContent: "center",
     textAlign: "center",
-    backgroundColor: theme.colors.blue[6],
+    backgroundColor: theme.colors.yellow[8],
     width: 30,
     height: 20,
     borderRadius: 50,
@@ -12,7 +12,7 @@ export const useStyles = createStyles((theme) => ({
   },
   text: {
     fontSize: 12,
-    fontWeight: 400,
-    color: theme.colors.gray[0],
+    fontWeight: 500,
+    color: theme.colors.dark[8],
   },
 }));

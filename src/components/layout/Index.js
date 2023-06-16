@@ -1,6 +1,5 @@
 import {
   AppShell,
-  Footer,
   Text,
   useMantineTheme,
   Select,
@@ -17,11 +16,7 @@ import { ProductCard } from "../cards/productCard/Index";
 import HeaderTabs from "../header/Index";
 import React, { useState, useEffect, useReducer } from "react";
 import { getProducts } from "../../api/products";
-import {
-  useInfiniteQuery,
-  useQuery,
-  useQueryClient,
-} from "@tanstack/react-query";
+import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
 import { handleInfiniteScroll } from "../../utils/infiniteScroll";
 import { useWindowScroll, useViewportSize } from "@mantine/hooks";
 import { getCategory } from "../../api/categories";
@@ -34,6 +29,9 @@ import {
 import { FilterDrawer } from "../drawers/filterDrawer/Index";
 import { CartReducer } from "../../utils/cartReducer";
 import { useNavigate } from "react-router-dom";
+import { warningQuantityNotification } from "../notifications/warningNotification";
+import { Footer } from "../footer/Index";
+import { useStyles } from "./Styles";
 
 export default function AppShellLayout() {
   const theme = useMantineTheme();
@@ -48,8 +46,9 @@ export default function AppShellLayout() {
   const [shoppingData, dispatch] = useReducer(CartReducer, []);
   const [scroll, scrollTo] = useWindowScroll();
   const { height, width } = useViewportSize();
-  const [chipValue, setChipValue] = useState();
-  const [priceRange, setPriceRange] = useState();
+  const [chipValue, setChipValue] = useState("");
+  const [priceRange, setPriceRange] = useState("");
+  const { classes } = useStyles();
 
   const {
     data,
@@ -58,11 +57,12 @@ export default function AppShellLayout() {
     hasNextPage,
     isFetchingNextPage,
     refetch,
-    isRefetching,
+    isFetching,
   } = useInfiniteQuery(
     ["products"],
     ({ pageParam = 1 }) =>
       getProducts(selectValue, searchWord, pageParam, categoryId, priceRange),
+
     {
       getNextPageParam: (lastPage, pages) => {
         const nextPage = pages.length + 1;
@@ -78,6 +78,12 @@ export default function AppShellLayout() {
 
   const handleAddQuantity = (item) => {
     const payload = { item, data };
+    const flatten = data?.pages.flatMap((item) => item);
+    const dataItem = flatten.find((dataItem) => dataItem.id === item.id);
+
+    if (item.quantity === dataItem.quantity) {
+      warningQuantityNotification();
+    }
     dispatch({ type: "ADD_QUANTITY", payload });
   };
 
@@ -112,10 +118,6 @@ export default function AppShellLayout() {
   const handleSearchBtn = () => {
     setSearchWord(search);
   };
-  const handleShowAll = () => {
-    setSearchWord("");
-    setValue("");
-  };
 
   const handleProductsDetails = (item) => {
     navigate(`/products/${item.id}`);
@@ -126,9 +128,7 @@ export default function AppShellLayout() {
     window.addEventListener("scroll", (e) =>
       handleInfiniteScroll(e, hasNextPage, fetchNextPage, isFetchingNextPage)
     );
-
     refetch();
-
     return () => {
       window.removeEventListener("scroll", (e) =>
         handleInfiniteScroll(e, hasNextPage, fetchNextPage, isFetchingNextPage)
@@ -145,23 +145,12 @@ export default function AppShellLayout() {
 
   return (
     <AppShell
-      styles={{
-        main: {
-          background:
-            theme.colorScheme === "dark"
-              ? theme.colors.dark[8]
-              : theme.colors.gray[0],
-          overflow: "hidden",
-        },
-      }}
-      // footer={
-      //   <Footer height={60} p="md">
-      //     Application footer
-      //   </Footer>
-      // }
+      className={classes.root}
+      footer={<Footer />}
       header={
         <HeaderTabs
           orders={shoppingData}
+          category={category}
           onDelete={handleDeleteItem}
           onQuantity={handleAddQuantity}
           onRemove={handleRemoveQuantity}
@@ -169,7 +158,6 @@ export default function AppShellLayout() {
           onText={handleSearchText}
           onEnter={handleSearchEnter}
           onBtn={handleSearchBtn}
-          onAll={handleShowAll}
         />
       }>
       <Group position="center" m={10} mb={20}>
@@ -193,7 +181,6 @@ export default function AppShellLayout() {
             return setSelectValue(value);
           }}
           value={selectValue}
-          // mx="auto"
           size="xs"
           data={[
             { label: "Highest price", value: "highest" },
@@ -211,7 +198,7 @@ export default function AppShellLayout() {
           <LoadingOverlay
             visible={isLoading}
             overlayBlur={6}
-            loaderProps={{ size: "xl", color: "dark" }}
+            loaderProps={{ size: "xl", color: "gray" }}
             overlayOpacity={0.3}
           />
         ) : (
@@ -234,15 +221,15 @@ export default function AppShellLayout() {
 
       {!swap && isFetchingNextPage && hasNextPage && (
         <Flex direction="column">
-          <Text mx="auto" fz="lg" fw="bold">
+          <Text mx="auto" fz="lg" fw="bold" c="gray.3">
             Loading more products
           </Text>
-          <Loader mx="auto" color="dark" size={50}></Loader>
+          <Loader mx="auto" color="gray.4" size={50}></Loader>
         </Flex>
       )}
       {!swap && !hasNextPage && (
         <Flex direction="column">
-          <Text mx="auto" fz="lg" fw="bold">
+          <Text mx="auto" fz="lg" fw="bold" c="gray.3">
             No more products to load
           </Text>
         </Flex>
@@ -258,14 +245,17 @@ export default function AppShellLayout() {
         onClose={() => setOpened(!opened)}
       />
 
-      <Affix position={{ bottom: height * 0.05, right: width * 0.01 }}>
+      <Affix position={{ bottom: height * 0.08, right: width * 0.01 }}>
         <Transition transition="slide-up" mounted={scroll.y > 0}>
           {(transitionStyles) => (
             <Button
               color="dark"
               style={transitionStyles}
               onClick={() => scrollTo({ y: 0 })}>
-              <IconArrowUp size={20} style={{ marginRight: 5 }} />
+              <IconArrowUp
+                size={20}
+                style={width > 800 ? { marginRight: 5 } : { marginRight: 0 }}
+              />
               {width > 500 ? "To top" : ""}
             </Button>
           )}
@@ -274,53 +264,3 @@ export default function AppShellLayout() {
     </AppShell>
   );
 }
-
-// {!swap ? (
-//   <Group position="center">
-//     {isLoading ? (
-//       <LoadingOverlay
-//         visible={isLoading}
-//         overlayBlur={6}
-//         loaderProps={{ size: "xl", color: "dark" }}
-//         overlayOpacity={0.3}
-//       />
-//     ) : (
-//       data?.pages?.map((group, i) => (
-//         <React.Fragment key={i}>
-//           {group?.map((item) => {
-//             return (
-//               <Group key={item.id} m={5}>
-//                 <ProductCard
-//                   data={item}
-//                   onClick={() => handleAddCart(item)}
-//                   onDetails={() => handleProductsDetails(item)}
-//                 />
-//               </Group>
-//             );
-//           })}
-//         </React.Fragment>
-//       ))
-//     )}
-//   </Group>
-// ) : (
-//   <Group position="center">
-//     {isLoading || isRefetching ? (
-//       <LoadingOverlay
-//         visible={isLoading || isRefetching}
-//         overlayBlur={6}
-//         loaderProps={{ size: "xl", color: "dark" }}
-//       />
-//     ) : (
-//       category?.map((item) => {
-//         return (
-//           <Group key={item.id} m={5}>
-//             <CategoryCard
-//               data={item}
-//               onClick={(e) => handleCategoryClick(item.id)}
-//             />
-//           </Group>
-//         );
-//       })
-//     )}
-//   </Group>
-// )}

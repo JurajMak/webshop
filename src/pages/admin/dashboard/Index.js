@@ -4,23 +4,21 @@ import { ProductsTable } from "../products/Index";
 import { OrderTable } from "../order/Index";
 import {
   AppShell,
-  Navbar,
   Header,
-  Footer,
-  Text,
   useMantineTheme,
-  Button,
-  Select,
   Group,
   Flex,
   Title,
   Tabs,
+  Box,
 } from "@mantine/core";
 import { AuthContext } from "../../../contexts/Index";
 import { useNavigate } from "react-router-dom";
-import { supabase } from "../../../config/Supabase";
 import UserMenu from "../../../components/userMenu/Index";
 import { useViewportSize } from "@mantine/hooks";
+import { ReactComponent as Logo } from "../../../assets/logo.svg";
+import { IconShirt, IconTruckDelivery } from "@tabler/icons";
+import { useStyle } from "./Styles";
 
 export default function Dashboard() {
   const theme = useMantineTheme();
@@ -33,6 +31,7 @@ export default function Dashboard() {
   const [swapOrder, setSwapOrder] = useState(false);
   const navigate = useNavigate();
   const { height, width } = useViewportSize();
+  const { classes } = useStyle();
   const titles = [
     "Image",
     "Name",
@@ -80,55 +79,17 @@ export default function Dashboard() {
               : theme.colors.gray[0],
         },
       }}
-      navbarOffsetBreakpoint="sm"
-      navbar={
-        <Navbar
-          p="md"
-          hiddenBreakpoint="sm"
-          hidden={!opened}
-          // bg="dark.4"
-          width={{ sm: 200, lg: 300 }}>
-          <Tabs
-            defaultValue="products"
-            variant="pills"
-            color="yellow"
-            sx={{
-              [".mantine-Tabs-tab"]: {
-                color: "black",
-                fontWeight: 600,
-                "&:hover": {
-                  backgroundColor: theme.colors.dark[4],
-                  color: theme.colors.gray[0],
-                },
-              },
-              // [".mantine-Tabs-panel"]: { color: "white" },
-            }}>
-            <Tabs.List grow position="center">
-              <Tabs.Tab value="products" onClick={handleSwapProduct}>
-                Products
-              </Tabs.Tab>
-              <Tabs.Tab value="orders" onClick={handleSwapOrder}>
-                Orders
-              </Tabs.Tab>
-            </Tabs.List>
-            <Tabs.Panel value="products" pl="xs">
-              Products table
-            </Tabs.Panel>
-            <Tabs.Panel ml={146} value="orders" pl="xs">
-              Orders table
-            </Tabs.Panel>
-          </Tabs>
-        </Navbar>
-      }
-      // footer={
-      //   <Footer height={60} p="md">
-      //     Application footer
-      //   </Footer>
-      // }
       header={
-        <Header height={95} p="md" bg="dark.4">
+        <Header
+          height={105}
+          p="md"
+          bg="linear-gradient(to right, #062343, #041428, #000205)">
           <Group position="apart">
-            <Title color={theme.colors.gray[3]}>Admin panel</Title>
+            <Group>
+              <Logo />
+              <Title color={theme.colors.gray[3]}>Admin panel</Title>
+            </Group>
+
             <Group>
               <SearchBar
                 miw={width * 0.3}
@@ -136,7 +97,7 @@ export default function Dashboard() {
                 size="xs"
                 radius="xl"
                 pt={10}
-                placeholder="Search"
+                placeholder="Search..."
                 onChange={(e) => handleSearchText(e)}
                 onKeyDown={(e) => handleSearchEnter(e)}
               />
@@ -147,6 +108,30 @@ export default function Dashboard() {
                 onProduct={navigateToCreate}
               />
             </Group>
+          </Group>
+          <Group position="center">
+            <Box>
+              <Tabs
+                className={classes.tabs}
+                defaultValue="products"
+                variant="pills"
+                color="yellow.8">
+                <Tabs.List grow position="center">
+                  <Tabs.Tab
+                    value="products"
+                    icon={<IconShirt stroke={1.5} />}
+                    onClick={handleSwapProduct}>
+                    Products
+                  </Tabs.Tab>
+                  <Tabs.Tab
+                    value="orders"
+                    icon={<IconTruckDelivery stroke={1.5} />}
+                    onClick={handleSwapOrder}>
+                    Orders
+                  </Tabs.Tab>
+                </Tabs.List>
+              </Tabs>
+            </Box>
           </Group>
         </Header>
       }>

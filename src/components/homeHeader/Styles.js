@@ -28,24 +28,4 @@ export const useStyles = createStyles((theme) => ({
       position: "right",
     },
   },
-  btn: {
-    [`&:hover`]: {
-      background: theme.colors.yellow[8],
-      color: theme.colors.dark[4],
-    },
-  },
-  indicator: {
-    [".mantine-Indicator-common"]: { color: "black" },
-  },
-
-  tabs: {
-    [".mantine-Tabs-tab"]: {
-      color: "white",
-      fontWeight: 600,
-      "&:hover": {
-        backgroundColor: theme.colors.yellow[8],
-        color: theme.colors.dark[8],
-      },
-    },
-  },
 }));

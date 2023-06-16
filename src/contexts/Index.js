@@ -62,7 +62,6 @@ const AuthProvider = ({ children }) => {
 
   React.useEffect(() => {
     supabase.auth.getSession().then(({ data }) => {
-      console.log(data);
       if (data && data.session) {
         setUser(data.session.user);
         setIsLoading(false);
@@ -71,7 +70,6 @@ const AuthProvider = ({ children }) => {
       }
     });
     supabase.auth.onAuthStateChange((event, session) => {
-      console.log(event, session);
       if (event === "SIGNED_IN") {
         setUser(session.user);
         setIsLoading(false);
@@ -90,7 +88,7 @@ const AuthProvider = ({ children }) => {
         <LoadingOverlay
           visible={isLoading}
           overlayBlur={2}
-          loaderProps={{ size: "xl", color: "dark" }}
+          loaderProps={{ size: "xl", color: "gray" }}
         />
       )}
     </AuthContext.Provider>
