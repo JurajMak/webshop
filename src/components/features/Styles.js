@@ -9,7 +9,7 @@ export const useStyles = createStyles((theme) => ({
   overlay: {
     position: "absolute",
     height: 110,
-    width: 340,
+    width: 300,
     top: 0,
     left: 0,
     zIndex: 1,

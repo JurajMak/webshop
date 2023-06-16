@@ -35,6 +35,7 @@ import { CartReducer } from "../../utils/cartReducer";
 import { useNavigate } from "react-router-dom";
 import { warningQuantityNotification } from "../notifications/warningNotification";
 import { Footer } from "../footer/Index";
+import { useStyles } from "./Styles";
 
 export default function AppShellLayout() {
   const theme = useMantineTheme();
@@ -51,6 +52,7 @@ export default function AppShellLayout() {
   const { height, width } = useViewportSize();
   const [chipValue, setChipValue] = useState("");
   const [priceRange, setPriceRange] = useState("");
+  const { classes } = useStyles();
 
   const {
     data,
@@ -151,28 +153,7 @@ export default function AppShellLayout() {
 
   return (
     <AppShell
-      // styles={{
-      //   main: {
-      //     // background:
-      //     //   theme.colorScheme === "dark"
-      //     //     ? theme.colors.dark[8]
-      //     //     : theme.colors.gray[0],
-      //     overflow: "hidden",
-      //     background: "#062343",
-      //   },
-      // }}
-      styles={{
-        root: {
-          backgroundColor: "#11284b",
-          backgroundSize: "cover",
-          backgroundPosition: "center",
-          backgroundImage:
-            "linear-gradient(250deg, rgba(130, 201, 30, 0) 0%, #062343 70%), url(https://images.unsplash.com/photo-1451187580459-43490279c0fa?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1080&q=80)",
-
-          // paddingTop: 150,
-          // paddingBottom: 150,
-        },
-      }}
+      className={classes.root}
       footer={<Footer />}
       header={
         <HeaderTabs
@@ -209,7 +190,6 @@ export default function AppShellLayout() {
             return setSelectValue(value);
           }}
           value={selectValue}
-          // mx="auto"
           size="xs"
           data={[
             { label: "Highest price", value: "highest" },
@@ -274,7 +254,7 @@ export default function AppShellLayout() {
         onClose={() => setOpened(!opened)}
       />
 
-      <Affix position={{ bottom: height * 0.1, right: width * 0.01 }}>
+      <Affix position={{ bottom: height * 0.08, right: width * 0.01 }}>
         <Transition transition="slide-up" mounted={scroll.y > 0}>
           {(transitionStyles) => (
             <Button
