@@ -12,6 +12,7 @@ import {
 import { IconX } from "@tabler/icons";
 import { filterRangePrice } from "../../../utils/priceRanges";
 import CustomChip from "../../customChip/Index";
+import { useStyles } from "./Styles";
 
 export function FilterDrawer({
   opened,
@@ -24,6 +25,7 @@ export function FilterDrawer({
   onRange,
 }) {
   const theme = useMantineTheme();
+  const { classes } = useStyles();
   const [isOpen, setIsOpen] = useState(false);
   const [accord, setAccord] = useState([
     "active",
@@ -33,15 +35,9 @@ export function FilterDrawer({
     "focus-ring",
   ]);
 
-  const matchedRangeLabel = filterRangePrice.find(
-    (option) => option.label === Number(priceRange)
-  );
-
-  console.log("priceRange", priceRange);
-  console.log("matched", matchedRangeLabel);
-
   return (
     <Drawer
+      className={classes.root}
       title="Filters"
       size="xl"
       padding="xs"
@@ -55,25 +51,12 @@ export function FilterDrawer({
           : theme.colors.gray[7]
       }
       overlayOpacity={0.55}
-      overlayBlur={3}
-      sx={{
-        [".mantine-Drawer-drawer"]: {
-          // background: "linear-gradient(to right, #062343, #041428, #000205)",
-          // background: "#F08C00",
-          background: "linear-gradient(135deg, #c13584, #f56040, #fcaf45)",
-        },
-        [".mantine-Drawer-closeButton"]: {
-          width: "30px",
-          height: "30px",
-        },
-        ["& .mantine-Drawer-closeButton svg"]: {
-          color: "black",
-          width: "30px",
-          height: "30px",
-        },
-        [".mantine-Drawer-title"]: { fontSize: 30, fontWeight: 600 },
-      }}>
-      <Accordion multiple value={accord} onChange={setAccord}>
+      overlayBlur={3}>
+      <Accordion
+        className={classes.accord}
+        multiple
+        value={accord}
+        onChange={setAccord}>
         {isOpen && (
           <Accordion.Item value="active">
             <Accordion.Control>
@@ -98,6 +81,8 @@ export function FilterDrawer({
                   <Flex align="center">
                     <CustomChip checked>{value}</CustomChip>
                     <ActionIcon
+                      className={classes.btn}
+                      radius="xl"
                       onClick={() => {
                         setValue("");
                         onCategory("");
@@ -111,6 +96,8 @@ export function FilterDrawer({
                   <Flex align="center">
                     <CustomChip checked>{priceRange}</CustomChip>
                     <ActionIcon
+                      className={classes.btn}
+                      radius="xl"
                       onClick={() => {
                         onRange("");
                       }}>

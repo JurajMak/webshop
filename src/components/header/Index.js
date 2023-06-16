@@ -129,7 +129,7 @@ export function HeaderTabs({
                 <Flex justify="center" style={{ alignItems: "center" }}>
                   <Logo width={50} />
                   <Text c="white" fw={600} fz={20}>
-                    Shopvert
+                    ShopVert
                   </Text>
                 </Flex>
               </UnstyledButton>
@@ -189,8 +189,6 @@ export function HeaderTabs({
                 position="apart"
                 spacing="xl"
                 miw={width < 768 && width * 0.9}>
-                <UserMenu orders={orders} onDrawer={() => setOpened(true)} />
-
                 {width < 768 && (
                   <UnstyledButton onClick={() => navigate("/")}>
                     <Flex justify="center" style={{ alignItems: "center" }}>
@@ -218,6 +216,7 @@ export function HeaderTabs({
                     </ActionIcon>
                   </Indicator>
                 )}
+                <UserMenu orders={orders} onDrawer={() => setOpened(true)} />
               </Group>
             ) : (
               <Group

@@ -21,11 +21,11 @@ const Home = () => {
     <Box bg="#062343">
       <HeaderTabs orders={shoppingData} />
       <HeroImageRight />
-      {/* <Features /> */}
+      {/* <Features />  */}
       {/* <HomeCarousel />
 
-      <Faq /> */}
-      {/* <Footer /> */}
+      <Faq />
+      <Footer /> */}
     </Box>
   );
 };

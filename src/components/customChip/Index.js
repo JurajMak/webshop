@@ -6,7 +6,8 @@ export default function CustomChip({ ...props }) {
     label: {
       "&[data-checked]": {
         "&, &:hover": {
-          backgroundColor: "#979B9F",
+          // backgroundColor: "#979B9F",
+          backgroundColor: "#062343",
 
           color: "#fff",
         },

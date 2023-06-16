@@ -50,7 +50,7 @@ export function HeroImageRight() {
       <Features />
       <HomeCarousel />
       <Faq />
-      <div className={classes.footer} style={{ minWidth: width }}>
+      <div className={classes.footer} style={{ minWidth: width * 0.95 }}>
         <Footer />
       </div>
     </div>
