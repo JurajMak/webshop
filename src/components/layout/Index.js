@@ -16,11 +16,7 @@ import { ProductCard } from "../cards/productCard/Index";
 import HeaderTabs from "../header/Index";
 import React, { useState, useEffect, useReducer } from "react";
 import { getProducts } from "../../api/products";
-import {
-  useInfiniteQuery,
-  useQuery,
-  useQueryClient,
-} from "@tanstack/react-query";
+import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
 import { handleInfiniteScroll } from "../../utils/infiniteScroll";
 import { useWindowScroll, useViewportSize } from "@mantine/hooks";
 import { getCategory } from "../../api/categories";
@@ -122,10 +118,6 @@ export default function AppShellLayout() {
   const handleSearchBtn = () => {
     setSearchWord(search);
   };
-  const handleShowAll = () => {
-    setSearchWord("");
-    setValue("");
-  };
 
   const handleProductsDetails = (item) => {
     navigate(`/products/${item.id}`);
@@ -166,7 +158,6 @@ export default function AppShellLayout() {
           onText={handleSearchText}
           onEnter={handleSearchEnter}
           onBtn={handleSearchBtn}
-          onAll={handleShowAll}
         />
       }>
       <Group position="center" m={10} mb={20}>

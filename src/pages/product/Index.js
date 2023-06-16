@@ -26,6 +26,7 @@ import { IconSquareMinus, IconSquarePlus } from "@tabler/icons";
 import { warningQuantityNotification } from "../../components/notifications/warningNotification";
 import { Footer } from "../../components/footer/Index";
 import { useStyles } from "./Styles";
+import noImage from "../../assets/register.jpg";
 
 export default function ProductDetails() {
   const { id } = useParams();
@@ -128,7 +129,11 @@ export default function ProductDetails() {
                     <Text color="dimmed" weight={500} size="xl" mb={20}>
                       Available quantity: {product?.quantity}
                     </Text>
-                    <Image src={product.image} maw={500} alt="Random image" />
+                    <Image
+                      src={product.image || noImage}
+                      maw={500}
+                      alt="Random image"
+                    />
                   </Flex>
                   <Flex direction="column" gap={30}>
                     <Group

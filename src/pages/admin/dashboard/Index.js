@@ -97,7 +97,7 @@ export default function Dashboard() {
                 size="xs"
                 radius="xl"
                 pt={10}
-                placeholder="Search"
+                placeholder="Search..."
                 onChange={(e) => handleSearchText(e)}
                 onKeyDown={(e) => handleSearchEnter(e)}
               />

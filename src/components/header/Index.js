@@ -9,9 +9,10 @@ import {
   useMantineTheme,
   ActionIcon,
   UnstyledButton,
+  Tabs,
 } from "@mantine/core";
 import { useViewportSize } from "@mantine/hooks";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams, useLocation } from "react-router-dom";
 import React, { useContext, useState } from "react";
 import { AuthContext } from "../../contexts/Index";
 import { supabase } from "../../config/Supabase";
@@ -33,7 +34,6 @@ export function HeaderTabs({
   onText,
   onEnter,
   onBtn,
-  onAll,
   onCategory,
   category,
 }) {
@@ -46,6 +46,7 @@ export function HeaderTabs({
   const { height, width } = useViewportSize();
   // const [tabValue, setTabValue] = useState("");
   // const { tabValue } = useParams();
+  const { pathname } = useLocation();
 
   const totalString = sumTotal(orders);
   const total = Number(totalString).toFixed();
@@ -115,7 +116,7 @@ export function HeaderTabs({
   return (
     <Box>
       <Header
-        height={width < 768 ? 140 : 90}
+        height={width < 768 ? 110 : 90}
         px="sm"
         bg="linear-gradient(to right, #062343, #041428, #000205)">
         <Flex direction="column">
@@ -133,47 +134,48 @@ export function HeaderTabs({
                   </Text>
                 </Flex>
               </UnstyledButton>
+              {pathname !== "/" && (
+                <>
+                  <SearchBar
+                    placeholder="Search products..."
+                    miw={width * 0.3}
+                    size="xs"
+                    radius="md"
+                    p={10}
+                    ml={width > 1100 ? width * 0.2 : 0}
+                    onChange={onText}
+                    onKeyPress={onEnter}
+                    onClick={onBtn}
+                  />
 
-              <SearchBar
-                placeholder="Search products..."
-                miw={width * 0.3}
-                size="xs"
-                radius="md"
-                p={10}
-                ml={width > 1100 ? width * 0.2 : 0}
-                onChange={onText}
-                onKeyPress={onEnter}
-                onClick={onBtn}
-              />
-              {/* <Button
-                variant="transparent"
-                color="dark"
-                sx={{
-                  [".mantine-Button-label"]: {
-                    color: "white",
-                  },
-                  [`&:hover`]: {
-                    background: theme.colors.yellow[8],
-                    color: theme.colors.dark[4],
-                  },
-                }}
-                onClick={onAll}>
-                Reset search
-              </Button> */}
-              <Button
-                variant="transparent"
-                color="gray.0"
-                sx={{
-                  [`&:hover`]: {
-                    background: theme.colors.yellow[8],
-
-                    color: theme.colors.dark[4],
-                  },
-                }}
-                onClick={() => navigate("/products")}>
-                Products
-              </Button>
+                  <Button
+                    variant="transparent"
+                    color="gray.0"
+                    className={classes.btn}
+                    onClick={() => navigate("/products")}>
+                    Products
+                  </Button>
+                </>
+              )}
             </Group>
+            {pathname === "/" && width > 768 && (
+              <Group position="center">
+                <Tabs
+                  mt={width < 768 ? 10 : 5}
+                  variant="outline"
+                  // value={tabValue}
+                  className={classes.tabs}
+                  onTabChange={(value) => navigate(`/${value}`)}>
+                  <Tabs.List position="center">
+                    <Tabs.Tab value="products">Products</Tabs.Tab>
+                    <Tabs.Tab value="categories" onClick={onCategory}>
+                      Categories
+                    </Tabs.Tab>
+                  </Tabs.List>
+                </Tabs>
+              </Group>
+            )}
+
             <CartDrawer
               handleCheckout={handleCheckout}
               loading={loading}
@@ -201,9 +203,7 @@ export function HeaderTabs({
                   <Indicator
                     mx={10}
                     color={theme.colors.yellow[8]}
-                    sx={{
-                      [".mantine-Indicator-common"]: { color: "black" },
-                    }}
+                    className={classes.indicator}
                     position="bottom-start"
                     inline
                     label={orders.length}
@@ -223,17 +223,6 @@ export function HeaderTabs({
                 position="apart"
                 spacing="xl"
                 miw={width < 768 && width * 0.9}>
-                <Button
-                  sx={{
-                    [`&:hover`]: {
-                      background: theme.colors.yellow[8],
-                      color: theme.colors.dark[4],
-                    },
-                  }}
-                  color="dark.4"
-                  onClick={() => navigate("/login")}>
-                  Log in
-                </Button>
                 {width < 768 && (
                   <UnstyledButton onClick={() => navigate("/")}>
                     <Flex justify="center" style={{ alignItems: "center" }}>
@@ -243,11 +232,8 @@ export function HeaderTabs({
                 )}
                 {orders.length > 0 && (
                   <Indicator
-                    // color={theme.colors.blue[6]}
                     color={theme.colors.yellow[8]}
-                    sx={{
-                      [".mantine-Indicator-common"]: { color: "black" },
-                    }}
+                    className={classes.indicator}
                     position="bottom-start"
                     inline
                     label={orders.length}
@@ -260,13 +246,19 @@ export function HeaderTabs({
                     </ActionIcon>
                   </Indicator>
                 )}
+                <Button
+                  className={classes.btn}
+                  color="dark.4"
+                  onClick={() => navigate("/login")}>
+                  Log in
+                </Button>
               </Group>
             )}
 
-            {width < 768 && (
+            {width < 768 && pathname !== "/" && (
               <Group mt={10}>
                 <SearchBar
-                  miw={width * 0.95}
+                  miw={width * 0.9}
                   placeholder="Search products..."
                   size="xs"
                   radius="xl"
@@ -277,31 +269,23 @@ export function HeaderTabs({
               </Group>
             )}
           </Group>
-          {/* <Group position="center">
-            <Tabs
-              mt={width < 768 ? 10 : 5}
-              variant="default"
-              value={tabValue}
-              color="yellow.8"
-              sx={{
-                [".mantine-Tabs-tab"]: {
-                  color: "white",
-                  fontWeight: 600,
-                  "&:hover": {
-                    backgroundColor: theme.colors.yellow[8],
-                    color: theme.colors.dark[8],
-                  },
-                },
-              }}
-              onTabChange={(value) => navigate(`/${value}`)}>
-              <Tabs.List position="center">
-                <Tabs.Tab value="products">Products</Tabs.Tab>
-                <Tabs.Tab value="categories" onClick={onCategory}>
-                  Categories
-                </Tabs.Tab>
-              </Tabs.List>
-            </Tabs>
-          </Group> */}
+          {width < 768 && pathname === "/" && (
+            <Group position="center">
+              <Tabs
+                mt={width < 768 ? 10 : 5}
+                variant="outline"
+                // value={tabValue}
+                className={classes.tabs}
+                onTabChange={(value) => navigate(`/${value}`)}>
+                <Tabs.List position="center">
+                  <Tabs.Tab value="products">Products</Tabs.Tab>
+                  <Tabs.Tab value="categories" onClick={onCategory}>
+                    Categories
+                  </Tabs.Tab>
+                </Tabs.List>
+              </Tabs>
+            </Group>
+          )}
         </Flex>
       </Header>
     </Box>

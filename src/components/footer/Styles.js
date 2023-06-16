@@ -4,19 +4,13 @@ export const useStyles = createStyles((theme) => ({
     borderTop: `${1} solid ${
       theme.colorScheme === "dark" ? theme.colors.gray[0] : theme.colors.gray[2]
     }`,
-    paddingInline: 20,
-
-    padding: 20,
-
-    // background: "linear-gradient(to right, #062343, #041428, #000205)",
+    paddingInline: 30,
   },
 
   inner: {
-    padding: 20,
     display: "flex",
     justifyContent: "space-between",
     alignItems: "center",
-    padding: `${theme.spacing.md} ${theme.spacing.md}`,
 
     [theme.fn.smallerThan("sm")]: {
       flexDirection: "column",
@@ -28,5 +22,8 @@ export const useStyles = createStyles((theme) => ({
       marginTop: theme.spacing.lg,
       marginBottom: theme.spacing.sm,
     },
+  },
+  btn: {
+    border: "none",
   },
 }));

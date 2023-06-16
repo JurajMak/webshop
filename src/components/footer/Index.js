@@ -33,7 +33,11 @@ export function Footer() {
 
         <Group spacing="xs" position="right" noWrap>
           <Link to="https://www.twitter.com/" target="blank">
-            <ActionIcon size="lg" variant="default" radius="sm">
+            <ActionIcon
+              size="lg"
+              variant="default"
+              radius="sm"
+              sx={{ border: "none" }}>
               <IconBrandTwitter
                 size="2rem"
                 stroke={1.5}
@@ -44,7 +48,12 @@ export function Footer() {
           </Link>
 
           <Link to="https://www.facebook.com/" target="_blank">
-            <ActionIcon size="lg" variant="default" radius="sm" bg="#4064AC">
+            <ActionIcon
+              size="lg"
+              variant="default"
+              radius="sm"
+              bg="#4064AC"
+              sx={{ border: "none" }}>
               <IconBrandFacebook
                 size="2rem"
                 stroke={1.5}
@@ -54,7 +63,10 @@ export function Footer() {
             </ActionIcon>
           </Link>
 
-          <Link to="https://www.instagram.com/" target="blank">
+          <Link
+            to="https://www.instagram.com/"
+            target="blank"
+            sx={{ border: "none" }}>
             <ActionIcon
               size="lg"
               variant="gradient"
