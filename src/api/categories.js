@@ -13,7 +13,7 @@ const createCategory = async (category, desc, userId) => {
       .insert({ name: category, description: desc, user_id: userId })
       .single();
     if (error) {
-      console.log(error.message);
+      throw new Error(error.message);
     }
 
     return categories;
