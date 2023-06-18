@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 import Home from "../pages/home/Index";
 import UserLogin from "../pages/login/Index";
 import ProtectedRoute from "../pages/protected/Index";
@@ -11,10 +11,21 @@ import CreateCategory from "../pages/admin/category/Index";
 import ProductDetails from "../pages/product/Index";
 import AppShellLayout from "../components/layout/Index";
 import Categories from "../pages/categories/Index";
+import React from "react";
+const ScrollToTop = () => {
+  const { pathname } = useLocation();
+
+  React.useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [pathname]);
+
+  return null;
+};
 
 const RenderRoutes = () => {
   return (
     <BrowserRouter>
+      <ScrollToTop />
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<UserLogin />} />

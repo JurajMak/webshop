@@ -180,14 +180,13 @@ export function HeaderTabs({
             <CartDrawer
               handleCheckout={handleCheckout}
               loading={loading}
-              // opened={opened}
-              // setOpened={setOpened}
-              cartOpen={cartOpen}
-              setCartOpen={setCartOpen}
+              opened={opened}
+              setOpened={setOpened}
               orders={orders}
               onRemove={onRemove}
               onQuantity={onQuantity}
               onDelete={onDelete}
+              setCartOpen={setCartOpen}
             />
             {user?.user_metadata.role === "user" ? (
               <Group
@@ -214,16 +213,20 @@ export function HeaderTabs({
                     <ActionIcon
                       variant="transparent"
                       color="gray.0"
-                      // onClick={() => setOpened(true)}
-                      onClick={() => setCartOpen(true)}>
+                      onClick={() => {
+                        setOpened(true);
+                        setCartOpen(true);
+                      }}>
                       <IconShoppingCart size={25} stroke={2} />
                     </ActionIcon>
                   </Indicator>
                 )}
                 <UserMenu
                   orders={orders}
-                  // onDrawer={() => setOpened(true)}
-                  onDrawer={() => setCartOpen(true)}
+                  onDrawer={() => {
+                    setOpened(true);
+                    setCartOpen(true);
+                  }}
                 />
               </Group>
             ) : (
@@ -249,8 +252,10 @@ export function HeaderTabs({
                     <ActionIcon
                       variant="transparent"
                       color="gray.0"
-                      // onClick={() => setOpened(true)}
-                      onClick={() => setCartOpen(true)}>
+                      onClick={() => {
+                        setOpened(true);
+                        setCartOpen(true);
+                      }}>
                       <IconShoppingCart size={25} stroke={2} />
                     </ActionIcon>
                   </Indicator>

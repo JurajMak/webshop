@@ -35,6 +35,7 @@ export default function ProductDetails() {
   const [shoppingData, dispatch] = useReducer(CartReducer, []);
   const [selectedQuantity, setSelectedQuantity] = useState(0);
   const { classes } = useStyles();
+  const [cartOpen, setCartOpen] = useState(false);
 
   const {
     data: product,
@@ -110,6 +111,8 @@ export default function ProductDetails() {
               onDelete={deleteCartItem}
               onQuantity={addCartQuantity}
               onClear={clearCartData}
+              cartOpen={cartOpen}
+              setCartOpen={setCartOpen}
             />
 
             <Container size="xl" mt={20}>
