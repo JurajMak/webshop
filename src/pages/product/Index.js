@@ -96,26 +96,26 @@ export default function ProductDetails() {
 
   return (
     <>
-      {isFetching ? (
-        <LoadingOverlay
-          loaderProps={{ size: "xl", color: "gray", variant: "oval" }}
-          overlayOpacity={0.3}
-          overlayColor="#c5c5c5"
-          visible
+      <Box>
+        <HeaderTabs
+          orders={shoppingData}
+          onRemove={removeCartQuantity}
+          onDelete={deleteCartItem}
+          onQuantity={addCartQuantity}
+          onClear={clearCartData}
+          cartOpen={cartOpen}
+          setCartOpen={setCartOpen}
         />
-      ) : (
-        isSuccess && (
-          <Box>
-            <HeaderTabs
-              orders={shoppingData}
-              onRemove={removeCartQuantity}
-              onDelete={deleteCartItem}
-              onQuantity={addCartQuantity}
-              onClear={clearCartData}
-              cartOpen={cartOpen}
-              setCartOpen={setCartOpen}
-            />
 
+        {isFetching ? (
+          <LoadingOverlay
+            loaderProps={{ size: "xl", color: "gray", variant: "oval" }}
+            overlayOpacity={0.3}
+            overlayColor="#c5c5c5"
+            visible
+          />
+        ) : (
+          <>
             <Container size="xl" mt={20}>
               <Flex mb={40} align="center">
                 <Title order={1}>{product?.name}</Title>
@@ -237,9 +237,158 @@ export default function ProductDetails() {
               </Group>
             </Container>
             <Footer />
-          </Box>
-        )
-      )}
+          </>
+        )}
+      </Box>
     </>
   );
+}
+
+{
+  /* <>
+{isFetching ? (
+  <LoadingOverlay
+    loaderProps={{ size: "xl", color: "gray", variant: "oval" }}
+    overlayOpacity={0.3}
+    overlayColor="#c5c5c5"
+    visible
+  />
+) : (
+  isSuccess && (
+    <Box>
+      <HeaderTabs
+        orders={shoppingData}
+        onRemove={removeCartQuantity}
+        onDelete={deleteCartItem}
+        onQuantity={addCartQuantity}
+        onClear={clearCartData}
+        cartOpen={cartOpen}
+        setCartOpen={setCartOpen}
+      />
+
+      <Container size="xl" mt={20}>
+        <Flex mb={40} align="center">
+          <Title order={1}>{product?.name}</Title>
+          {product.is_sale && (
+            <Badge ml={50} variant="filled" color="red" size="lg">
+              {percentageCalc(product.price, product.sale_price)}% off
+            </Badge>
+          )}
+        </Flex>
+        <Stack pb={100}>
+          <Flex
+            justify="space-evenly"
+            direction={width < 800 && "column"}>
+            <Flex direction="column">
+              <Text color="dimmed" weight={500} size="xl" mb={20}>
+                Available quantity: {product?.quantity}
+              </Text>
+              <Image
+                src={product.image || noImage}
+                maw={500}
+                alt="Random image"
+              />
+            </Flex>
+            <Flex direction="column" gap={30}>
+              <Group
+                style={{ flexDirection: "column", gap: 30 }}
+                mt={width < 800 ? 30 : 10}>
+                {product.is_sale ? (
+                  <>
+                    <Title
+                      truncate
+                      td="line-through"
+                      color="dark"
+                      fz={25}
+                      weight={400}
+                      sx={{ lineHeight: 1 }}>
+                      {product.price.toFixed(2)}€
+                    </Title>
+                    <Title
+                      truncate
+                      color="red.6"
+                      weight={400}
+                      sx={{ lineHeight: 1 }}>
+                      {product.sale_price.toFixed(2)}€
+                    </Title>
+                  </>
+                ) : (
+                  <Box>
+                    <Title
+                      truncate
+                      color="dark"
+                      weight={400}
+                      sx={{ lineHeight: 1 }}>
+                      {product.price.toFixed(2)}€
+                    </Title>
+                  </Box>
+                )}
+
+                <Text color="dimmed" weight={500} size="xl">
+                  Add quantity
+                </Text>
+                <Group>
+                  <ActionIcon
+                    className={classes.btn}
+                    onClick={() => handleRemoveQuantity()}>
+                    <IconSquareMinus size={30} />
+                  </ActionIcon>
+                  <Text color="dimmed" weight={500} size="sm">
+                    {selectedQuantity}
+                  </Text>
+                  <ActionIcon
+                    className={classes.btn}
+                    onClick={() => handleAddQuantity()}>
+                    <IconSquarePlus size={30} />
+                  </ActionIcon>
+                </Group>
+              </Group>
+              <Group position="center">
+                <Button
+                  disabled={!selectedQuantity ?? 0}
+                  color="dark"
+                  onClick={() => handleAddCart(product)}>
+                  Add to cart
+                </Button>
+              </Group>
+            </Flex>
+          </Flex>
+        </Stack>
+
+        <Accordion
+          className={classes.accord}
+          multiple
+          defaultValue={["description"]}>
+          <Accordion.Item value="description" sx={{}}>
+            <Accordion.Control>Description</Accordion.Control>
+            <Accordion.Panel>{product.description}</Accordion.Panel>
+          </Accordion.Item>
+          <Accordion.Item value="flexibility">
+            <Accordion.Control>Flexibility</Accordion.Control>
+            <Accordion.Panel>
+              Configure components appearance and behavior with vast
+              amount of settings or overwrite any part of component styles
+            </Accordion.Panel>
+          </Accordion.Item>
+
+          <Accordion.Item value="focus-ring">
+            <Accordion.Control>No annoying focus ring</Accordion.Control>
+            <Accordion.Panel>
+              With new :focus-visible pseudo-class focus ring appears only
+              when user navigates with keyboard
+            </Accordion.Panel>
+          </Accordion.Item>
+        </Accordion>
+
+        <Group mt={50} mb={50} position="center">
+          <Button color="dark" radius={6} onClick={() => navigate(-1)}>
+            Return
+          </Button>
+        </Group>
+      </Container>
+      <Footer />
+    </Box>
+  )
+)}
+</> */
 }
