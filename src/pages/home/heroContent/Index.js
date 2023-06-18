@@ -1,18 +1,9 @@
-import {
-  createStyles,
-  Container,
-  Title,
-  Text,
-  Button,
-  Group,
-  Box,
-} from "@mantine/core";
+import { Container, Title, Text, Box } from "@mantine/core";
 import { useStyles } from "./Styles";
 import { Faq } from "../../../components/faq/Index";
 import { Features } from "../../../components/features/Index";
 import { HomeCarousel } from "../../../components/carousel/Index";
 
-import { Footer } from "../../../components/footer/Index";
 import { useViewportSize } from "@mantine/hooks";
 
 export function HeroImageRight() {
@@ -21,10 +12,10 @@ export function HeroImageRight() {
   const { width } = useViewportSize();
 
   return (
-    <div className={classes.root}>
+    <Box className={classes.root}>
       <Container>
-        <div className={classes.inner}>
-          <div className={classes.content}>
+        <Box className={classes.inner}>
+          <Box className={classes.content}>
             <Title className={classes.title}>
               Your{" "}
               <Text
@@ -45,22 +36,12 @@ export function HeroImageRight() {
               ease. Enjoy the convenience of shopping from the comfort of your
               own home, whenever and wherever it suits you.
             </Text>
-          </div>
-        </div>
+          </Box>
+        </Box>
       </Container>
       <Features />
       <HomeCarousel />
       <Faq />
-      <div className={classes.footer}>
-        <Box
-          pt={20}
-          sx={{
-            position: "absolute",
-            width: "100%",
-          }}>
-          <Footer />
-        </Box>
-      </div>
-    </div>
+    </Box>
   );
 }

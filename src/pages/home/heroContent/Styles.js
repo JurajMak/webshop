@@ -70,7 +70,4 @@ export const useStyles = createStyles((theme) => ({
       width: "100%",
     },
   },
-  footer: {
-    position: "relative",
-  },
 }));

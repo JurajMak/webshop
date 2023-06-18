@@ -22,8 +22,4 @@ export const useStyles = createStyles((theme) => ({
   },
 
   icon: { color: "#2C2E33" },
-
-  title: {
-    color: theme.colorScheme === "dark" ? theme.white : theme.black,
-  },
 }));

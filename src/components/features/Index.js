@@ -1,4 +1,4 @@
-import { Text, SimpleGrid, Container, Button, Group } from "@mantine/core";
+import { Text, SimpleGrid, Container, Button, Group, Box } from "@mantine/core";
 
 import { useStyles } from "./Styles";
 import { mockFeat } from "./mockFeat";
@@ -10,10 +10,10 @@ function Feature({ icon: Icon, title, description, className, ...others }) {
   const { classes, cx } = useStyles();
 
   return (
-    <div className={cx(classes.feature, className)} {...others}>
-      <div className={classes.overlay} />
+    <Box className={cx(classes.feature, className)} {...others}>
+      <Box className={classes.overlay} />
 
-      <div className={classes.content}>
+      <Box className={classes.content}>
         <Icon size={38} className={classes.icon} stroke={1.5} />
         <Text fw={700} fz="lg" mb="xs" mt={5} c="dark.5">
           {title}
@@ -21,8 +21,8 @@ function Feature({ icon: Icon, title, description, className, ...others }) {
         <Text c="#B6BCC3" fz="md" mt={20}>
           {description}
         </Text>
-      </div>
-    </div>
+      </Box>
+    </Box>
   );
 }
 
