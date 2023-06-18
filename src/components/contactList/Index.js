@@ -13,7 +13,7 @@ function ContactIcon({
   const { classes, cx } = useStyles({ variant });
 
   return (
-    <div className={cx(classes.wrapper, className)} {...others}>
+    <Box className={cx(classes.wrapper, className)} {...others}>
       {variant === "gradient" ? (
         <ThemeIcon size={40} radius="md" className={classes.icon}>
           <Icon size="1.5rem" />
@@ -24,13 +24,13 @@ function ContactIcon({
         </Box>
       )}
 
-      <div>
+      <Box>
         <Text size="xs" className={classes.title}>
           {title}
         </Text>
         <Text className={classes.description}>{description}</Text>
-      </div>
-    </div>
+      </Box>
+    </Box>
   );
 }
 

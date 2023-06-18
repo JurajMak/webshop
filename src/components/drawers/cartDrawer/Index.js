@@ -23,8 +23,10 @@ export default function CartDrawer({
   onQuantity,
   handleCheckout,
   loading,
-  opened,
-  setOpened,
+  // opened,
+  // setOpened,
+  cartOpen,
+  setCartOpen,
 }) {
   const theme = useMantineTheme();
   const { classes } = useStyles();
@@ -35,11 +37,14 @@ export default function CartDrawer({
   const navigateLogin = async () => {
     navigate("/login");
   };
+
   return (
     <Drawer
       className={classes.root}
-      opened={opened}
-      onClose={() => setOpened(false)}
+      // opened={opened}
+      // onClose={() => setOpened(false)}
+      opened={cartOpen}
+      onClose={() => setCartOpen(false)}
       padding="xs"
       size="xl"
       transitionDuration={550}

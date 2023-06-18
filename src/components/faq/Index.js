@@ -1,11 +1,11 @@
 import {
-  createStyles,
   Title,
   Container,
   Text,
   UnstyledButton,
   Overlay,
   SimpleGrid,
+  Box,
 } from "@mantine/core";
 import { ContactIconsList } from "../contactList/Index";
 import { mockFaq } from "./mockFaq";
@@ -32,20 +32,20 @@ export function Faq({ categories }) {
 
   return (
     <Container className={classes.wrapper} size="lg">
-      <div className={classes.header}>
+      <Box className={classes.header}>
         <Title className={classes.title}>Frequently Asked Questions</Title>
         <Title className={classes.titleOverlay} role="presentation">
           FAQ
         </Title>
 
-        <div className={classes.contact}>
+        <Box className={classes.contact}>
           <Text size="xl" weight={500} className={classes.contactTitle}>
             Contact us
           </Text>
 
           <ContactIconsList />
-        </div>
-      </div>
+        </Box>
+      </Box>
 
       <SimpleGrid cols={3} breakpoints={[{ maxWidth: "sm", cols: 1 }]}>
         {items}

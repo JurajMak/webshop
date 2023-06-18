@@ -38,11 +38,11 @@ export default function AppShellLayout() {
   const theme = useMantineTheme();
   const navigate = useNavigate();
   const [opened, setOpened] = useState(false);
+  const [cartOpen, setCartOpen] = useState(false);
   const [search, setSearch] = useState("");
   const [selectValue, setSelectValue] = useState("popular");
   const [searchWord, setSearchWord] = useState("");
   const [value, setValue] = useState("");
-  // const [swap, setSwap] = useState(false);
   const [categoryId, setCategoryId] = useState("");
   const [shoppingData, dispatch] = useReducer(CartReducer, []);
   const [scroll, scrollTo] = useWindowScroll();
@@ -144,16 +144,10 @@ export default function AppShellLayout() {
     hasNextPage,
   ]);
 
-  console.log("op", opened);
-
   return (
     <AppShell
       className={classes.root}
-      footer={
-        <Box mb={20}>
-          <Footer />
-        </Box>
-      }
+      footer={<Footer />}
       header={
         <HeaderTabs
           orders={shoppingData}
@@ -165,6 +159,8 @@ export default function AppShellLayout() {
           onText={handleSearchText}
           onEnter={handleSearchEnter}
           onBtn={handleSearchBtn}
+          cartOpen={cartOpen}
+          setCartOpen={setCartOpen}
         />
       }>
       <Group position="center" m={10} mb={20}>
@@ -227,7 +223,7 @@ export default function AppShellLayout() {
       </Group>
 
       {isFetchingNextPage && hasNextPage && (
-        <Flex direction="column">
+        <Flex direction="column" m={20}>
           <Text mx="auto" fz="lg" fw="bold" c="gray.3">
             Loading more products
           </Text>
@@ -235,7 +231,7 @@ export default function AppShellLayout() {
         </Flex>
       )}
       {!hasNextPage && (
-        <Flex direction="column">
+        <Flex direction="column" mb={20}>
           <Text mx="auto" fz="lg" fw="bold" c="gray.3">
             No more products to load
           </Text>
@@ -251,7 +247,7 @@ export default function AppShellLayout() {
         opened={opened}
         onClose={() => setOpened(!opened)}
       />
-      {!opened && (
+      {!cartOpen && (
         <Affix position={{ bottom: height * 0.08, right: width * 0.01 }}>
           <Transition transition="slide-up" mounted={scroll.y > 0}>
             {(transitionStyles) => (
@@ -259,11 +255,7 @@ export default function AppShellLayout() {
                 color="dark"
                 style={transitionStyles}
                 onClick={() => scrollTo({ y: 0 })}>
-                <IconArrowUp
-                  size={20}
-                  style={width > 800 ? { marginRight: 5 } : { marginRight: 0 }}
-                />
-                {width > 500 ? "To top" : ""}
+                <IconArrowUp size={20} />
               </Button>
             )}
           </Transition>

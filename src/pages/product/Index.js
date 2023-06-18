@@ -139,6 +139,37 @@ export default function ProductDetails() {
                     <Group
                       style={{ flexDirection: "column", gap: 30 }}
                       mt={width < 800 ? 30 : 10}>
+                      {product.is_sale ? (
+                        <>
+                          <Title
+                            truncate
+                            td="line-through"
+                            color="dark"
+                            fz={25}
+                            weight={400}
+                            sx={{ lineHeight: 1 }}>
+                            {product.price.toFixed(2)}€
+                          </Title>
+                          <Title
+                            truncate
+                            color="red.6"
+                            weight={400}
+                            sx={{ lineHeight: 1 }}>
+                            {product.sale_price.toFixed(2)}€
+                          </Title>
+                        </>
+                      ) : (
+                        <Box>
+                          <Title
+                            truncate
+                            color="dark"
+                            weight={400}
+                            sx={{ lineHeight: 1 }}>
+                            {product.price.toFixed(2)}€
+                          </Title>
+                        </Box>
+                      )}
+
                       <Text color="dimmed" weight={500} size="xl">
                         Add quantity
                       </Text>

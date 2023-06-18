@@ -3,7 +3,7 @@ import { createStyles } from "@mantine/core";
 export const useStyles = createStyles((theme) => ({
   wrapper: {
     paddingTop: theme.spacing.md,
-    paddingBottom: 150,
+    paddingBottom: 100,
   },
 
   header: {

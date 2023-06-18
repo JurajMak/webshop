@@ -35,7 +35,8 @@ export function HeaderTabs({
   onEnter,
   onBtn,
   onCategory,
-  category,
+  cartOpen,
+  setCartOpen,
 }) {
   const { classes } = useStyles();
   const theme = useMantineTheme();
@@ -179,8 +180,10 @@ export function HeaderTabs({
             <CartDrawer
               handleCheckout={handleCheckout}
               loading={loading}
-              opened={opened}
-              setOpened={setOpened}
+              // opened={opened}
+              // setOpened={setOpened}
+              cartOpen={cartOpen}
+              setCartOpen={setCartOpen}
               orders={orders}
               onRemove={onRemove}
               onQuantity={onQuantity}
@@ -211,12 +214,17 @@ export function HeaderTabs({
                     <ActionIcon
                       variant="transparent"
                       color="gray.0"
-                      onClick={() => setOpened(true)}>
+                      // onClick={() => setOpened(true)}
+                      onClick={() => setCartOpen(true)}>
                       <IconShoppingCart size={25} stroke={2} />
                     </ActionIcon>
                   </Indicator>
                 )}
-                <UserMenu orders={orders} onDrawer={() => setOpened(true)} />
+                <UserMenu
+                  orders={orders}
+                  // onDrawer={() => setOpened(true)}
+                  onDrawer={() => setCartOpen(true)}
+                />
               </Group>
             ) : (
               <Group
@@ -241,7 +249,8 @@ export function HeaderTabs({
                     <ActionIcon
                       variant="transparent"
                       color="gray.0"
-                      onClick={() => setOpened(true)}>
+                      // onClick={() => setOpened(true)}
+                      onClick={() => setCartOpen(true)}>
                       <IconShoppingCart size={25} stroke={2} />
                     </ActionIcon>
                   </Indicator>
