@@ -17,7 +17,7 @@ const App = () => {
           </AuthProvider>
         </NotificationsProvider>
       </MantineProvider>
-      {/* <ReactQueryDevtools initialIsOpen={false} /> */}
+      <ReactQueryDevtools initialIsOpen={false} />
     </QueryClientProvider>
   );
 };
