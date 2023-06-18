@@ -41,6 +41,7 @@ export default function ProductDetails() {
     data: product,
     isLoading,
     isSuccess,
+    isFetching,
     refetch,
   } = useQuery({
     queryKey: ["product"],
@@ -95,7 +96,7 @@ export default function ProductDetails() {
 
   return (
     <>
-      {isLoading ? (
+      {isFetching ? (
         <LoadingOverlay
           loaderProps={{ size: "xl", color: "gray", variant: "oval" }}
           overlayOpacity={0.3}
