@@ -12,6 +12,7 @@ import ProductDetails from "../pages/product/Index";
 import AppShellLayout from "../components/layout/Index";
 import Categories from "../pages/categories/Index";
 import React from "react";
+import ShippingInfo from "../pages/shippingInfo/Index";
 const ScrollToTop = () => {
   const { pathname } = useLocation();
 
@@ -33,6 +34,7 @@ const RenderRoutes = () => {
         <Route path="/:tabValue" element={<AppShellLayout />} />
         <Route path="/products/:id" element={<ProductDetails />} />
         {/* <Route path="/categories" element={<Categories />} /> */}
+        <Route path="/products/shipping" element={<ShippingInfo />} />
         <Route path="/" element={<ProtectedRoute />}>
           <Route path="/admin" element={<Dashboard />} />
           <Route path="/admin/products/create" element={<Create />} />

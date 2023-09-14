@@ -33,6 +33,7 @@ import { useNavigate } from "react-router-dom";
 import { warningQuantityNotification } from "../notifications/warningNotification";
 import { Footer } from "../footer/Index";
 import { useStyles } from "./Styles";
+import { MemoizedHeaderTabs } from "../header/Index";
 
 export default function AppShellLayout() {
   const theme = useMantineTheme();
@@ -50,6 +51,7 @@ export default function AppShellLayout() {
   const [chipValue, setChipValue] = useState("");
   const [priceRange, setPriceRange] = useState("");
   const { classes } = useStyles();
+  const handleInfiniteScrollRef = React.useRef(handleInfiniteScroll);
 
   const {
     data,
@@ -126,14 +128,30 @@ export default function AppShellLayout() {
 
   useEffect(() => {
     dispatch({ type: "LOAD_CART_FROM_STORAGE" });
-    window.addEventListener("scroll", (e) =>
-      handleInfiniteScroll(e, hasNextPage, fetchNextPage, isFetchingNextPage)
-    );
-    refetch();
-    return () => {
-      window.removeEventListener("scroll", (e) =>
-        handleInfiniteScroll(e, hasNextPage, fetchNextPage, isFetchingNextPage)
+
+    // window.addEventListener("scroll", (e) =>
+    //   handleInfiniteScroll(e, hasNextPage, fetchNextPage, isFetchingNextPage)
+    // );
+    // refetch();
+    // return () => {
+    //   window.removeEventListener("scroll", (e) =>
+    //     handleInfiniteScroll(e, hasNextPage, fetchNextPage, isFetchingNextPage)
+    //   );
+    // };
+
+    const handleScroll = (e) =>
+      handleInfiniteScrollRef.current(
+        e,
+        hasNextPage,
+        fetchNextPage,
+        isFetchingNextPage
       );
+
+    window.addEventListener("scroll", handleScroll);
+    refetch();
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
     };
   }, [
     selectValue,
@@ -143,13 +161,14 @@ export default function AppShellLayout() {
     fetchNextPage,
     hasNextPage,
   ]);
+  console.log("parent render");
 
   return (
     <AppShell
       className={classes.root}
       footer={<Footer />}
       header={
-        <HeaderTabs
+        <MemoizedHeaderTabs
           orders={shoppingData}
           category={category}
           onDelete={handleDeleteItem}

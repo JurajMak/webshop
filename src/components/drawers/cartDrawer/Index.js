@@ -33,8 +33,11 @@ export default function CartDrawer({
   const { user } = useContext(AuthContext);
   const { height, width } = useViewportSize();
 
-  const navigateLogin = async () => {
+  const navigateLogin = () => {
     navigate("/login");
+  };
+  const navigateToShipping = () => {
+    navigate("/products/shipping");
   };
 
   return (
@@ -88,9 +91,9 @@ export default function CartDrawer({
               color="dark"
               miw={250}
               disabled={orders.length <= 0 ? true : false}
-              onClick={handleCheckout}
+              onClick={navigateToShipping}
               loading={loading}>
-              Checkout €
+              Proceed with purchase
             </Button>
           ) : (
             <Button color="dark" miw={250} onClick={navigateLogin}>

@@ -113,7 +113,7 @@ export function HeaderTabs({
     handlePaymentNotification();
     onClear();
   };
-
+  console.log("heder comp ");
   return (
     <Box>
       <Header
@@ -307,3 +307,5 @@ export function HeaderTabs({
 }
 
 export default HeaderTabs;
+
+export const MemoizedHeaderTabs = React.memo(HeaderTabs);

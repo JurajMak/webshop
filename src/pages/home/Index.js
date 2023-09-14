@@ -7,6 +7,8 @@ import { Features } from "../../components/features/Index";
 import { Footer } from "../../components/footer/Index";
 import { Faq } from "../../components/faq/Index";
 import { HeroImageRight } from "./heroContent/Index";
+import { MemoizedHeaderTabs } from "../../components/header/Index";
+
 // #062343 #041428 #000205
 
 // box #062343 #061221
@@ -19,13 +21,10 @@ const Home = () => {
 
   return (
     <Box bg="#062343">
-      <HeaderTabs orders={shoppingData} />
-      <HeroImageRight />
-      {/* <Features />  */}
-      {/* <HomeCarousel />
+      <MemoizedHeaderTabs orders={shoppingData} />
 
-      <Faq />
-     */}
+      <HeroImageRight />
+
       <Footer />
     </Box>
   );
