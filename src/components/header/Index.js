@@ -169,9 +169,9 @@ export function HeaderTabs({
                   onTabChange={(value) => navigate(`/${value}`)}>
                   <Tabs.List position="center">
                     <Tabs.Tab value="products">Products</Tabs.Tab>
-                    <Tabs.Tab value="categories" onClick={onCategory}>
+                    {/* <Tabs.Tab value="categories" onClick={onCategory}>
                       Categories
-                    </Tabs.Tab>
+                    </Tabs.Tab> */}
                   </Tabs.List>
                 </Tabs>
               </Group>

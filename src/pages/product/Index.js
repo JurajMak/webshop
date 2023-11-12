@@ -13,9 +13,7 @@ import {
   Accordion,
   ActionIcon,
 } from "@mantine/core";
-import React, { useEffect, useReducer, useState } from "react";
-import { useQuery } from "@tanstack/react-query";
-import { getProductById } from "../../api/products";
+import React, { useReducer, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import { CartReducer } from "../../utils/cartReducer";
@@ -27,6 +25,7 @@ import { warningQuantityNotification } from "../../components/notifications/warn
 import { Footer } from "../../components/footer/Index";
 import { useStyles } from "./Styles";
 import noImage from "../../assets/register.jpg";
+import { useProductById } from "../../hooks/product";
 
 export default function ProductDetails() {
   const { id } = useParams();
@@ -36,16 +35,11 @@ export default function ProductDetails() {
   const [selectedQuantity, setSelectedQuantity] = useState(0);
   const { classes } = useStyles();
   const [cartOpen, setCartOpen] = useState(false);
-
   const {
     data: product,
-    isLoading,
-    isSuccess,
     isFetching,
     refetch,
-  } = useQuery({
-    queryKey: ["product"],
-    queryFn: () => getProductById(id),
+  } = useProductById(id, {
     onSuccess: () => {
       dispatch({ type: "LOAD_CART_FROM_STORAGE" });
     },
@@ -116,7 +110,7 @@ export default function ProductDetails() {
           />
         ) : (
           <>
-            <Container size="xl" mt={20}>
+            <Container size="xl" mt={20} h="100vh">
               <Flex mb={40} align="center">
                 <Title order={1}>{product?.name}</Title>
                 {product.is_sale && (

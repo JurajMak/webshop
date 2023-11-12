@@ -22,7 +22,6 @@ import { getProducts } from "../../api/products";
 import {
   useInfiniteQuery,
   useQuery,
-  useQueryClient,
 } from "@tanstack/react-query";
 import { handleInfiniteScroll } from "../../utils/infiniteScroll";
 import { useWindowScroll, useViewportSize } from "@mantine/hooks";

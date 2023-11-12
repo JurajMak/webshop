@@ -34,8 +34,10 @@ function HomeCard({ image, name, category, id }) {
 
 export function HomeCarousel() {
   const theme = useMantineTheme();
-  const mobile = useMediaQuery(`(max-width: ${theme.breakpoints.sm})`);
+  const mobile = useMediaQuery(`(max-width: 576px)`);
   const autoplay = useRef(Autoplay({ delay: 2000 }));
+
+  console.log(mobile, "sm");
 
   const { data } = useQuery({
     queryKey: ["productsImages"],

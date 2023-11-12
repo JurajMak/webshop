@@ -58,7 +58,6 @@ export default function AppShellLayout() {
     hasNextPage,
     isFetchingNextPage,
     refetch,
-    isFetching,
   } = useInfiniteQuery(
     ["products"],
     ({ pageParam = 1 }) =>

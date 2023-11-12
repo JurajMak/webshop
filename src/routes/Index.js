@@ -10,7 +10,6 @@ import Edit from "../pages/admin/edit/Index";
 import CreateCategory from "../pages/admin/category/Index";
 import ProductDetails from "../pages/product/Index";
 import AppShellLayout from "../components/layout/Index";
-import Categories from "../pages/categories/Index";
 import React from "react";
 const ScrollToTop = () => {
   const { pathname } = useLocation();

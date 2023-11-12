@@ -9,7 +9,6 @@ import {
   useMantineTheme,
   ActionIcon,
   Tabs,
-  Container,
   UnstyledButton,
 } from "@mantine/core";
 import { useViewportSize } from "@mantine/hooks";
@@ -35,7 +34,6 @@ export function HomeHeader({
   onText,
   onEnter,
   onBtn,
-  onAll,
 }) {
   const { classes } = useStyles();
   const theme = useMantineTheme();

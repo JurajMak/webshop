@@ -4,12 +4,8 @@ import { Faq } from "../../../components/faq/Index";
 import { Features } from "../../../components/features/Index";
 import { HomeCarousel } from "../../../components/carousel/Index";
 
-import { useViewportSize } from "@mantine/hooks";
-
 export function HeroImageRight() {
   const { classes } = useStyles();
-
-  const { width } = useViewportSize();
 
   return (
     <Box className={classes.root}>
@@ -17,14 +13,14 @@ export function HeroImageRight() {
         <Box className={classes.inner}>
           <Box className={classes.content}>
             <Title className={classes.title}>
-              Your{" "}
+              Your
               <Text
                 component="span"
                 inherit
                 variant="gradient"
                 gradient={{ from: "pink", to: "yellow" }}>
                 Shopping Destination,
-              </Text>{" "}
+              </Text>
               Elevated.
             </Title>
 

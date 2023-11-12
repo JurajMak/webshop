@@ -25,9 +25,7 @@ import {
 } from "@tanstack/react-query";
 
 export function ProductsTable({ titles, search }) {
-  const theme = useMantineTheme();
   const navigate = useNavigate();
-  const { user } = useContext(AuthContext);
   const queryClient = new useQueryClient();
 
   const toEdit = (item) => {
@@ -36,9 +34,6 @@ export function ProductsTable({ titles, search }) {
 
   const {
     data,
-    isSuccess,
-    isLoading,
-    error,
     fetchNextPage,
     hasNextPage,
     isFetchingNextPage,
