@@ -8,6 +8,8 @@ import {
   Button,
   Group,
   Container,
+  Box,
+  Stack,
 } from "@mantine/core";
 import { useNavigate } from "react-router-dom";
 import { IconAt, IconEye, IconEyeOff } from "@tabler/icons";
@@ -97,12 +99,19 @@ export function UserLogin() {
           }
           {...form.getInputProps("password")}
         />
-        <Group position="left" mt={20}>
-          <Button color="dark" type="submit">
-            Login
-          </Button>
-          <Button color="dark" onClick={returnHome}>
-            Return
+
+        <Group position="apart" mt={20}>
+          <Box>
+            <Button color="dark" type="submit" mr={10}>
+              Login
+            </Button>
+            <Button color="dark" onClick={returnHome}>
+              Return
+            </Button>
+          </Box>
+
+          <Button color="dark" onClick={() => navigate("/")}>
+            Home
           </Button>
         </Group>
       </Form>
@@ -113,6 +122,14 @@ export function UserLogin() {
           Register
         </Anchor>
       </Text>
+      <Stack mt={20}>
+        <Text align="center" fw={500}>
+          ADMIN: test@admin.com password: test123
+        </Text>
+        <Text align="center" fw={500}>
+          USER: test@user.com password: test123
+        </Text>
+      </Stack>
     </Container>
   );
 }

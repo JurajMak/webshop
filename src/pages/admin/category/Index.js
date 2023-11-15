@@ -34,7 +34,11 @@ const CreateCategory = () => {
   });
   const { name, description } = form.values;
 
-  const { data: category, isLoading } = useQuery({
+  const {
+    data: category,
+    isLoading,
+    refetch,
+  } = useQuery({
     queryKey: ["categories"],
     queryFn: () => getCategory(value),
   });
@@ -53,6 +57,8 @@ const CreateCategory = () => {
       userId: user.id,
     };
     await createCategoryMutation.mutateAsync(create);
+    refetch();
+    form.reset();
   };
 
   const handleReturn = () => {
@@ -63,6 +69,7 @@ const CreateCategory = () => {
     form.reset();
     setValue("");
   };
+
   return (
     <Container
       sizes="xl"

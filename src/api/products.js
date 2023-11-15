@@ -44,8 +44,8 @@ const getProducts = async (sortKey, searchValue, page, categoryId, price) => {
     }
   }
 
-  const from = page === 1 ? 0 : 20 * (page - 1);
-  const to = page * 20 - 1;
+  const from = page === 1 ? 0 : 10 * (page - 1);
+  const to = page * 10 - 1;
 
   const { data, error } = await query.range(from, to);
 
