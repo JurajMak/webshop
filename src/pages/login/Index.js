@@ -1,5 +1,4 @@
 import {
-  createStyles,
   TextInput,
   Title,
   Text,
@@ -8,7 +7,6 @@ import {
   Button,
   Group,
   Container,
-  Box,
   Stack,
 } from "@mantine/core";
 import { useNavigate } from "react-router-dom";
@@ -46,14 +44,8 @@ export function UserLogin() {
       navigate("/products");
       if (data.user.user_metadata.role === "admin") {
         navigate("/admin");
-        return;
       }
-      return;
     }
-  };
-
-  const returnHome = () => {
-    navigate(-1);
   };
 
   const returnRegister = () => {
@@ -101,17 +93,11 @@ export function UserLogin() {
         />
 
         <Group position="apart" mt={20}>
-          <Box>
-            <Button color="dark" type="submit" mr={10}>
-              Login
-            </Button>
-            <Button color="dark" onClick={returnHome}>
-              Return
-            </Button>
-          </Box>
-
           <Button color="dark" onClick={() => navigate("/")}>
             Home
+          </Button>
+          <Button color="dark" type="submit" mr={10}>
+            Login
           </Button>
         </Group>
       </Form>
