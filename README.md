@@ -61,4 +61,4 @@ The application will be accessible at [http://localhost:3000/](http://localhost:
 This project is developed for demonstration purposes 
 
 ## Live Preview
-[webshop-jurajmak.vercel.app](https://webshop-jurajmak.vercel.app/)
+- [https://webshop-ry1f.vercel.app/](https://webshop-ry1f.vercel.app/)
